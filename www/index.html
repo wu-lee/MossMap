@@ -1,0 +1,29 @@
+<!doctype html>
+<html ng-app="TetradMapModule">
+<head>
+  <title>Moss Map</title>
+  <script src="3p/angular.js"></script>
+  <script src="3p/ui-bootstrap.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/tetrad-map.js"></script>
+  <script src="3p/d3.v2.js"></script>
+  <link rel="stylesheet" href="3p/bootstrap.css"></link>
+  <link rel="stylesheet" href="styles.css"></link>
+
+<style>
+div[map] {
+    background-image: uri(basemap.jpg);
+    height: 1166px;
+    width: 1596px;
+}
+</style>
+</head>
+<body>
+<div id="top" ng-controller="Controller">
+  
+  <div tetrad-map="basemap.jpg" taxon-observation-data="cheshire-dataset.json"
+       gridref1="SJ58:536,439" gridref2="SJ68:699,439" ></div>
+
+</div>
+</body>
+</html>
