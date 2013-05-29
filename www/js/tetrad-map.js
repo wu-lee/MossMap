@@ -112,6 +112,7 @@ angular.module('TetradMapModule')
 
 		    var taxaList = d3.entries(json);
 		    scope.$parent[datasetVarName] = json;
+		    scope.$parent.$digest();
 
 		    var taxa = mapG
 			.selectAll("g.taxon")
