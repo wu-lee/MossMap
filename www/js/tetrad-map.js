@@ -15,6 +15,9 @@ angular.module('TetradMapModule')
 		var dataFile = attrs.taxonObservationData;
 		var gridrefAlias1 = attrs.gridref1;
 		var gridrefAlias2 = attrs.gridref2;
+		var datasetVarName = attrs.datasetVar;
+
+		scope.$parent[datasetVarName] = {}
 
 		// FIXME error check
 
@@ -108,6 +111,7 @@ angular.module('TetradMapModule')
                     d3.select(mapG.node().childNodes).remove();
 
 		    var taxaList = d3.entries(json);
+		    scope.$parent[datasetVarName] = json;
 
 		    var taxa = mapG
 			.selectAll("g.taxon")
