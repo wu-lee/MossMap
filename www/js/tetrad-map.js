@@ -1,4 +1,4 @@
-angular.module('TetradMapModule', []);
+angular.module('TetradMapModule', ['ui.bootstrap']);
 
 
 
@@ -141,6 +141,14 @@ angular.module('TetradMapModule')
 
 
 
-function Controller() {
+function Controller($scope) {
+    $scope.taxon = '';
 
+    $scope.$watch('taxon', function(newValue, oldValue) {
+	console.log(oldValue+" -> "+newValue);
+	if (oldValue === newValue)
+	    return;
+	oldValue && d3.selectAll('g[taxon="'+oldValue[0]+'"]').style("display", "none");
+	newValue && d3.selectAll('g[taxon="'+newValue[0]+'"]').style("display", "inherit");
+    });
 }

@@ -10,6 +10,9 @@
   <link rel="stylesheet" href="3p/bootstrap.css"></link>
   <link rel="stylesheet" href="styles.css"></link>
 <style>
+div.overlay {
+    position: fixed;
+}
 g.taxon {
     display: none;
 }
@@ -22,6 +25,14 @@ g.taxon circle {
 <body>
 <div id="top" ng-controller="Controller">
   
+  <div class="overlay">
+    <div class="container-fluid">
+      <div>Taxon:</div>
+      <input type="text" ng-model="taxon"
+	     typeahead="t.taxon for t in dataset | filter:$viewValue ">
+    </div>
+  </div>
+
   <div tetrad-map="basemap.jpg" taxon-observation-data="cheshire-dataset.json"
        dataset-var="dataset" 
        gridref1="SJ58:536,439" gridref2="SJ68:699,439" ></div>
