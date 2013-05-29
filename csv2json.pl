@@ -53,7 +53,7 @@ my @heading_map = (
     },
 );
 
-my %data;
+my %index;
 my %taxon;
 my %csv_row = map { $_ => undef } @heading_map;
 while ( my $csv_row_ref = $csv->getline( $fh ) ) {
@@ -75,15 +75,34 @@ while ( my $csv_row_ref = $csv->getline( $fh ) ) {
 
     my $taxon = delete $row{taxon};
     my $grid_ref = delete $row{grid_ref};
-    my $list = $data{$taxon}{$grid_ref} ||= [];
+    my $list = $index{$taxon}{$grid_ref} ||= [];
     push @$list, \%row;
 }
 
 $csv->eof or $csv->error_diag();
 close $fh;
 
+# reformat the %index into a @list
+my @list = map {
+    my $taxon = $_;
+    my $locations = $index{$taxon};
+    {
+        taxon => $taxon,
+        locations => [
+            map {
+                my $gridref = $_;
+                my $sightings = $locations->{$gridref};
+                {
+                    gridref => $gridref,
+                    sightings => $sightings,
+                };
+            } sort keys %$locations
+        ]
+    };
+} sort keys %index;
+
 use JSON::PP;
 my $json = JSON::PP->new->ascii->pretty->allow_nonref;
-print $json->encode(\%data);
+print $json->encode(\@list);
 #print "$_\n" for sort keys %taxon;
 

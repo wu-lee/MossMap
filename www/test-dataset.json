@@ -1,34 +1,58 @@
-{
-   "species 1" : {
-      "SJ55" : [
-         {
-            "period" : "day",
-            "date" : "1978-12-31"
-         }
-      ],
-      "SJ66" : [
-         {
-            "period" : "day",
-            "date" : "1978-12-31"
-         }
-      ],
-      "SJ77" : [
-         {
-            "period" : "day",
-            "date" : "1978-12-31"
-         }
-      ],
-      "SJ88" : [
-         {
-            "period" : "day",
-            "date" : "1978-12-31"
-         }
-      ],
-      "SJ99" : [
-         {
-            "period" : "day",
-            "date" : "1978-12-31"
-         }
+[
+  {
+      "taxon": "species 1",
+      "locations":
+      [ 
+	  {
+	      "gridref": "SJ55",
+	      "sightings":
+	      [
+		  {
+		      "period": "day",
+		      "date": "1978-12-31"
+		  }
+	      ]
+	  },
+	  {
+	      "gridref": "SJ66" ,
+	      "sightings":
+	      [
+		  {
+		      "period": "day",
+		      "date": "1978-12-31"
+		  }
+	      ]
+          },
+	  {
+	      "gridref": "SJ77",
+	      "sightings":
+	      [
+		  {
+		      "period": "day",
+		      "date": "1978-12-31"
+		  }
+	      ]
+          },
+	  {
+	      "gridref": "SJ88",
+	      "sightings":
+	      [
+		  {
+		      "period": "day",
+		      "date": "1978-12-31"
+		  }
+	      ]
+          },
+	  {
+	      "gridref": "SJ99",
+	      "sightings":
+	      [
+		  {
+		      "period": "day",
+		      "date": "1978-12-31"
+		  }
+	      ]
+          }
       ]
-   }
-}
+  }
+]
