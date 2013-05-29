@@ -134,9 +134,6 @@ angular.module('TetradMapModule')
 			.attr("cx", function(d) { return d.x + d.precision*0.5 })
 			.attr("cy", function(d) { return d.y + d.precision*0.5 })
 			.attr("r", function(d) { return d.precision*0.5 })
-			.attr("fill", "red")
-
-
 		});
             }
         }
