@@ -115,22 +115,22 @@ angular.module('TetradMapModule')
 
 		    var taxa = mapG
 			.selectAll("g.taxon")
-			.data(taxaList)
+			.data(json)
 
 			.enter()
 			.append("g")
 		    	.classed("taxon", true)
-			.attr("taxon", function(d) { return d.key; })
+			.attr("taxon", function(d) { return d.taxon; })
 			.attr("width", "100%")
 			.attr("height", "100%");
 
 		    var markers = taxa
 			.selectAll("circle")
-			.data(function(d) { return d3.entries(d.value); })
+			.data(function(d) { return d.locations; })
 
 			.enter()
 			.append("circle")
-			.datum(function(d) { return map2img.transform(gridrefToFalseOriginCoord(d.key)); })
+			.datum(function(d) { return map2img.transform(gridrefToFalseOriginCoord(d.gridref)); })
 			.attr("cx", function(d) { return d.x + d.precision*0.5 })
 			.attr("cy", function(d) { return d.y + d.precision*0.5 })
 			.attr("r", function(d) { return d.precision*0.5 })
