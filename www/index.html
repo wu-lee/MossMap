@@ -12,6 +12,17 @@
 <style>
 div.overlay {
     position: fixed;
+    font-size: large;
+    color: white;
+    text-shadow: 0 0 0.2em black;
+}
+div.loading {
+    background-image: url(spinner.gif);
+    background-repeat: no-repeat;
+    padding-left: 38px;
+    height: 32px;
+    line-height: 32px;
+    vertical-align: middle;
 }
 g.taxon {
     display: none;
@@ -30,6 +41,7 @@ g.taxon circle {
       <div>Taxon:</div>
       <input type="text" ng-model="taxon"
 	     typeahead="t.taxon for t in dataset | filter:$viewValue ">
+      <div class="loading" ng-hide="dataset && dataset.length">Loading data...</div>
     </div>
   </div>
 
