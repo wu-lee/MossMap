@@ -6,6 +6,69 @@ angular.module('TetradMapModule')
     .directive('tetradMap', function() {
 
 	var aliasRx = /(\S*)\s*:\s*(\d+)\s*,\s*(\d+)/;
+	var dateRx = /^(\d{4})(\d{2})?(\d{2})?$/;
+
+
+	function Record(gridref, datestr) {
+	    this.gridref = gridref;
+	    this.datestr = datestr;
+	    this.date = this.parseDate(datestr);
+	}
+
+	Record.prototype.parseDate = function(string) {
+	    var d = dateRx.exec(string);
+	    if (!d || d[2] > 12 || d[3] > 31) 
+		throw new Error("malformed date string: "+string);
+
+	    // Note Javascript month indexes are zero-based, so there is a -1 below.
+	    var date = 
+		!d[2]? { period: 'year', start: new Date(d[1]) } :
+		!d[3]? { period: 'month', start: new Date(d[1], d[2]-1) } :
+	        { period: 'day', start: new Date(d[1], d[2]-1, d[3]) } ;
+
+	    return date;
+	};
+
+	Record.prototype.dateStr = function() {
+	    var date = this.date.start;
+	    var str = "";
+	    switch (this.date.period) {
+	    case "day":
+		str = date.getDay();
+
+	    case "month": 
+		var month = [
+		    'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'
+		][date.getMonth()];
+		str += " "+ month ;
+		
+	    case "year":
+		str += " "+date.getFullYear();
+	    }
+
+	    return str;
+	}
+
+	// This function returns the last day of the period
+	// following the start date.
+	// The javascript date object attempts to auto-adjust to 
+	// account for overflows and underflows of the input values.
+	// So we can do the tricks below and come away with the correct date.
+	Record.prototype.periodEnd = function() {
+	    var date = new Date(this.date.start);
+	    switch (this.date.period) {
+	    case "year":
+		date.setYear(date.getFullYear()+1);
+		return date;
+		
+	    case "month":
+		date.setMonth(date.getMonth()+1);
+		return date;
+		
+	    default:
+		return date;
+	    };
+	};
 
         return {
             scope: true, //{ val: '=' },
@@ -121,67 +184,47 @@ angular.module('TetradMapModule')
 			.enter()
 			.append("g")
 		    	.classed("taxon", true)
-			.attr("taxon", function(d) { return d.taxon; })
+			.attr("taxon", function(d) { return d[0]; })
 			.attr("width", "100%")
 			.attr("height", "100%");
 
 		    var markers = taxa
 			.selectAll("circle")
-			.data(function(d) { return d.locations; })
+			.data(function(d) { return d[1]; })
 
 			.enter()
 			.append("circle")
-			.datum(function(d) { 
-			    return angular.extend(
-				map2img.transform(gridrefToFalseOriginCoord(d.gridref)),
-				d
-			    );
-			})
-			.attr("cx", function(d) { return d.x + d.precision*0.5 })
-			.attr("cy", function(d) { return d.y + d.precision*0.5 })
-			.attr("r", function(d) { return d.precision*0.5 })
-			.attr("title", function(d) {
+			.datum(function(d) {
+			    var gridref = d[0];
+			    var dates = d.slice(1);
 			    var largest;
 			    var largestDateString;
-			    d.sightings.forEach(function(it) {
-				var elems = it.date.split("-");
-				var date = new Date(elems[0], elems[1], elems[2]);
-				// FIXME somewhat simplistic
-				switch (it.period) {
-				case "year":
-				    date.setYear(date.getYear()+1);
-				    break;
-				    
-				case "month":
-				    var month = date.getMonth();
-				    if (month == 11) {
-					date.setMonth(0);
-					date.setYear(date.getYear()+1);
-				    }
-				    else {
-					date.setMonth(month + 1);
-				    }
-				    break;
 
-				default:
-				    // fall through
-				    break;
-				};
-				if (!largest) {
-				    largest = date;
-				    largestDateString = it.date;
+			    // Find the most recent record, i.e. that whose last day
+			    // of the period within the precision of the date is latest.
+			    var latest, latestRecord;
+			    var records  = dates.map(function(date) {
+				var record = new Record(gridref, date);
+				var end = record.periodEnd();
+				if (!latest || latest < end) {
+				    latest = end;
+				    latestRecord = record;
 				}
-				else {
-				    if (largest < date) {
-					largest = date;
-					largestDateString = it.date;
-				    }
-				}
+				return record;
 			    });
-			    var latest = Math.max.apply(null, d.sightings);
-			    return d.sightings.length+" sightings @"+d.gridref+
-				" latest at "+largestDateString;
-			});
+			    var text = records.length+" records @"+gridref+
+				" latest at "+latestRecord.dateStr();
+
+			    return {
+				gridref: gridref,
+				coord: map2img.transform(gridrefToFalseOriginCoord(gridref)),
+				text: text
+			    };
+			})
+			.attr("cx", function(d) { return d.coord.x + d.coord.precision*0.5 })
+			.attr("cy", function(d) { return d.coord.y + d.coord.precision*0.5 })
+			.attr("r", function(d) { return d.coord.precision*0.5 })
+			.attr("title", function(d) { return d.text; })
 		});
             }
         }

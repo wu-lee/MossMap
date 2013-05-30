@@ -42,7 +42,7 @@ g.taxon circle {
     <div class="container-fluid">
       <div>Taxon:</div>
       <input type="text" ng-model="taxon"
-	     typeahead="t.taxon for t in dataset | filter:$viewValue ">
+	     typeahead="t[0] for t in dataset | filter:$viewValue ">
       <div class="loading" ng-hide="dataset && dataset.length">Loading data...</div>
     </div>
   </div>

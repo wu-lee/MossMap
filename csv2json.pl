@@ -23,15 +23,16 @@ my $headings = $csv->getline( $fh );
 $headings && @$headings
     or die "No headings found\n";
 
-sub datestr {
-    sprintf "%04u-%02u-%02u", @_;
-}
+
 
 # Defines what we keep, and name mappings thereof
 my @heading_map = (
     taxon => 'Taxon',
     grid_ref => 'GR',
-    ['period', 'date'] => sub {
+
+    # Dates are formatted as either '', 'YYYY', 'YYYYMM', or 'YYYYMMDD'
+    # depending on the precision
+    date => sub {
         my $row = shift;
         my ($y, $m, $d) = map { 
             (!defined) ? '' :
@@ -40,16 +41,16 @@ my @heading_map = (
                 int;
         } @$row{qw(Year Month Day)};
 
-        return day => datestr($y,$m,$d)
+        return sprintf '%04u%02u%02u', $y, $m, $d
             if length($y) && length($m) && $d;
         
-        return month => datestr($y,$m,1)
+        return sprintf '%04u%02u', $y, $m
             if length($y) && length($m);
             
-        return year => datestr($y,1,1)
+        return sprintf '%04u', $y
             if length($y);
 
-        return 'undefined' => '';
+        return '';
     },
 );
 
@@ -75,8 +76,9 @@ while ( my $csv_row_ref = $csv->getline( $fh ) ) {
 
     my $taxon = delete $row{taxon};
     my $grid_ref = delete $row{grid_ref};
+    my $date = delete $row{date};
     my $list = $index{$taxon}{$grid_ref} ||= [];
-    push @$list, \%row;
+    push @$list, $date;
 }
 
 $csv->eof or $csv->error_diag();
@@ -86,23 +88,20 @@ close $fh;
 my @list = map {
     my $taxon = $_;
     my $locations = $index{$taxon};
-    {
-        taxon => $taxon,
-        locations => [
+    [
+        $taxon,
+        [
             map {
                 my $gridref = $_;
-                my $sightings = $locations->{$gridref};
-                {
-                    gridref => $gridref,
-                    sightings => $sightings,
-                };
+                my $dates = $locations->{$gridref};
+                [ $gridref, @$dates ];
             } sort keys %$locations
         ]
-    };
+    ];
 } sort keys %index;
 
 use JSON::PP;
-my $json = JSON::PP->new->ascii->pretty->allow_nonref;
+my $json = JSON::PP->new->ascii; #->pretty->allow_nonref;
 print $json->encode(\@list);
 #print "$_\n" for sort keys %taxon;
 
