@@ -131,10 +131,57 @@ angular.module('TetradMapModule')
 
 			.enter()
 			.append("circle")
-			.datum(function(d) { return map2img.transform(gridrefToFalseOriginCoord(d.gridref)); })
+			.datum(function(d) { 
+			    return angular.extend(
+				map2img.transform(gridrefToFalseOriginCoord(d.gridref)),
+				d
+			    );
+			})
 			.attr("cx", function(d) { return d.x + d.precision*0.5 })
 			.attr("cy", function(d) { return d.y + d.precision*0.5 })
 			.attr("r", function(d) { return d.precision*0.5 })
+			.attr("title", function(d) {
+			    var largest;
+			    var largestDateString;
+			    d.sightings.forEach(function(it) {
+				var elems = it.date.split("-");
+				var date = new Date(elems[0], elems[1], elems[2]);
+				// FIXME somewhat simplistic
+				switch (it.period) {
+				case "year":
+				    date.setYear(date.getYear()+1);
+				    break;
+				    
+				case "month":
+				    var month = date.getMonth();
+				    if (month == 11) {
+					date.setMonth(0);
+					date.setYear(date.getYear()+1);
+				    }
+				    else {
+					date.setMonth(month + 1);
+				    }
+				    break;
+
+				default:
+				    // fall through
+				    break;
+				};
+				if (!largest) {
+				    largest = date;
+				    largestDateString = it.date;
+				}
+				else {
+				    if (largest < date) {
+					largest = date;
+					largestDateString = it.date;
+				    }
+				}
+			    });
+			    var latest = Math.max.apply(null, d.sightings);
+			    return d.sightings.length+" sightings @"+d.gridref+
+				" latest at "+largestDateString;
+			});
 		});
             }
         }
