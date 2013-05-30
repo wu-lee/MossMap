@@ -84,7 +84,7 @@ function fghjkToXY(alpha) {
     };
 }
 
-
+// Resulting coordinates are in units of meters.
 function osAlphaToFalseOriginCoord(grid500km, grid100km) {
     var coord500km = fghjkToXY(grid500km);
     var coord100km = fghjkToXY(grid100km);
@@ -92,6 +92,16 @@ function osAlphaToFalseOriginCoord(grid500km, grid100km) {
     return {
 	x: 100000 * (5 * coord500km.x + coord100km.x),
 	y: 100000 * (5 * coord500km.y + coord100km.y)
+    };
+}
+
+// Tetrads have a fixed scale of 2km square.  Resulting coord is an
+// offset in meters from the hectad bottom-left corner.
+function tetradToFalseOriginCoord(alpha) {
+    var offset = dintyToXY(alpha);
+    return {
+	x: offset.x * 2000,
+	y: offset.y * 2000
     };
 }
 
@@ -104,25 +114,33 @@ function gridrefToFalseOriginCoord(gridref) {
     var grid1k = match[2]
     var eastnothings = match[3];
     var tetradId = match[4];
+    var tetradCoord = { x: 0, y: 0 }; // default
 
     if (eastnothings.length & 1)
 	throw new Error("malformed grid reference contains uneven numeric component "+
 			"with "+eastnothings.length+" digits");
 
-    // If a tetrad id is suffixed, we must have a 2 digit grid reference
-    if (tetradId && eastnothings.length != 2)
-	throw new Error("malformed grid reference contains tetrad suffix "+
-			"with wrong numeric precision ("+eastnothings.length+" digit reference)");
-
     var numDigits = eastnothings.length >> 1; // integer divide by 2
     var scale = Math.pow(10, 5 - numDigits); // in meters - i.e. 5 digits has a 1 meter precision
+
 
     var eastings = eastnothings.slice(0, numDigits)*scale;
     var northings = eastnothings.slice(numDigits)*scale;
     
     var coord = osAlphaToFalseOriginCoord(grid5k, grid1k);
-    var tetradCoord = tetradId? 
-	dintyToXY(tetradId) : { x: 0, y: 0 };
+
+    if (tetradId) {
+	// If a tetrad id is suffixed, we must have a 2 digit grid reference
+	if (eastnothings.length != 2)
+	    throw new Error("malformed grid reference contains tetrad suffix "+
+			    "with wrong numeric precision ("+eastnothings.length+" digit reference)");
+
+	// convert the tetrad component
+	tetradCoord = tetradToFalseOriginCoord(tetradId);
+
+	// set the scale
+	scale = 2000;
+    }
 
     return {
 	x: coord.x + eastings + tetradCoord.x,

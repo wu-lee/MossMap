@@ -124,10 +124,17 @@ testCases({
 	["VV0000000", /malformed grid reference contains uneven numeric component with 7 digits/],
 	["VV000000000", /malformed grid reference contains uneven numeric component with 9 digits/],
 
+	// tetrad suffixes
+	["VV00A", {x: 0, y: 0, precision: 2000}],
+	["VV00Z", {x: 2000*4, y: 2000*4, precision: 2000}],
+	["VV11I", {x: 10000 + 2000*1, y: 10000 + 2000*3, precision: 2000}],
+	["GH12G", {x: 1*500*1000 + 2*100*1000 + 1*10000 + 2000, y: 3*500*1000 + 3*100*1000 + 2*10000 + 2000, precision: 2000}],
+	["VV00O", /invalid grid reference letter 'O'/],
+	["AA1234A", /malformed grid reference contains tetrad suffix with wrong numeric precision \(4/],
    ]
 });
 
-
+// FIXME "invalid grid reference letter" might be inappropriate in the case of tetrads
 
 
 
