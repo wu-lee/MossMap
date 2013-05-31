@@ -34,7 +34,7 @@ angular.module('TetradMapModule')
 	    var str = "";
 	    switch (this.date.period) {
 	    case "day":
-		str = date.getDay();
+		str = date.getDate();
 
 	    case "month": 
 		var month = [
@@ -167,6 +167,8 @@ angular.module('TetradMapModule')
 		};
 		img.src = mapImg;
 
+		var timeNow = new Date().getTime();
+
 		d3.json(dataFile, function(json, err) {
 		    if (err)
 			throw new Error(err);
@@ -215,15 +217,22 @@ angular.module('TetradMapModule')
 			    var text = records.length+" records @"+gridref+
 				" latest at "+latestRecord.dateStr();
 
+			    var ageIx = Math.pow(2, (latest.getTime() - timeNow)/1000000000000);
 			    return {
 				gridref: gridref,
 				coord: map2img.transform(gridrefToFalseOriginCoord(gridref)),
-				text: text
+				text: text,
+				age: ageIx
 			    };
 			})
 			.attr("cx", function(d) { return d.coord.x + d.coord.precision*0.5 })
 			.attr("cy", function(d) { return d.coord.y + d.coord.precision*0.5 })
 			.attr("r", function(d) { return d.coord.precision*0.5 })
+			.attr("fill", function(d) {
+			    var hex1 = Math.floor(d.age * 0xf).toString(16);
+			    var hex2 = Math.floor((1-d.age) * 0xf).toString(16);
+			    return "#"+hex2+hex1+"0";
+			})
 			.attr("title", function(d) { return d.text; })
 		});
             }
