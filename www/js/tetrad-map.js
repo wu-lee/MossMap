@@ -142,28 +142,37 @@ angular.module('TetradMapModule')
 
 		var svg = d3.select(element[0])
 		    .append("svg")
-//		    .style("background-image", "url("+mapImg+")");
-		;
+		    .attr("height", "100%")
+		    .attr("width", "100%")
+		    .attr("preserveAspectRatio", "xMidYMid");
 
-		var mapG = svg
+		var mapScaler = svg
 		    .append("g")
-/*		    .attr("transform",
-			  "scale("+map2img.scale.x+","+map2img.scale.y+") "+
-			  "translate("+map2img.offset.x+","+map2img.offset.y+")");
-*/
-		;
+		    .attr("id", "scaler")
+		    .attr("transform", "scale(1)");
+
+		var mapContainer = mapScaler
+		    .append("g");
+
 		var img = new Image();
 
 		img.onload = function() {
-		    var image = svg
-			.attr("height", img.height)
-			.attr("width", img.width)
+		    var xoffset = -img.width*0.5;
+		    var yoffset = -img.height*0.5;
+
+		    svg
+			.attr("viewBox",
+			      xoffset+" "+yoffset+" "+
+			      img.width+" "+img.height);
+
+		    mapContainer
+			.attr("transform", 
+			      "translate("+xoffset+","+yoffset+")")
+		    
 			.insert("image", ":first-child")
 			.attr("xlink:href", mapImg)
 			.attr("height", img.height)
 			.attr("width", img.width);
-
-//		    img = image;
 		};
 		img.src = mapImg;
 
@@ -173,13 +182,13 @@ angular.module('TetradMapModule')
 		    if (err)
 			throw new Error(err);
 
-                    d3.select(mapG.node().childNodes).remove();
+                    d3.select(mapContainer.node().childNodes).remove();
 
 		    var taxaList = d3.entries(json);
 		    scope.$parent[datasetVarName] = json;
 		    scope.$parent.$digest();
 
-		    var taxa = mapG
+		    var taxa = mapContainer
 			.selectAll("g.taxon")
 			.data(json)
 
