@@ -79,6 +79,9 @@ angular.module('TetradMapModule')
 		var gridrefAlias1 = attrs.gridref1;
 		var gridrefAlias2 = attrs.gridref2;
 		var datasetVarName = attrs.datasetVar;
+		var dateThreshold = attrs.dateThreshold || new Date();
+                if (!(dateThreshold instanceof Date))
+                    dateThreshold = new Date(dateThreshold);
 
 		scope.$parent[datasetVarName] = {}
 
@@ -226,21 +229,19 @@ angular.module('TetradMapModule')
 			    var text = records.length+" records @"+gridref+
 				" latest at "+latestRecord.dateStr();
 
-			    var ageIx = Math.pow(2, (latest.getTime() - timeNow)/1000000000000);
 			    return {
 				gridref: gridref,
 				coord: map2img.transform(gridrefToFalseOriginCoord(gridref)),
 				text: text,
-				age: ageIx
+                                latestRecord: latestRecord,
 			    };
 			})
 			.attr("cx", function(d) { return d.coord.x + d.coord.precision*0.5 })
 			.attr("cy", function(d) { return d.coord.y + d.coord.precision*0.5 })
 			.attr("r", function(d) { return d.coord.precision*0.5 })
 			.attr("fill", function(d) {
-			    var hex1 = Math.floor(d.age * 0xf).toString(16);
-			    var hex2 = Math.floor((1-d.age) * 0xf).toString(16);
-			    return "#"+hex2+hex1+"0";
+                            return d.latestRecord.periodEnd() < dateThreshold?
+                                "white" : "black";
 			})
 			.attr("title", function(d) { return d.text; })
 		});
