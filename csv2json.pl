@@ -85,6 +85,9 @@ $csv->eof or $csv->error_diag();
 close $fh;
 
 # reformat the %index into a @list
+# Sort records by gridref precision, so that large circles rendered before small ones.
+# This means that the former don't eclipse the latter.  Handily, a gridref's precision
+# is related to its length in characters (the longer the higher the precision)
 my @list = map {
     my $taxon = $_;
     my $locations = $index{$taxon};
@@ -95,7 +98,7 @@ my @list = map {
                 my $gridref = $_;
                 my $dates = $locations->{$gridref};
                 [ $gridref, @$dates ];
-            } sort keys %$locations
+            } sort { length $a <=> length $b } keys %$locations
         ]
     ];
 } sort keys %index;
