@@ -119,7 +119,7 @@ angular.module('TetradMapModule')
 		};
 
 		var scale = Math.sqrt(
-		    (dims.img.width*dims.img.width + dims.img.height*dims.map.height) /
+		    (dims.img.width*dims.img.width + dims.img.height*dims.img.height) /
 		    (dims.map.width*dims.map.width + dims.map.height*dims.map.height)
 		);
 
