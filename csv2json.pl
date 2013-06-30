@@ -23,7 +23,53 @@ my $headings = $csv->getline( $fh );
 $headings && @$headings
     or die "No headings found\n";
 
+my @dinty = map { [split '', $_] } reverse (
+    'EJPUZ',
+    'DINTY',
+    'CHMSX',
+    'BGLRW',
+    'AFKQV',
+);
 
+my %filters = (
+    keep_all => sub { 1 },
+
+    keep_tetrad_attributable => sub {
+        my $row = shift;
+
+        # Reject grid-refs with precision less than
+        # PQnnR (tetrad)
+        my $grid_ref = $row->{grid_ref};
+        my $len = length $grid_ref;
+        if ($len < 5) {
+            warn "discarding as too coarse: $grid_ref\n";
+            return;
+        }
+            
+        if ($len == 5) {
+            return 1;
+        }
+
+        # Convert other grid-refs to tetrad precision
+        my $rx = (qr/^(..)(.)(.)(.)(.)$/,
+                  undef,
+                  qr/^(..)(.)(.).(.)(.).$/,
+                  undef,
+                  qr/^(..)(.)(.)..(.)(.)..$/,
+                  undef,
+                  qr/^(..)(.)(.)...(.)(.)...$/)[$len-6];
+        die "invalid grid ref '$grid_ref'"
+            unless $rx;
+
+
+        $row->{grid_ref} =~ s/$rx/join('',$1,$2,$4,$dinty[$5>>1][$3>>1])/e;
+#        warn "$grid_ref => $row->{grid_ref}: $1$2$4 $3$5 ".$dinty[$5>>1][$3>>1]."\n";  # DEBUG
+        warn "converting grid-ref to tetrad: $grid_ref -> $row->{grid_ref}\n";
+        return 1;
+    },
+);
+
+my $is_keeper = $filters{keep_tetrad_attributable};
 
 # Defines what we keep, and name mappings thereof
 my @heading_map = (
@@ -74,10 +120,14 @@ while ( my $csv_row_ref = $csv->getline( $fh ) ) {
         @row{@$fields} = $mapper->(\%csv_row);
     }
 
+    # Optionally discard data points
+    next unless $is_keeper->(\%row);
+
     my $taxon = delete $row{taxon};
     my $grid_ref = delete $row{grid_ref};
     my $date = delete $row{date};
     my $list = $index{$taxon}{$grid_ref} ||= [];
+    
     push @$list, $date;
 }
 
