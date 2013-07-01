@@ -210,23 +210,26 @@ angular.module('TetradMapModule')
 			.append("circle")
 			.datum(function(d) {
 			    var gridref = d[0];
-			    var dates = d.slice(1);
+			    var dates = d[1];
 			    var largest;
 			    var largestDateString;
 
 			    // Find the most recent record, i.e. that whose last day
 			    // of the period within the precision of the date is latest.
-			    var latest, latestRecord;
-			    var records  = dates.map(function(date) {
+			    var latest, latestRecord, count = 0;
+                            for(var date in dates) {
+                                if (!dates.hasOwnProperty(date))
+                                    continue;
+			        
 				var record = new Record(gridref, date);
 				var end = record.periodEnd();
 				if (!latest || latest < end) {
 				    latest = end;
 				    latestRecord = record;
 				}
-				return record;
-			    });
-			    var text = records.length+" records @"+gridref+
+                                count += dates[date];
+			    }
+			    var text = count+" records @"+gridref+
 				" latest at "+latestRecord.dateStr();
 
 			    return {

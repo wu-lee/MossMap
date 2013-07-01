@@ -126,9 +126,8 @@ while ( my $csv_row_ref = $csv->getline( $fh ) ) {
     my $taxon = delete $row{taxon};
     my $grid_ref = delete $row{grid_ref};
     my $date = delete $row{date};
-    my $list = $index{$taxon}{$grid_ref} ||= [];
-    
-    push @$list, $date;
+
+    $index{$taxon}{$grid_ref}{$date}++;
 }
 
 $csv->eof or $csv->error_diag();
@@ -147,7 +146,7 @@ my @list = map {
             map {
                 my $gridref = $_;
                 my $dates = $locations->{$gridref};
-                [ $gridref, @$dates ];
+                [ $gridref, $dates ];
             } sort { length $a <=> length $b } keys %$locations
         ]
     ];
