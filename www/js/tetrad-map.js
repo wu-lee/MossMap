@@ -5,7 +5,7 @@ angular.module('TetradMapModule', ['ui.bootstrap']);
 angular.module('TetradMapModule')
     .directive('tetradMap', function() {
 
-	var aliasRx = /(\S*)\s*:\s*(\d+)\s*,\s*(\d+)/;
+	var aliasRx = /(\S*)\s*:\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)/;
 	var dateRx = /^(\d{4})(\d{2})?(\d{2})?$/;
 
 
