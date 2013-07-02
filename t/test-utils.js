@@ -124,7 +124,9 @@ testCases({
 	["VV0000000", /malformed grid reference contains uneven numeric component with 7 digits/],
 	["VV000000000", /malformed grid reference contains uneven numeric component with 9 digits/],
 
-	// tetrad suffixes
+	// tetrad suffixes 258.9 324.9
+	["SJ38J", {x: 2*500*1000 + 3*100*1000 + 3*10000 + 2000, y: 1*500*1000 + 3*100*1000 + 8*10000 + 8000 , precision: 2000}],
+	["SJ3288", {x: 2*500*1000 + 3*100*1000 + 3*10000 + 2000, y: 1*500*1000 + 3*100*1000 + 8*10000 + 8000 , precision: 1000}],
 	["VV00A", {x: 0, y: 0, precision: 2000}],
 	["VV00Z", {x: 2000*4, y: 2000*4, precision: 2000}],
 	["VV11I", {x: 10000 + 2000*1, y: 10000 + 2000*3, precision: 2000}],
