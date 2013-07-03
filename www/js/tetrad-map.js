@@ -242,9 +242,8 @@ angular.module('TetradMapModule')
 			.attr("cx", function(d) { return d.coord.x + d.coord.precision*0.5 })
 			.attr("cy", function(d) { return d.coord.y - d.coord.precision*0.5 })
 			.attr("r", function(d) { return d.coord.precision*0.5 })
-			.attr("fill", function(d) {
-                            return d.latestRecord.periodEnd() < dateThreshold?
-                                "white" : "black";
+			.classed("old", function(d) {
+                            return d.latestRecord.periodEnd() < dateThreshold;
 			})
 			.attr("title", function(d) { return d.text; })
 		});
