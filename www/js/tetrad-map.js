@@ -181,7 +181,7 @@ angular.module('TetradMapModule')
 
 		var timeNow = new Date().getTime();
 
-		d3.json(dataFile, function(json, err) {
+		d3.json(dataFile, function(err, json) {
 		    if (err)
 			throw new Error(err);
 
