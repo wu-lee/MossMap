@@ -86,6 +86,63 @@ angular.module('TetradMapModule')
 		scope.$parent[datasetVarName] = {}
 
 		// FIXME error check
+                var body = d3.select('body');
+
+                // Hand-roll some tooltip functionality using d3 since
+                // angular $compiling a tooltip into all the elements
+                // we're about to add is hopelessly slow.
+                function showTooltip(d, i) {
+                    var bbox = this.getBoundingClientRect();
+                    var inner;
+                    var tooltip = body
+                        .select('body > div.tooltip');
+
+                    if (tooltip.empty()) {
+
+                        tooltip = body
+                            .append('div')
+                            .attr('class', 'tooltip top')
+                            .datum(function() {
+                                // This is inside a .datum() so it
+                                // only gets fired once when the tooltip
+                                // is created
+                                var tooltip = d3.select(this);
+                                tooltip
+                                    .append('div')
+                                    .attr('class', 'tooltip-arrow');
+                                
+                                inner = tooltip
+                                    .append('div')
+                                    .attr('class', 'tooltip-inner');
+                            });
+                    }
+                    else {
+                        inner = tooltip.select('.tooltip-inner');
+                    }
+
+                    inner
+                        .text(d.text); // FIXME sanitise
+
+                    var tooltipNode = tooltip[0][0];
+                    var ttWidth = tooltipNode.offsetWidth;
+                    var ttHeight = tooltipNode.offsetHeight;
+                    var left = bbox.left + bbox.width/2 - ttWidth/2;
+                    var top = bbox.top - ttHeight;
+
+                    tooltip
+                        .attr('style', 'top: '+top+'px; left: '+left+'px;');
+                    
+                    tooltip
+                        .transition()
+                        .style('opacity', 100)
+                 };
+
+                function hideTooltip() {
+                    body.selectAll('.tooltip')
+                        .transition()
+                        .style('opacity', 0)
+                        .remove();
+                };
 
 		var match = aliasRx.exec(gridrefAlias1);
 		var alias1 = {
@@ -245,7 +302,8 @@ angular.module('TetradMapModule')
 			.classed("old", function(d) {
                             return d.latestRecord.periodEnd() < dateThreshold;
 			})
-			.attr("title", function(d) { return d.text; })
+                        .on("mouseenter", showTooltip)
+                        .on("mouseleave", hideTooltip);
 		});
             }
         }
