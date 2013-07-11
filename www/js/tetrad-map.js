@@ -145,6 +145,39 @@ angular.module('TetradMapModule')
                         .remove();
                 };
 
+                function move(pos) {
+                    return function(d, i) {
+                        var newpos = d3.mouse(this.parentNode);
+                        var x = newpos[0] - pos[0];
+                        var y = newpos[1] - pos[1];
+
+                        d3.select(this)
+                            .attr('transform', 'translate('+x+','+y+')');
+                    };
+                };
+
+                function drop() {
+                    var map = d3.select(this);
+                    map.on('mousemove', null);
+                };
+
+                function grab(d, i) {
+                    var map = d3.select(this);
+                    var pos = d3.mouse(this.parentNode);
+
+                    // Subtract the current map offset from the mouse
+                    // position
+                    var matrix = this.getTransformToElement(this.parentNode);
+                    pos[0] -= matrix.e;
+                    pos[1] -= matrix.f;
+
+                    map
+                        .on('mousemove', move(pos))
+                        .on('mouseout', drop)
+                        .on('mouseup', drop);
+                };
+
+
 		var match = aliasRx.exec(gridrefAlias1);
 		var alias1 = {
 		    gridref: match[1],
@@ -212,8 +245,16 @@ angular.module('TetradMapModule')
 		    .attr("id", "scaler")
 		    .attr("transform", "scale(1)");
 
-		var mapContainer = mapScaler
+		var mapMover = mapScaler
+		    .append("g")
+		    .attr("id", "mover");
+
+		var mapContainer = mapMover
 		    .append("g");
+
+
+                mapMover
+                    .on('mousedown', grab);
 
 		var img = new Image();
 
