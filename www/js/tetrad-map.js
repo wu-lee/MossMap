@@ -79,6 +79,7 @@ angular.module('TetradMapModule')
 		var gridrefAlias1 = attrs.gridref1;
 		var gridrefAlias2 = attrs.gridref2;
 		var datasetVarName = attrs.datasetVar;
+                var zoomExpr = attrs.zoomExpr || 1;
 		var dateThreshold = attrs.dateThreshold || new Date();
                 if (!(dateThreshold instanceof Date))
                     dateThreshold = new Date(dateThreshold);
@@ -236,6 +237,12 @@ angular.module('TetradMapModule')
 		};
 		img.src = mapImg;
 
+                // This updates the zoom when the zoomExpr changes
+                scope.$watch(zoomExpr, function(newVal, oldVal) {
+                    mapScaler
+		        .attr("transform", "scale("+(1+newVal*newVal/100)+")");
+                });
+
 		var timeNow = new Date().getTime();
 
 		d3.json(dataFile, function(err, json) {
@@ -313,6 +320,7 @@ angular.module('TetradMapModule')
 
 function Controller($scope) {
     $scope.taxon = '';
+    $scope.zoom = 0;
 
     $scope.$watch('taxon', function(newValue, oldValue) {
 	console.log(oldValue+" -> "+newValue);

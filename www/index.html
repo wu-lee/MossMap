@@ -2,14 +2,23 @@
 <html ng-app="TetradMapModule">
 <head>
   <title>Moss Map</title>
+  <script src="3p/jquery.min.js"></script>
   <script src="3p/angular.js"></script>
   <script src="3p/ui-bootstrap.js"></script>
   <script src="3p/d3.v3.js"></script>
-  <script src="3p/webforms2.js"></script>
+  <script src="3p/js-webshim/extras/modernizr-custom.js"></script> 
+  <script src="3p/js-webshim/polyfiller.js"></script> 
+
   <script src="js/utils.js"></script>
   <script src="js/tetrad-map.js"></script>
+
   <link rel="stylesheet" href="3p/bootstrap.css"></link>
-  <link rel="stylesheet" href="3p/webforms2.css"></link>
+
+<script> 
+    $.webshims.polyfill();
+</script>
+
+
 <style>
 html, body, #top, div[tetrad-map] {
     width: 100%;
@@ -59,6 +68,13 @@ g.taxon circle.old {
     position: absolute;
     bottom: 0;
 }
+#controls input[type="range"],
+#controls .ws-range {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 38px;
+}
 </style>
 </head>
 <body>
@@ -68,10 +84,12 @@ g.taxon circle.old {
       <div>Taxon:</div>
       <select ng-model="taxon" ng-options="t[0] for t in dataset" size="10"></select>
       <div class="loading" ng-hide="dataset && dataset.length">Loading data...</div>
+
+      <input type="range" name="zoom" min="0" max="20" ng-model="zoom"> </input>
   </div>
 
   <div tetrad-map="basemap.jpg" taxon-observation-data="cheshire-dataset.json"
-       dataset-var="dataset"  date-threshold="2000" class="span8"
+       dataset-var="dataset"  date-threshold="2000" class="span8" zoom-expr="zoom"
        gridref1="SD20:29.5,75.5" gridref2="SK14:1092.5,784" ></div>
 
 </div>
