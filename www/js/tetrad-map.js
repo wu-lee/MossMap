@@ -147,6 +147,8 @@ angular.module('TetradMapModule')
 
                 function move(pos) {
                     return function(d, i) {
+                        d3.event.preventDefault();
+
                         var newpos = d3.mouse(this.parentNode);
                         var x = newpos[0] - pos[0];
                         var y = newpos[1] - pos[1];
@@ -162,6 +164,7 @@ angular.module('TetradMapModule')
                 };
 
                 function grab(d, i) {
+                    d3.event.preventDefault();
                     var map = d3.select(this);
                     var pos = d3.mouse(this.parentNode);
 
