@@ -32,12 +32,12 @@ div.container-fluid > div:not(.dropdown) {
     color: white;
     text-shadow: 0 0 0.2em black;
 }
-div.loading {
+#messages {
     background-image: url(spinner.gif);
     background-repeat: no-repeat;
     padding-left: 38px;
-    height: 32px;
-    line-height: 32px;
+    height: 38px;
+    line-height: 38px;
     vertical-align: middle;
 }
 g.taxon {
@@ -52,45 +52,102 @@ g.taxon circle.old {
 }
 #controls {
     height: 100%;
+    width: 30%;
     position: relative;
+    float: left;
 }
-#controls select {
+#map-container {
+    width: 70%;
+    height: 100%;
+    float: right;
+    padding: 5px;
+}
+#map-container > div {
+    border: 1px solid green;
+    border-radius: 5px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+#controls, #map-container, #controls > * {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+#taxa {
     position: absolute;
-    height: auto;
-    width: 100%;
+    top: 0;
+    bottom: 48px;
+    left: 0;
+    right: 0;
+    border: 1px solid green;
+    border-radius: 5px;
+    margin: 5px;
+}
+#taxa > * {
+    margin: 5px;
+}
+#taxa select {
+    position: absolute;
+    width: calc(100% - 10px);
+    bottom: 0px;
+    top: 20px;
+}
+#messages {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 38px;
+    border: 1px solid green;
+    border-radius: 5px;
+    margin: 5px;
+}
+#zoom {
+    position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    top: 0;
-    margin: 1.5em 0 3em 0;
-}
-#controls .loading {
-    position: absolute;
-    bottom: 0;
-}
-#controls input[type="range"],
-#controls .ws-range {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
     height: 38px;
+    border: 1px solid green;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 5px;
 }
+#zoom > span {
+    height: 23px;
+    overflow: hidden;
+    display: block;
+}
+#zoom > span > * {
+    width: 100%;
+}
+#zoom label {
+    float: left;
+    margin: 0 0.5em 0 0;
+} 
 </style>
 </head>
 <body>
-<div id="top" ng-controller="Controller" class="row-fluid">
+<div id="top" ng-controller="Controller">
   
-  <div id="controls" class="span4">
+  <div id="controls">
+    <div id="taxa">
       <div>Taxon:</div>
       <select ng-model="taxon" ng-options="t[0] for t in dataset" size="10"></select>
-      <div class="loading" ng-hide="dataset && dataset.length">Loading data...</div>
+    </div>
+    
+    <div id="messages" ng-hide="dataset && dataset.length">Loading data...</div>
 
-      <input type="range" name="zoom" min="0" max="20" ng-model="zoom"> </input>
+    <div id="zoom" ng-show="dataset && dataset.length">
+      <label>Zoom:</label>
+      <span><input type="range" name="zoom" min="0" max="20" ng-model="zoom"> </input></span>
+    </div>
   </div>
 
-  <div tetrad-map="basemap.jpg" taxon-observation-data="cheshire-dataset.json"
-       dataset-var="dataset"  date-threshold="2000" class="span8" zoom-expr="zoom"
-       gridref1="SD20:29.5,75.5" gridref2="SK14:1092.5,784" ></div>
+  <div id="map-container">
+    <div tetrad-map="basemap.jpg" taxon-observation-data="cheshire-dataset.json"
+	 dataset-var="dataset"  date-threshold="2000" zoom-expr="zoom"
+	 gridref1="SD20:29.5,75.5" gridref2="SK14:1092.5,784" ></div>
+  </div>
 
 </div>
 </body>

@@ -241,7 +241,7 @@ angular.module('TetradMapModule')
 		    .append("svg")
 		    .attr("height", "100%")
 		    .attr("width", "100%")
-		    .attr("preserveAspectRatio", "xMinYMin");
+		    .attr("preserveAspectRatio", "xMidYMid");
 
 		var mapScaler = svg
 		    .append("g")
