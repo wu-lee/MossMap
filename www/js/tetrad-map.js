@@ -240,10 +240,13 @@ angular.module('TetradMapModule')
 		var svg = d3.select(element[0])
 		    .append("svg")
 		    .attr("height", "100%")
-		    .attr("width", "100%")
+		    .attr("width", "100%");
+
+                var mapSvg = svg
+                    .append('svg')
 		    .attr("preserveAspectRatio", "xMidYMid");
 
-		var mapScaler = svg
+		var mapScaler = mapSvg
 		    .append("g")
 		    .attr("id", "scaler")
 		    .attr("transform", "scale(1)");
@@ -259,13 +262,64 @@ angular.module('TetradMapModule')
                 mapMover
                     .on('mousedown', grab);
 
+
+                // Legend
+
+                var legend = svg
+                    .append("g")
+                    .attr("class", "legend")
+                    .attr("transform", "translate(20,20)");
+
+                var legend_items = legend
+                    .selectAll("g.legend g")
+                    .data([["recent", "Recordings since 2000"],
+                           ["old", "Recordings before 2000"]])
+                    .enter()
+                    .append("g")
+                    .attr("transform", function(d,i) {
+                        return "translate(0,"+(i*15)+")";
+                    });
+
+                legend_items
+                    .append("circle")
+                    .attr("r", 5)
+                    .attr("class", function(d) { return d[0] });
+                legend_items
+                    .append("text")
+                    .attr("x", "1em")
+                    .attr("dy", "0.32em")
+
+                    .text(function(d) { return d[1]; });
+
+                var legendBBox = legend.node().getBBox();
+                legendBBox.x -= 5;
+                legendBBox.y -= 5;
+                legendBBox.width += 10;
+                legendBBox.height += 10;
+
+                legend
+                    .insert("rect", ":first-child")
+                    .attr("fill", "white")
+                    .attr("stroke", "green")
+                    .attr("x",legendBBox.x)
+                    .attr("y",legendBBox.y)
+                    .attr("rx",5)
+                    .attr("ry",5)
+                    .attr("width",legendBBox.width)
+                    .attr("height",legendBBox.height);
+                
+
+
+
+                // Load the map image, transform it
+
 		var img = new Image();
 
 		img.onload = function() {
 		    var xoffset = -img.width*0.5;
 		    var yoffset = -img.height*0.5;
 
-		    svg
+		    mapSvg
 			.attr("viewBox",
 			      xoffset+" "+yoffset+" "+
 			      img.width+" "+img.height);
