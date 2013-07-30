@@ -8,25 +8,8 @@ basedir="${0%/*}/.."
 
 cd $basedir
 
-schema_class MossMap::Schema
 
-lib lib
-
-# FIXME unfinished    
-    # connection string
-    <connect_info>
-        dsn     dbi:mysql:example
-        user    root
-        pass    secret
-    </connect_info>
-    
-    # dbic loader options
-    <loader_options>
-        components  InflateColumn::DateTime
-        components  TimeStamp
-    </loader_options>
-
-dbicdump -o "dump_directory=$basedir/lib" \
+dbicdump -o "dump_directory=lib" \
     -o components='["InflateColumn::DateTime"]' \
     MossMap::Schema \
-    "dbi:SQLite:$basedir/db/moss-map.db"
+    "dbi:SQLite:db/moss-map.db"
