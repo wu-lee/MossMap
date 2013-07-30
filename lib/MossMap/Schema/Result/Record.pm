@@ -41,6 +41,11 @@ __PACKAGE__->table("records");
   is_auto_increment: 1
   is_nullable: 0
 
+=head2 data_set_id
+
+  data_type: 'integer'
+  is_nullable: 0
+
 =head2 grid_ref
 
   data_type: 'text'
@@ -68,6 +73,8 @@ __PACKAGE__->table("records");
 __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+  "data_set_id",
+  { data_type => "integer", is_nullable => 0 },
   "grid_ref",
   { data_type => "text", is_nullable => 0 },
   "taxon",
@@ -123,8 +130,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-22 00:19:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Ix2NNiNnsu90MmobfU+cfA
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-31 00:34:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:W/S9vLzgS1V53otdZYRsPA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

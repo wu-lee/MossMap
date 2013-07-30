@@ -11,7 +11,8 @@ CREATE TABLE taxa (
 );
 
 CREATE TABLE records (
-    id INTEGER PRIMARY KEY,    
+    id INTEGER PRIMARY KEY,
+    data_set_id INTEGER NOT NULL,
     grid_ref TEXT NOT NULL,
     taxon INTEGER NOT NULL REFERENCES taxa(id),
     recorder INTEGER NOT NULL REFERENCES recorders(id),
