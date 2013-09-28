@@ -74,13 +74,15 @@ angular.module('TetradMapModule')
             scope: true, //{ val: '=' },
             link: function(scope, element, attrs) {
 
-                var mapImg = attrs.tetradMap;
-		var dataFile = attrs.taxonObservationData;
-		var gridrefAlias1 = attrs.gridref1;
-		var gridrefAlias2 = attrs.gridref2;
-		var datasetVarName = attrs.datasetVar;
-                var zoomExpr = attrs.zoomExpr || 1;
-		var dateThreshold = attrs.dateThreshold || new Date();
+                var options = scope.$eval(attrs.tetradMap);
+
+                var mapImg = options.image;
+		var dataFile = options.taxonObservationData;
+		var gridrefAlias1 = options.gridref1;
+		var gridrefAlias2 = options.gridref2;
+		var datasetVarName = options.datasetVar;
+                var zoomExpr = options.zoomExpr || 1;
+		var dateThreshold = options.dateThreshold || new Date();
                 if (!(dateThreshold instanceof Date))
                     dateThreshold = new Date(dateThreshold);
 
@@ -427,4 +429,15 @@ function Controller($scope) {
 	oldValue && d3.selectAll('g[taxon="'+oldValue[0]+'"]').style("display", "none");
 	newValue && d3.selectAll('g[taxon="'+newValue[0]+'"]').style("display", "inherit");
     });
+
+
+    $scope.mapOptions = {
+        image: "basemap.jpg",
+        taxonObservationData: "cheshire-dataset.json",
+	datasetVar: "dataset",
+        dateThreshold: "2000",
+        zoomExpr: "zoom",
+	gridref1: "SD20:29.5,75.5",
+        gridref2: "SK14:1092.5,784",
+    };
 }
