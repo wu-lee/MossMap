@@ -45,6 +45,16 @@ sub set_data_set {
     return $rs->id;
 }
 
+sub new_data_set {
+    my $self = shift;
+    my $data = shift;
+
+    delete $data->{id};
+    my $rs = $self->_rs('DataSet')->create($data);
+
+    return $rs->id;
+}
+
 sub get_data_set {
     my $self = shift;
     my $id = shift;
