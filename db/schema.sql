@@ -12,10 +12,13 @@ CREATE TABLE taxa (
 
 CREATE TABLE records (
     id INTEGER PRIMARY KEY,
-    data_set_id INTEGER NOT NULL,
+    data_set_id INTEGER NOT NULL REFERENCES data_set(id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
     grid_ref TEXT NOT NULL,
-    taxon INTEGER NOT NULL REFERENCES taxa(id),
-    recorder INTEGER NOT NULL REFERENCES recorders(id),
+    taxon INTEGER NOT NULL REFERENCES taxa(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
+    recorder INTEGER NOT NULL REFERENCES recorders(id)
+    ON DELETE RESTRICT ON UPDATE RESTRICT,
     recorded_on TEXT NOT NULL
 );
 
