@@ -9,6 +9,41 @@ angular.module('TetradMapModule')
 	var dateRx = /^(\d{4})(\d{2})?(\d{2})?$/;
 
 
+        function DateThreshold(thresholds, defaultVal) {
+            this.default = defaultVal;
+            if (!(thresholds instanceof Object))
+                throw new Error("thresholds parameter must be an object");
+
+            this.thresholds = 
+                Object.keys(thresholds).map(function(key) {
+                    var date = thresholds[key];
+                    if (!(date instanceof Date))
+                        throw Error("threshold['"+key+"'] is not "+
+                                    "a Date (it is: "+date+")");
+
+                    return {
+                        date: date,
+                        key: key
+                    };
+                });
+
+            this.thresholds.sort(function(a, b) {
+                return 
+                    a.date < b.date? -1:
+                    a.date > b.date? +1:
+                    0;
+            });
+        }
+
+        DateThreshold.prototype.get = function(date) {
+            for(var ix = 0; ix < this.thresholds.length; ix += 1) {
+                var threshold = this.thresholds[ix];
+                if (date < threshold.date)
+                    return threshold.key;
+            }
+            return this.default;
+        };
+
 	function Record(gridref, datestr) {
 	    this.gridref = gridref;
 	    this.datestr = datestr;
@@ -82,10 +117,11 @@ angular.module('TetradMapModule')
 		var gridrefAlias2 = options.gridref2;
 		var datasetVarName = options.datasetVar;
                 var zoomExpr = options.zoomExpr || 1;
-		var dateThreshold = options.dateThreshold || new Date();
-                if (!(dateThreshold instanceof Date))
-                    dateThreshold = new Date(dateThreshold);
+		var dateThresholds = new DateThreshold(
+                    options.dateThresholds || {}, null
+                );
 
+                                                   
 		scope.$parent[datasetVarName] = {}
 
 		// FIXME error check
@@ -406,8 +442,8 @@ angular.module('TetradMapModule')
 			.attr("cx", function(d) { return d.coord.x + d.coord.precision*0.5 })
 			.attr("cy", function(d) { return d.coord.y - d.coord.precision*0.5 })
 			.attr("r", function(d) { return d.coord.precision*0.5 })
-			.classed("old", function(d) {
-                            return d.latestRecord.periodEnd() < dateThreshold;
+			.attr("class", function(d) {
+                            return dateThresholds.get(d.latestRecord.periodEnd());
 			})
                         .on("mouseenter", showTooltip)
                         .on("mouseleave", hideTooltip);
@@ -435,7 +471,7 @@ function Controller($scope) {
         image: "basemap.jpg",
         taxonObservationData: "cheshire-dataset.json",
 	datasetVar: "dataset",
-        dateThreshold: "2000",
+        dateThresholds: {old: new Date(2000,0,1)},
         zoomExpr: "zoom",
 	gridref1: "SD20:29.5,75.5",
         gridref2: "SK14:1092.5,784",
