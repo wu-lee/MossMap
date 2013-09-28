@@ -79,10 +79,35 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-22 00:19:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XeDglSs/AOMOZHwlVOGPlg
+=head2 records
+
+Type: has_many
+
+Related object: L<MossMap::Schema::Result::Record>
+
+=cut
+
+__PACKAGE__->has_many(
+  "records",
+  "MossMap::Schema::Result::Record",
+  { "foreign.data_set_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-31 00:46:42
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5dySpUQ1ocrB1UIypGj4eg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
+
+#__PACKAGE__->has_many(
+#  "records",
+#  "MossMap::Schema::Result::Record",
+#  { "foreign.data_set" => "self.id" },
+#  { cascade_copy => 1, cascade_delete => 1 },
+#);
+
 1;

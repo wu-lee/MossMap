@@ -44,6 +44,7 @@ __PACKAGE__->table("records");
 =head2 data_set_id
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
 
 =head2 grid_ref
@@ -74,7 +75,7 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "data_set_id",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "grid_ref",
   { data_type => "text", is_nullable => 0 },
   "taxon",
@@ -99,6 +100,21 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
+=head2 data_set
+
+Type: belongs_to
+
+Related object: L<MossMap::Schema::Result::DataSet>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "data_set",
+  "MossMap::Schema::Result::DataSet",
+  { id => "data_set_id" },
+  { is_deferrable => 0, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
 =head2 recorder
 
 Type: belongs_to
@@ -111,7 +127,7 @@ __PACKAGE__->belongs_to(
   "recorder",
   "MossMap::Schema::Result::Recorder",
   { id => "recorder" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 =head2 taxon
@@ -126,13 +142,22 @@ __PACKAGE__->belongs_to(
   "taxon",
   "MossMap::Schema::Result::Taxa",
   { id => "taxon" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-31 00:34:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:W/S9vLzgS1V53otdZYRsPA
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-31 00:54:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JghxICPn+dSAnC0tqPoDgw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
+
+
+__PACKAGE__->belongs_to(
+  "data_set",
+  "MossMap::Schema::Result::DataSet",
+  { id => "data_set_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
 1;
