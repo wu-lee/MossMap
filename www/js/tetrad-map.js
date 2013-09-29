@@ -307,7 +307,9 @@ angular.module('TetradMapModule')
                     .attr("class", "legend")
                     .attr("transform", "translate(20,20)");
 
-                // Convert the dateThresholds into a legend
+                // Convert the dateThresholds into a legend We append
+                // items for a) recordings since the final threshold
+                // date, and b) completed tetrad markers.
                 var legend_data = dateThresholds.thresholds
                     .map(function(it) { 
                         return [ it.key, 
@@ -317,7 +319,8 @@ angular.module('TetradMapModule')
                     .concat([[ dateThresholds.default, 
                                "Recordings since "+
                                (dateThresholds.thresholds
-                                .slice(-1)[0].date.getYear()+1900) ]])
+                                .slice(-1)[0].date.getYear()+1900) ],
+                             [ "completed", "Survey effort satisfactory" ]])
                     .reverse();
 
                 var legend_items = legend
@@ -331,7 +334,7 @@ angular.module('TetradMapModule')
 
                 legend_items
                     .append("circle")
-                    .attr("r", 5)
+                    .attr("r", function(d) { return d[0] === "completed"? 2 : 5 })
                     .attr("class", function(d) { return d[0] });
                 legend_items
                     .append("text")
@@ -403,7 +406,7 @@ angular.module('TetradMapModule')
 
 		    var taxa = mapContainer
 			.selectAll("g.taxon")
-			.data(json)
+			.data(json.taxa)
 
 			.enter()
 			.append("g")
@@ -412,7 +415,7 @@ angular.module('TetradMapModule')
 			.attr("width", "100%")
 			.attr("height", "100%");
 
-		    var markers = taxa
+		    var markers1 = taxa
 			.selectAll("circle")
 			.data(function(d) { return d[1]; })
 
@@ -457,6 +460,30 @@ angular.module('TetradMapModule')
 			})
                         .on("mouseenter", showTooltip)
                         .on("mouseleave", hideTooltip);
+
+                    var completed = mapContainer
+                        .selectAll("g.completed")
+                        .data([json.completed])
+                        .enter()
+                        .append("g")
+                        .classed("completed", true)
+			.attr("width", "100%")
+			.attr("height", "100%");
+
+
+                    var completedRadius = 3;
+		    var markers2 = completed
+			.selectAll("circle")
+			.data(function(d) { return d; })
+
+			.enter()
+			.append("circle")
+			.datum(function(gridref) {
+                            return map2img.transform(gridrefToFalseOriginCoord(gridref));
+			})
+			.attr("cx", function(coord) { return coord.x + coord.precision*0.5 })
+			.attr("cy", function(coord) { return coord.y - coord.precision*0.5 })
+			.attr("r", function(coord) { return completedRadius });
 		});
             }
         }

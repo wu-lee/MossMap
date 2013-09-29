@@ -47,6 +47,13 @@ circle {
     opacity: 0.8;
     fill: black;
 }
+g.completed circle {
+    fill: red;
+}
+g.legend circle.completed {
+    fill: red;
+    radius: 2px;
+}
 circle.p0 {
     stroke: black;
 }
@@ -140,12 +147,12 @@ circle.p2 {
   <div id="controls">
     <div id="taxa">
       <div>Taxon:</div>
-      <select ng-model="taxon" ng-options="t[0] for t in dataset" size="10"></select>
+      <select ng-model="taxon" ng-options="t[0] for t in dataset.taxa" size="10"></select>
     </div>
     
-    <div id="messages" ng-hide="dataset && dataset.length">Loading data...</div>
+    <div id="messages" ng-hide="dataset.taxa">Loading data...</div>
 
-    <div id="zoom" ng-show="dataset && dataset.length">
+    <div id="zoom" ng-show="dataset.taxa">
       <label>Zoom:</label>
       <span><input type="range" name="zoom" min="0" max="20" ng-model="zoom"> </input></span>
     </div>
