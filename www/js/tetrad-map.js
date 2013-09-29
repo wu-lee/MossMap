@@ -398,7 +398,6 @@ angular.module('TetradMapModule')
 
                     d3.select(mapContainer.node().childNodes).remove();
 
-		    var taxaList = d3.entries(json);
 		    scope.$parent[datasetVarName] = json;
 		    scope.$parent.$digest();
 
