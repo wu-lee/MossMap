@@ -496,7 +496,6 @@ function Controller($scope) {
     $scope.zoom = 0;
 
     $scope.$watch('taxon', function(newValue, oldValue) {
-	console.log(oldValue+" -> "+newValue);
 	if (oldValue === newValue)
 	    return;
 	oldValue && d3.selectAll('g[taxon="'+oldValue[0]+'"]').style("display", "none");
