@@ -28,10 +28,9 @@ angular.module('TetradMapModule')
                 });
 
             this.thresholds.sort(function(a, b) {
-                return 
-                    a.date < b.date? -1:
-                    a.date > b.date? +1:
-                    0;
+                return ((a.date < b.date)? -1:
+                        (a.date > b.date)? +1:
+                        0);
             });
         }
 
@@ -118,7 +117,7 @@ angular.module('TetradMapModule')
 		var datasetVarName = options.datasetVar;
                 var zoomExpr = options.zoomExpr || 1;
 		var dateThresholds = new DateThreshold(
-                    options.dateThresholds || {}, null
+                    options.dateThresholds || {}, 'p0'
                 );
 
                                                    
@@ -308,10 +307,22 @@ angular.module('TetradMapModule')
                     .attr("class", "legend")
                     .attr("transform", "translate(20,20)");
 
+                // Convert the dateThresholds into a legend
+                var legend_data = dateThresholds.thresholds
+                    .map(function(it) { 
+                        return [ it.key, 
+                                 "Recordings before "+
+                                 (it.date.getYear()+1900) ];
+                    })
+                    .concat([[ dateThresholds.default, 
+                               "Recordings since "+
+                               (dateThresholds.thresholds
+                                .slice(-1)[0].date.getYear()+1900) ]])
+                    .reverse();
+
                 var legend_items = legend
                     .selectAll("g.legend g")
-                    .data([["recent", "Recordings since 2000"],
-                           ["old", "Recordings before 2000"]])
+                    .data(legend_data)
                     .enter()
                     .append("g")
                     .attr("transform", function(d,i) {
@@ -471,7 +482,8 @@ function Controller($scope) {
         image: "basemap.jpg",
         taxonObservationData: "cheshire-dataset.json",
 	datasetVar: "dataset",
-        dateThresholds: {old: new Date(2000,0,1)},
+        dateThresholds: {p1: new Date(2000,0,1),
+                         p2: new Date(1950,0,1)},
         zoomExpr: "zoom",
 	gridref1: "SD20:29.5,75.5",
         gridref2: "SK14:1092.5,784",
