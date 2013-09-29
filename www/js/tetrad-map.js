@@ -491,7 +491,7 @@ angular.module('TetradMapModule')
 
 
 
-function Controller($scope) {
+function Controller($scope, $modal) {
     $scope.taxon = '';
     $scope.zoom = 0;
 
@@ -512,5 +512,20 @@ function Controller($scope) {
         zoomExpr: "zoom",
 	gridref1: "SD20:29.5,75.5",
         gridref2: "SK14:1092.5,784",
+    };
+
+
+    $scope.about = function() {
+        var modalInstance = $modal.open({
+            templateUrl: '_about.html',
+            controller: AboutController,
+        });        
+    };
+}
+
+
+function AboutController($scope, $modalInstance) {
+    $scope.ok = function() {
+        $modalInstance.close();
     };
 }

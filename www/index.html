@@ -135,7 +135,10 @@ circle.p2 {
 #zoom label {
     float: left;
     margin: 0 0.5em 0 0;
-} 
+}
+#zoom button {
+    float: right;
+}
 </style>
 </head>
 <body>
@@ -150,8 +153,10 @@ circle.p2 {
     <div id="messages" ng-hide="dataset.taxa">Loading data...</div>
 
     <div id="zoom" ng-show="dataset.taxa">
+      <button class="btn btn-small" ng-click="about()">About...</button>
       <label>Zoom:</label>
       <span><input type="range" name="zoom" min="0" max="20" ng-model="zoom"> </input></span>
+
     </div>
   </div>
 
