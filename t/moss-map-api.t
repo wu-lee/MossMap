@@ -31,6 +31,20 @@ use Test::More;
 use Test::Mojo;
 require "$Bin/../moss-map.pl";
 
+# Helper for collapsing  created_on fields to something we  can use in
+# test comparisons.
+sub Test::Mojo::json_is_xx {
+    my $self = shift;
+    my ($p, $data) = ref $_[0] ? ('', shift) : (shift, shift);
+    my $desc = shift || qq{exact match for JSON Pointer "$p"};
+    my $json = $self->tx->res->json($p);
+    $json = [$json]
+        unless ref $json eq 'ARRAY';
+    $_->{created_on} =~ s/^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d$/whatever/
+        for @$json;
+
+    return $self->_test('is_deeply', $json, $data, $desc);
+}
 
 
 my $t = Test::Mojo->new;
@@ -103,18 +117,21 @@ $t
 $t
     ->get_ok('/data/sets')
     ->status_is(200)
-    ->json_is([{id => 1, name => 'set1',
-                records => $records }],'data_sets has new member');
-exit;
- 
+    ->json_is_xx([{id => 1, name => 'set1',
+                   created_on => 'whatever',
+                   records => $records }],
+                 'Data set 1 is correct');
+
+
 # Get the item we just obtained
 $t
     ->get_ok('/data/set/1')
     ->status_is(200)
-    ->json_is({id => 1, name => 'set1',
-           records => $records},'Data set 1 is correct');
+    ->json_is_xx([{id => 1, name => 'set1',
+                   created_on => 'whatever',
+                   records => $records}],
+                 'Data set 1 is correct');
  
-
 # Put a new value for 1
 $t
     ->put_ok('/data/set/1', json => {name => 'set1.1', 
@@ -122,12 +139,15 @@ $t
     ->status_is(200)
     ->json_is({message => 'ok', id => 1}, 'Put set update ok');
 
+
+
 $t
     ->get_ok('/data/sets')
     ->status_is(200)
-    ->json_is([{id => 1, name => 'set1.1',
-                records => [ $records->[0] ]}],'Data sets correct');
-
+    ->json_is_xx([{id => 1, name => 'set1.1',
+                   created_on => 'whatever',
+                   records => [$records->[0]]}],
+                 'Data sets correct');
 
 # Make sure id is ignored FIXME or should it be an error?
 $t
@@ -139,8 +159,10 @@ $t
 $t
     ->get_ok('/data/sets')
     ->status_is(200)
-    ->json_is([{id => 1, name => 'set1.2',
-                records => [ $records->[1] ]}], 'Data sets correct');
+    ->json_is_xx([{id => 1, name => 'set1.2',
+                   created_on => 'whatever',
+                   records => [$records->[1]]}],
+                 'Data sets correct');
 
 # Put a new value for 1
 $t
@@ -151,9 +173,13 @@ $t
 $t
     ->get_ok('/data/sets')
     ->status_is(200)
-    ->json_is([{id => 1, name => 'set1.2',
-                records => [ $records->[1] ]},
-               {id => 3, name => 'set3'}], 'Data sets correct');
+    ->json_is_xx([{id => 1, name => 'set1.2',
+                   created_on => 'whatever',
+                   records => [$records->[1]]},
+                   {id => 3, name => 'set3',
+                    created_on => 'whatever',
+                    records => []}],
+                 'Data sets correct');
 
 # Delete 1
 $t
@@ -164,8 +190,10 @@ $t
 $t
     ->get_ok('/data/sets')
     ->status_is(200)
-    ->json_is([{id => 1, name => 'set1.2',
-                records => [ $records->[1] ]}], 'Data sets correct');
+    ->json_is_xx([{id => 1, name => 'set1.2',
+                   created_on => 'whatever',
+                   records => [$records->[1]]}],
+                 'Data sets correct');
 
 # FIXME edge cases... logout?
 # FIXME multi-set post? delete?
