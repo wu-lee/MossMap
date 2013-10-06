@@ -9,76 +9,23 @@ use lib "$Bin/../lib";
 my $temp_dir;
 BEGIN {
     $temp_dir = "$Bin/temp/moss-map-api";
-    $ENV{MOSSMAP_DB} = "$temp_dir/db";
-    
+
+    if (!$ENV{MOSSMAP_DB}) {
+        # Use a transient SQLite database by default
+        $ENV{MOSSMAP_DB} = "$temp_dir/db";
+    }
+    elsif ($ENV{MOSSMAP_DB} eq 'stub') {
+        # Make sure we load the stub MossMap::Model class
+        # preferentially, so that no database is used at all.
+        unshift @INC, "$Bin/stub";
+    }
+    # Otherwise, some external database will be used.
+    # We expect it to be empty, ready to be populated.
 }
 
-print $temp_dir;
 rmtree $temp_dir;
 mkpath $temp_dir;
 
-=pod 
-
-=begin testing
-
-{
-    # Stub the model
-    package MossMap::Model;
-    use strict;
-    use warnings;
-    use Carp qw(croak);
-
-    # Prevent the original from being loaded later.
-    $INC{'MossMap/Model.pm'} = __FILE__;
-
-    my @sets;
-
-    sub new { return bless {}, shift }
-
-    sub _deploy {}
-
-    sub data_sets {
-        return [grep { defined } @sets];
-    }
-
-    sub new_data_set {
-        my ($self, $data) = @_;
-        
-        push @sets, $data;
-        $data->{id} = @sets;
-
-        return $data->{id};
-    }
-
-    sub delete_data_set {
-        my ($self, $id) = @_;
-        delete $sets[$id-1];
-        return;
-    }
-
-    sub get_data_set {
-        my ($self, $id) = @_;
-        my $data = $sets[$id-1];
-        
-        return $data;
-    }
-
-    sub set_data_set {
-        my ($self, $data) = @_;
-        croak "argument must be a hashref"
-            unless ref $data eq 'HASH';
-        my $id = $data->{id};
-        croak "argument must have an id defined"
-            unless defined $id;
-        
-        $sets[$id-1] = $data;
-        return;
-    }
-}
-
-=end testing
-
-=cut
 
 use Test::More;
 use Test::Mojo;
@@ -88,7 +35,7 @@ require "$Bin/../moss-map.pl";
 
 my $t = Test::Mojo->new;
 
-# create an empty database
+# Populate the (assumed empty) test database
 $t->app->model->_schema->deploy;
 
 # Don't hide internal exceptions, show them on STDERR
