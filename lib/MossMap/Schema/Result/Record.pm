@@ -127,7 +127,7 @@ __PACKAGE__->belongs_to(
   "recorder",
   "MossMap::Schema::Result::Recorder",
   { id => "recorder" },
-  { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
+  { is_deferrable => 0, on_delete => "RESTRICT", on_update => "CASCADE" },
 );
 
 =head2 taxon
@@ -142,22 +142,15 @@ __PACKAGE__->belongs_to(
   "taxon",
   "MossMap::Schema::Result::Taxa",
   { id => "taxon" },
-  { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
+  { is_deferrable => 0, on_delete => "RESTRICT", on_update => "CASCADE" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-31 00:54:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JghxICPn+dSAnC0tqPoDgw
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-06 22:04:29
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TYNaYgaMaerJVfF4Ia+RoA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 
-
-__PACKAGE__->belongs_to(
-  "data_set",
-  "MossMap::Schema::Result::DataSet",
-  { id => "data_set_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
-);
 
 1;
