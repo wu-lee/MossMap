@@ -67,11 +67,11 @@ group {
     # FIXME error handling?
     # fixme return 20x statuses?
 
-    # get all sets
+    # get an index of all sets
     get '/sets' => sub {
         my $self = shift;
         $self->respond_to(
-            any => {json => $self->model->data_sets,
+            any => {json => $self->model->data_sets_index,
                     status => 200},
         );
     };

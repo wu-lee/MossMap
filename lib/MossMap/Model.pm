@@ -35,11 +35,19 @@ sub _hrs {
     return $rs;
 }
 
-# Get a ref to an array of all data sets
-sub data_sets {
+# Get a ref to an array of all data sets (without the records).
+sub data_sets_index {
     my $self = shift;
     
     my $rs = $self->_hrs('DataSet');
+    return [$rs->all];
+}
+
+# Get a ref to an array of all data sets (with the records, recorders and taxa)
+sub data_sets {
+    my $self = shift;
+    
+    my $rs = $self->_rs('DataSet');
     $rs = $rs->search(undef, {prefetch => {'records' => ['recorder','taxon']}});
     $rs->result_class('DBIx::Class::ResultClass::HashRefInflator');
     return [$rs->all];

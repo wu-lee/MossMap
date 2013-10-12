@@ -80,17 +80,22 @@ $t
 $t
     ->get_ok('/data/sets')
     ->status_is(200)
-    ->json_is_xx([{id => 1, name => 'set1',
-                   created_on => 'whatever',
-                   records => $records }],
-                 'Data set 1 is correct');
+    ->my_json_is([{id => 1, name => 'set1',
+                   created_on => 'whatever'}],
+                 'Data set 1 is listed');
 
+is_deeply
+    +MyTest::Mojo->date2whatever($t->app->model->data_sets),
+    [{id => 1, name => 'set1',
+      created_on => 'whatever',
+      records => $records }],
+    'Data sets are is correct';
 
 # Get the item we just obtained
 $t
     ->get_ok('/data/set/1')
     ->status_is(200)
-    ->json_is_xx([{id => 1, name => 'set1',
+    ->my_json_is([{id => 1, name => 'set1',
                    created_on => 'whatever',
                    records => $records}],
                  'Data set 1 is correct');
@@ -107,25 +112,39 @@ $t
 $t
     ->get_ok('/data/sets')
     ->status_is(200)
-    ->json_is_xx([{id => 1, name => 'set1.1',
-                   created_on => 'whatever',
-                   records => [$records->[0]]}],
-                 'Data sets correct');
+    ->my_json_is([{id => 1, name => 'set1.1',
+                   created_on => 'whatever'}],
+                 'Data set 1.1 is listed');
+
+is_deeply
+    +MyTest::Mojo->date2whatever($t->app->model->data_sets),
+    [{id => 1, name => 'set1.1',
+      created_on => 'whatever',
+      records => [$records->[0]]}],
+    'Data sets are correct';
 
 # Make sure id is ignored FIXME or should it be an error?
 $t
     ->put_ok('/data/set/1', json => {name => 'set1.2', id => 3,
                                      records => [ $records->[1] ]})
     ->status_is(200)
-    ->json_is({message => 'ok', id => 1}, 'Put set update with redundant id ignored ok');
+    ->json_is({message => 'ok', id => 1}, 
+              'Put set update with redundant id ignored ok');
 
 $t
     ->get_ok('/data/sets')
     ->status_is(200)
-    ->json_is_xx([{id => 1, name => 'set1.2',
-                   created_on => 'whatever',
-                   records => [$records->[1]]}],
-                 'Data sets correct');
+    ->my_json_is([{id => 1, name => 'set1.2',
+                   created_on => 'whatever'}],
+                 'Data set 1.2 is listed');
+
+is_deeply
+    +MyTest::Mojo->date2whatever($t->app->model->data_sets),
+    [{id => 1, name => 'set1.2',
+      created_on => 'whatever',
+      records => [$records->[1]]}],
+    'Data sets are correct';
+
 
 # Put a new value for 1
 $t
@@ -136,13 +155,21 @@ $t
 $t
     ->get_ok('/data/sets')
     ->status_is(200)
-    ->json_is_xx([{id => 1, name => 'set1.2',
-                   created_on => 'whatever',
-                   records => [$records->[1]]},
+    ->my_json_is([{id => 1, name => 'set1.2',
+                   created_on => 'whatever'},
                    {id => 3, name => 'set3',
-                    created_on => 'whatever',
-                    records => []}],
-                 'Data sets correct');
+                    created_on => 'whatever'}],
+                 'Data sets 1.2 and 3 are listed');
+
+is_deeply
+    +MyTest::Mojo->date2whatever($t->app->model->data_sets),
+    [{id => 1, name => 'set1.2',
+      created_on => 'whatever',
+      records => [$records->[1]]},
+     {id => 3, name => 'set3',
+      created_on => 'whatever',
+      records => []}],
+    'Data sets are correct';
 
 # Delete 1
 $t
@@ -153,10 +180,16 @@ $t
 $t
     ->get_ok('/data/sets')
     ->status_is(200)
-    ->json_is_xx([{id => 1, name => 'set1.2',
-                   created_on => 'whatever',
-                   records => [$records->[1]]}],
-                 'Data sets correct');
+    ->my_json_is([{id => 1, name => 'set1.2',
+                   created_on => 'whatever'}],
+                 'Data sets 1.2 is listed');
+
+is_deeply
+    +MyTest::Mojo->date2whatever($t->app->model->data_sets),
+    [{id => 1, name => 'set1.2',
+      created_on => 'whatever',
+      records => [$records->[1]]}],
+    'Data sets are correct';
 
 # FIXME edge cases... logout?
 # FIXME multi-set post? delete?
