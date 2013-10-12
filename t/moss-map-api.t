@@ -2,52 +2,17 @@
 use strict;
 use warnings;
 use FindBin qw($Bin);
-use File::Path qw(mkpath rmtree);
+use Test::More;
 use lib "$Bin/../ll/lib/perl5";
 use lib "$Bin/../lib";
+use lib "$Bin/lib";
 
-my $temp_dir;
-BEGIN {
-    $temp_dir = "$Bin/temp/moss-map-api";
+use MyTest::Data qw($temp_dir);
 
-    if (!$ENV{MOSSMAP_DB}) {
-        # Use a transient SQLite database by default
-        $ENV{MOSSMAP_DB} = "$temp_dir/db";
-    }
-    elsif ($ENV{MOSSMAP_DB} eq 'stub') {
-        # Make sure we load the stub MossMap::Model class
-        # preferentially, so that no database is used at all.
-        unshift @INC, "$Bin/stub";
-    }
-    # Otherwise, some external database will be used.
-    # We expect it to be empty, ready to be populated.
-}
-
-rmtree $temp_dir;
-mkpath $temp_dir;
-
-
-use Test::More;
-use Test::Mojo;
+use MyTest::Mojo;
 require "$Bin/../moss-map.pl";
 
-# Helper for collapsing  created_on fields to something we  can use in
-# test comparisons.
-sub Test::Mojo::json_is_xx {
-    my $self = shift;
-    my ($p, $data) = ref $_[0] ? ('', shift) : (shift, shift);
-    my $desc = shift || qq{exact match for JSON Pointer "$p"};
-    my $json = $self->tx->res->json($p);
-    $json = [$json]
-        unless ref $json eq 'ARRAY';
-    $_->{created_on} =~ s/^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d$/whatever/
-        for @$json;
-
-    return $self->_test('is_deeply', $json, $data, $desc);
-}
-
-
-my $t = Test::Mojo->new;
+my $t = MyTest::Mojo->new;
 
 # Populate the (assumed empty) test database
 $t->app->model->_schema->deploy;
@@ -59,8 +24,6 @@ $t->app->hook(around_dispatch => sub {
                   warn $@;
                   die $@;
               });
-
-#print {$t->app->log->handle} "hello\n";
 
 my $records = [
     { id => 1, data_set_id => 1, grid_ref => 'sj1234', taxon => {id => 1, name => 'foo'}, recorder => {id => 1, name => 'alice'}, recorded_on => '2011-11-11'},
