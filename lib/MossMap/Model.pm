@@ -17,6 +17,9 @@ sub new {
 
 sub _schema { shift->{schema} }
 
+# This allows debugging to be enabled or disabled
+sub _debug { shift->_schema->storage->debug(@_); }
+
 # Sortcut which gets a result set
 sub _rs {
     my $self = shift;
