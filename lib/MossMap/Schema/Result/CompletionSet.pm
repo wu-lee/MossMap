@@ -1,12 +1,12 @@
 use utf8;
-package MossMap::Schema::Result::DataSet;
+package MossMap::Schema::Result::CompletionSet;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-MossMap::Schema::Result::DataSet
+MossMap::Schema::Result::CompletionSet
 
 =cut
 
@@ -27,11 +27,11 @@ use base 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime");
 
-=head1 TABLE: C<data_set>
+=head1 TABLE: C<completion_set>
 
 =cut
 
-__PACKAGE__->table("data_set");
+__PACKAGE__->table("completion_set");
 
 =head1 ACCESSORS
 
@@ -81,33 +81,25 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
-=head2 records
+=head2 completed_tetrads
 
 Type: has_many
 
-Related object: L<MossMap::Schema::Result::Record>
+Related object: L<MossMap::Schema::Result::CompletedTetrad>
 
 =cut
 
 __PACKAGE__->has_many(
-  "records",
-  "MossMap::Schema::Result::Record",
-  { "foreign.data_set_id" => "self.id" },
+  "completed_tetrads",
+  "MossMap::Schema::Result::CompletedTetrad",
+  { "foreign.completion_set_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
 # Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-15 22:42:05
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1WLTf5Wzmc5+VtqwRNAjSA
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uC7o35vgmWPzs0P+rLSrzg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
-
-#__PACKAGE__->has_many(
-#  "records",
-#  "MossMap::Schema::Result::Record",
-#  { "foreign.data_set" => "self.id" },
-#  { cascade_copy => 1, cascade_delete => 1 },
-#);
-
 1;

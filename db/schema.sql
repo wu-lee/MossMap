@@ -22,6 +22,20 @@ CREATE TABLE records (
     recorded_on TEXT NOT NULL
 );
 
+
+CREATE TABLE completion_set (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    created_on TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE completed_tetrads (
+    completion_set_id INTEGER NOT NULL REFERENCES completion_set(id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    grid_ref TEXT NOT NULL,
+    PRIMARY KEY(completion_set_id, grid_ref)
+);
+
 CREATE TABLE recorders (
    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
    name TEXT
