@@ -209,7 +209,8 @@ sub bulk_json {
                     my $gridref = $_;
                     my $dates = $locations->{$gridref};
                     [ $gridref, $dates ];
-                } sort { length $a <=> length $b } keys %$locations
+                } sort { length $a <=> length $b ||
+                             $a cmp $b } keys %$locations
             ]
         ];
     } sort keys %index;
