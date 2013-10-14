@@ -174,8 +174,8 @@ sub mk_filtered_row_iterator {
             # Optionally discard data points
             next
                 unless $row = $self->{filter}->($row);
-        
-            return delete @$row(qw(taxon grid_ref date recorder));
+
+            return @$row{qw(taxon grid_ref date recorder)};
         }
 
         # If we get here we ran out of data
