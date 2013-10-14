@@ -33,6 +33,7 @@ sub my_json_is {
     return $self->_test('is_deeply', $json, $data, $desc);
 }
 
+my $date_rx = qr/^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d$/;
 sub date2whatever {
     my ($self, $json) = @_;
 
