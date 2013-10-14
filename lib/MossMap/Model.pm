@@ -2,6 +2,7 @@ package MossMap::Model;
 use strict;
 use warnings;
 use MossMap::Schema;
+use MossMap::CSV;
 use FindBin;
 use Carp qw(croak);
 
@@ -33,6 +34,27 @@ sub _hrs {
     my $rs = $self->_schema->resultset(@_);
     $rs->result_class('DBIx::Class::ResultClass::HashRefInflator');
     return $rs;
+}
+
+sub _nest_onto {
+    shift;
+    my $data = shift;
+    my $cursor = shift;
+    
+    while (my ($taxon, $gridref, $rec_on, $rec_count) = $cursor->()) {
+        my $TAXON = 
+            @$data <= 2?              ($data->[2] = [$taxon,[]]) :
+            $data->[-1][0] eq $taxon? $data->[-1] :
+                                      ($data->[+@$data] = [$taxon,[]]);
+        my $GRIDREF = 
+            @{$TAXON->[1]} == 0?            ($TAXON->[1][0] = [$gridref, {}]) :
+            $TAXON->[1][-1][0] eq $gridref? $TAXON->[1][-1] :
+                                           ($TAXON->[1][+@{$TAXON->[1]}] = [$gridref, {}]);
+
+        $GRIDREF->[1]{$rec_on} = $rec_count;
+    };
+
+    return $data;
 }
 
 # Get a ref to an array of all data sets (without the records).
@@ -113,6 +135,70 @@ sub delete_data_set {
     
     return 1;
 }
+
+sub new_csv_data_set {
+    my $self = shift;
+    my $name = shift
+        or croak "Please supply a name parameter";
+    my $source = shift
+        or croak "Please supply a CSV data source";
+
+    my $iterator = MossMap::CSV->new->mk_filtered_row_iterator($source);
+
+    my @records;
+    while(my @fields = $iterator->()) {
+        my %record;
+        $record{taxon} = { name => $fields[0] };
+        $record{recorder} = { name => $fields[3] };
+        @record{qw(grid_ref recorded_on)} = @fields[1,2];
+        push @records, \%record;
+    }
+
+    my $dataset = { 
+        name => $name,
+        records => \@records
+    };
+
+    my $rs = $self->_rs('DataSet')->create($dataset);
+
+    return $rs->id;
+}
+
+# Gets a data set in bulk format given the id
+sub get_bulk_data_set {
+    my $self = shift;
+    my $id = shift;
+
+    my ($dataset) = $self->_hrs('DataSet')
+        ->find({id => $id});
+
+    return
+        unless $dataset;
+
+    # If we get here we retrieved something
+    my @data = ($dataset->{name}, $dataset->{created_on});
+
+    my $rs = $self->_rs('Record')->search(
+        { data_set_id => $id },
+        { select => ['taxon.name', 
+                     'grid_ref',
+                     'recorded_on',
+                     { count => 'grid_ref' }],
+          as => ['taxon', 'grid_ref', 'recorded_on', 'record_count'],
+          join => ['taxon'],
+          group_by => [qw(taxon.name grid_ref)],
+          order_by => [qw(taxon.name grid_ref recorded_on)] },
+    );
+
+    my $cursor = $rs->cursor;
+    $self->_nest_onto(\@data, sub { $cursor->next });
+
+    return {
+        completed => [],
+        taxa => \@data,
+    };
+}
+
 
 no Carp;
 1;
