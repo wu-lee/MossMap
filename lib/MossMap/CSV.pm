@@ -127,7 +127,9 @@ sub mk_row_iterator {
             return ($line && $csv->parse($line));
         };
     }
-    elsif (ref $source eq 'GLOB' || ref $source->isa('IO::Handle')) {
+    elsif (ref $source eq 'GLOB'
+        || $source->isa('IO::Handle')
+        || $source->isa('IO::String')) {
         $iterator = sub { $csv->getline($source) }
     }
 
