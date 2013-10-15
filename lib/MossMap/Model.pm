@@ -193,11 +193,76 @@ sub get_bulk_data_set {
     my $cursor = $rs->cursor;
     $self->_nest_onto(\@data, sub { $cursor->next });
 
-    return {
-        completed => [],
-        taxa => \@data,
-    };
+    return \@data;
 }
+
+
+# Get a ref to an array of all data sets (without the records).
+sub completion_sets_index {
+    my $self = shift;
+    
+    my $rs = $self->_hrs('CompletionSet');
+    return [$rs->all];
+}
+
+
+sub new_csv_completion_set {
+    my $self = shift;
+    my $name = shift
+        or croak "Please supply a name for this completion set";
+    my $source = shift
+        or croak "Please supply a CSV data source";
+
+    my $iterator = MossMap::CSV->new->mk_row_iterator($source);
+
+    my $headings = $iterator->();
+    my ($col_ix) = grep { lc $headings->[$_] eq 'tetrad' } 0..$#$headings;
+    my @tetrads;
+    while(my $fields = $iterator->()) {
+        push @tetrads, {grid_ref => $fields->[$col_ix]};
+    }
+
+    my $completion_set = { 
+        name => $name,
+        completed_tetrads => \@tetrads
+    };
+
+    my $rs = $self->_rs('CompletionSet')->create($completion_set);
+
+
+    return $rs->id;
+}
+
+
+# Gets a completion set in bulk format given the id
+sub get_bulk_completion_set {
+    my $self = shift;
+    my $id = shift;
+
+    my ($dataset) = $self->_hrs('CompletionSet')
+        ->find({id => $id});
+
+    return
+        unless $dataset;
+
+    # If we get here we retrieved something
+    my @data = ($dataset->{name}, $dataset->{created_on});
+
+    my $rs = $self->_rs('CompletedTetrad')->search(
+        { completion_set_id => $id },
+        { select => ['grid_ref'],
+          as => ['grid_ref'],
+          order_by => [qw(grid_ref)] },
+    );
+
+    my $cursor = $rs->cursor;
+    my $tetrad;
+    push @data, $tetrad
+        while ($tetrad) = $cursor->next;
+
+    return \@data;
+}
+
 
 
 no Carp;

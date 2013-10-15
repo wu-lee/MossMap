@@ -21,13 +21,20 @@ $t->app->model->_schema->deploy;
 
 # populate the database
 my $csv_sets = MyTest::Data->bulk_csv_sets;
+my $csv_completion_sets = MyTest::Data->bulk_csv_completions;
+
 for my $ix (0..$#$csv_sets) {
-    $t->app->model->new_csv_data_set("set".($ix+1), IO::String->new($csv_sets->[$ix]));
+    my $name = "set".($ix+1);
+    $t->app->model->new_csv_data_set(
+        $name, IO::String->new($csv_sets->[$ix]),
+    );
+    $t->app->model->new_csv_completion_set(
+        $name, IO::String->new($csv_completion_sets->[$ix]),
+    );
 }
 
 my $bulk_sets = MyTest::Data->bulk_json_sets;
 my $set_index = [];
-#my $bulk_sets = [];
 for my $ix (0..$#$csv_sets) {
     my $index = {
         id => $ix+1,
@@ -36,9 +43,18 @@ for my $ix (0..$#$csv_sets) {
     };
 
     push @$set_index, $index;
-
 }
 
+my $completion_set_index = [];
+for my $ix (0..$#$csv_completion_sets) {
+    my $index = {
+        id => $ix+1,
+        name => "set".($ix+1),
+        created_on => 'whatever',
+    };
+
+    push @$completion_set_index, $index;
+}
 
 
 # Check we can list the datasets
@@ -52,17 +68,25 @@ $t
 $t
     ->get_ok('/bulk/set/1')
     ->status_is(200)
-    ->my_json_is({
-        completed => [],
-        taxa => ['set1','whatever', @{ $bulk_sets->[0] }],
-    }, 
+    ->my_json_is($bulk_sets->[0]{taxa}, 
               '/bulk/set/1 is correct');
 
 # Check we can't set data before logging in
-$t # FIXME
+$t
     ->post_ok('/bulk/sets.csv', form => {upload => {content => $csv_sets->[0]}})
     ->status_is(401)
-    ->json_is({error => 'Unauthorized'},'Unauthorized /bulk/sets.csv is 401');
+    ->json_is({error => 'Unauthorized'},
+              'Unauthorized /bulk/sets.csv is 401');
+
+
+# Check we can't completion set data before logging in
+$t
+    ->post_ok('/bulk/completed.csv', form => {
+        upload => {content => $csv_completion_sets->[0]},
+    })
+    ->status_is(401)
+    ->json_is({error => 'Unauthorized'},
+              'Unauthorized /bulk/completed.csv is 401');
 
 
 # Log in
@@ -88,18 +112,46 @@ $t
     ->status_is(201)
     ->json_is({message => 'ok', id => 3}, 'Posted set ok');
 
-
 # Check we can get it back
 $t
     ->get_ok('/bulk/set/3')
     ->status_is(200)
-    ->my_json_is({
-        completed => [],
-        taxa => ['some-filename.csv','whatever', @{ $bulk_sets->[0] }],
-    },
+    ->my_json_is(['some-filename.csv', splice @{ $bulk_sets->[0]{taxa} }, 1 ],
                  '/bulk/set/3 is correct');
 
+
+# Check we can post a completion set
+$t
+    ->post_ok('/bulk/completed.csv', form => {
+        upload => {
+            content => $csv_completion_sets->[0],
+            filename => "some-other-filename.csv",
+        },
+    })
+    ->status_is(201)
+    ->json_is({message => 'ok', id => 3}, 'Posted completions ok');
+
+
+# Check we can get it back
+$t
+    ->get_ok('/bulk/completed/3')
+    ->status_is(200)
+    ->my_json_is(['some-other-filename.csv',
+                  splice @{ $bulk_sets->[0]{completed} }, 1],
+                 '/bulk/completed/3 is correct');
+
 # Check index
+$t
+    ->get_ok('/data/completions')
+    ->status_is(200)
+    ->my_json_is([@$completion_set_index, 
+                  {id => 3,
+                   name => "some-other-filename.csv",
+                   created_on => 'whatever'}],
+                 '/data/sets is correct');
+
+
+# Check index again
 $t
     ->get_ok('/data/sets')
     ->status_is(200)

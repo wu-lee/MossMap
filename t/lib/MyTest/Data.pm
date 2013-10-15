@@ -42,9 +42,9 @@ my $json = JSON::PP->new;
 
 sub bulk_json_sets {
     return [map { $json->decode($_) } <<SET1, <<SET2];
-[["Amblystegium serpens var. serpens",[["SJ88M",{"20130215":1}]]],["Aulacomnium palustre",[["SJ86A",{"20010901":1}]]],["Barbula unguiculata",[["SJ87M",{"19930313":2}]]],["Bryum argenteum",[["SJ58F",{"20130222":1}]]],["Bryum capillare",[["SJ68Y",{"19931031":1}],["SJ77C",{"19920229":2}],["SJ78D",{"20130418":1}]]],["Bryum rubens",[["SJ58B",{"20130104":1}]]],["Calypogeia muelleriana",[["SJ57F",{"20040504":1}]]],["Campylopus introflexus",[["SJ75R",{"20130304":2}],["SJ97A",{"19951202":1}]]],["Campylopus pyriformis",[["SJ65V",{"20020905":1}]]],["Cephalozia bicuspidata",[["SE00Q",{"20100711":1}]]],["Cryphaea heteromalla",[["SJ88N",{"20130303":1}]]],["Dichodontium pellucidum",[["SJ58X",{"20130401":1}]]],["Dicranella heteromalla",[["SJ97S",{"19940806":1}]]],["Dicranella schreberiana",[["SJ97J",{"19821231":1}]]],["Dicranella varia",[["SJ68H",{"20110509":1}]]],["Encalypta streptocarpa",[["SJ98U",{"20010816":2}]]],["Fissidens fontanus",[["SJ98P",{"19121231":1}]]],["Grimmia pulvinata",[["SJ38J",{"20090206":1}]]],["Hypnum andoi",[["SJ99A",{"20010430":2}]]],["Kindbergia praelonga",[["SJ67N",{"19940716":1}],["SJ88F",{"20130325":1}]]],["Lophocolea bidentata",[["SJ68Y",{"20130411":1}]]],["Marchantia polymorpha subsp. ruderalis",[["SJ88T",{"20130310":1}]]],["Orthodontium lineare",[["SJ87L",{"19650915":2}]]],["Oxyrrhynchium hians",[["SJ88N",{"20130306":1}]]],["Pellia epiphylla",[["SJ77P",{"19920705":2}]]],["Plagiomnium affine",[["SJ57Q",{"20040619":1}]]],["Plagiothecium succulentum",[["SJ37G",{"20130414":1}]]],["Pogonatum urnigerum",[["SK07B",{"19760608":1}]]],["Pohlia nutans",[["SK07E",{"20111026":2}]]],["Rhizomnium punctatum",[["SJ28X",{"20001231":1}]]],["Rhytidiadelphus squarrosus",[["SJ86D",{"20020727":1}]]],["Syntrichia papillosa",[["SJ58B",{"20130104":1}]]],["Syntrichia ruralis var. ruralis",[["SJ58L",{"20130220":1}]]],["Tortula muralis",[["SJ45W",{"20010616":1}],["SJ68X",{"20130419":2}],["SJ68Y",{"19931031":1}]]],["Zygodon viridissimus var. viridissimus",[["SJ47X",{"20081206":1}]]]]
+{"completed":["set1","whatever","SJ18Y","SJ18Z","SJ58Y","SJ68D","SJ68E","SJ68I","SJ68J","SJ68N","SJ68P","SJ68T","SJ68U","SJ68Y","SJ68Z","SJ69V","SJ78D","SJ78E","SJ79A","SJ79B","SJ79F","SJ79G","SJ79K","SJ79L","SJ79Q","SJ79R","SJ79V","SJ79W","SJ88N","SJ88P","SJ88T","SJ89B"],"taxa":["set1","whatever",["Amblystegium serpens var. serpens",[["SJ88M",{"20130215":1}]]],["Aulacomnium palustre",[["SJ86A",{"20010901":1}]]],["Barbula unguiculata",[["SJ87M",{"19930313":2}]]],["Bryum argenteum",[["SJ58F",{"20130222":1}]]],["Bryum capillare",[["SJ68Y",{"19931031":1}],["SJ77C",{"19920229":2}],["SJ78D",{"20130418":1}]]],["Bryum rubens",[["SJ58B",{"20130104":1}]]],["Calypogeia muelleriana",[["SJ57F",{"20040504":1}]]],["Campylopus introflexus",[["SJ75R",{"20130304":2}],["SJ97A",{"19951202":1}]]],["Campylopus pyriformis",[["SJ65V",{"20020905":1}]]],["Cephalozia bicuspidata",[["SE00Q",{"20100711":1}]]],["Cryphaea heteromalla",[["SJ88N",{"20130303":1}]]],["Dichodontium pellucidum",[["SJ58X",{"20130401":1}]]],["Dicranella heteromalla",[["SJ97S",{"19940806":1}]]],["Dicranella schreberiana",[["SJ97J",{"19821231":1}]]],["Dicranella varia",[["SJ68H",{"20110509":1}]]],["Encalypta streptocarpa",[["SJ98U",{"20010816":2}]]],["Fissidens fontanus",[["SJ98P",{"19121231":1}]]],["Grimmia pulvinata",[["SJ38J",{"20090206":1}]]],["Hypnum andoi",[["SJ99A",{"20010430":2}]]],["Kindbergia praelonga",[["SJ67N",{"19940716":1}],["SJ88F",{"20130325":1}]]],["Lophocolea bidentata",[["SJ68Y",{"20130411":1}]]],["Marchantia polymorpha subsp. ruderalis",[["SJ88T",{"20130310":1}]]],["Orthodontium lineare",[["SJ87L",{"19650915":2}]]],["Oxyrrhynchium hians",[["SJ88N",{"20130306":1}]]],["Pellia epiphylla",[["SJ77P",{"19920705":2}]]],["Plagiomnium affine",[["SJ57Q",{"20040619":1}]]],["Plagiothecium succulentum",[["SJ37G",{"20130414":1}]]],["Pogonatum urnigerum",[["SK07B",{"19760608":1}]]],["Pohlia nutans",[["SK07E",{"20111026":2}]]],["Rhizomnium punctatum",[["SJ28X",{"20001231":1}]]],["Rhytidiadelphus squarrosus",[["SJ86D",{"20020727":1}]]],["Syntrichia papillosa",[["SJ58B",{"20130104":1}]]],["Syntrichia ruralis var. ruralis",[["SJ58L",{"20130220":1}]]],["Tortula muralis",[["SJ45W",{"20010616":1}],["SJ68X",{"20130419":2}],["SJ68Y",{"19931031":1}]]],["Zygodon viridissimus var. viridissimus",[["SJ47X",{"20081206":1}]]]]}
 SET1
-[["Aloina aloides",[["SJ66P",{"20011204":1}]]],["Amblystegium serpens var. serpens",[["SJ78E",{"20130419":1}]]],["Atrichum undulatum var. undulatum",[["SJ88Y",{"20090702":1}]]],["Aulacomnium androgynum",[["SJ88I",{"20130217":1}]]],["Barbula unguiculata",[["SJ58A",{"20130209":1}],["SJ97S",{"19940806":1}]]],["Brachythecium albicans",[["SJ28M",{"20001231":1}]]],["Brachythecium mildeanum",[["SJ68N",{"20130405":1}]]],["Brachythecium rutabulum",[["SJ58B",{"20130104":1}],["SJ97U",{"19920510":1}],["SJ99T",{"19970906":1}]]],["Bryoerythrophyllum recurvirostrum",[["SJ58G",{"20130101":1}]]],["Bryum capillare",[["SJ37C",{"20070526":1}],["SJ68T",{"20130410":1}],["SJ88S",{"20090125":1}]]],["Bryum dichotomum",[["SJ89V",{"20130420":1}]]],["Bryum rubens",[["SJ68Y",{"20130411":1}]]],["Calypogeia fissa",[["SJ58W",{"20110505":1}]]],["Calypogeia muelleriana",[["SK07E",{"20111213":1}]]],["Campylopus flexuosus",[["SJ87P",{"19641231":1}]]],["Campylopus pyriformis",[["SJ28M",{"20011031":1}]]],["Chiloscyphus polyanthos s.l.",[["SJ98R",{"19910813":1}]]],["Conocephalum conicum s.l.",[["SJ98H",{"19940430":1}]]],["Cratoneuron filicinum",[["SJ88P",{"20130313":1}]]],["Dicranella staphylina",[["SJ68T",{"20130410":1}]]],["Dicranella varia",[["SJ58S",{"20130320":1}]]],["Dicranoweisia cirrata",[["SJ58A",{"20130131":1}],["SJ58G",{"20130101":1}],["SJ68M",{"20130409":1}]]],["Dicranum bonjeanii",[["SJ56T",{"19650331":1}]]],["Dicranum scoparium",[["SJ56Z",{"20070729":1}]]],["Fissidens bryoides var. bryoides",[["SK07E",{"19911124":1}]]],["Fontinalis antipyretica var. antipyretica",[["SJ77U",{"19800930":1}]]],["Fossombronia pusilla",[["SJ58V",{"20130428":1}]]],["Funaria hygrometrica",[["SJ57J",{"20130209":1}],["SJ87N",{"20030527":1}]]],["Grimmia pulvinata",[["SJ58G",{"20130101":1}],["SJ79G",{"20050204":1}]]],["Homalothecium sericeum",[["SJ88P",{"20090513":1}]]],["Hypnum cupressiforme",[["SJ57G",{"20040504":1}]]],["Kindbergia praelonga",[["SJ57P",{"20130406":1}],["SJ77C",{"20040220":1}],["SJ78D",{"20130418":1}]]],["Leptodictyum riparium",[["SJ68T",{"20130410":1}]]],["Lophocolea bidentata",[["SJ67L",{"20001014":1}]]],["Lunularia cruciata",[["SJ58X",{"20130401":1}]]],["Mnium hornum",[["SJ57U",{"20110521":1}],["SJ68Y",{"20130411":1}],["SJ88F",{"20130325":1}]]],["Orthotrichum lyellii",[["SJ58W",{"20110510":1}]]],["Orthotrichum stramineum",[["SJ68C",{"20130402":1}]]],["Oxyrrhynchium hians",[["SJ68T",{"20130411":1}]]],["Oxyrrhynchium pumilum",[["SJ64J",{"19950228":1}]]],["Physcomitrium sphaericum",[["SJ96H",{"20031003":1}],["SJ97K",{"19940923":1}]]],["Plagiomnium undulatum",[["SJ98G",{"19951202":1}]]],["Plagiothecium succulentum",[["SJ37L",{"20130414":1}]]],["Plagiothecium undulatum",[["SJ57K",{"20070406":1}],["SJ99R",{"20020817":1}]]],["Polytrichastrum formosum",[["SJ79K",{"19960413":1}]]],["Polytrichum juniperinum",[["SJ77P",{"20010721":1}]]],["Polytrichum piliferum",[["SJ78L",{"19920718":1}]]],["Pseudoscleropodium purum",[["SJ28M",{"20011031":1}]]],["Pseudotaxiphyllum elegans",[["SJ88G",{"19951231":1}]]],["Racomitrium aciculare",[["SJ98T",{"20010816":1}]]],["Rhizomnium punctatum",[["SJ57L",{"19791231":1}]]],["Rhynchostegium confertum",[["SJ58B",{"20130104":1}]]],["Rhytidiadelphus squarrosus",[["SJ46B",{"20050218":1}],["SJ88F",{"20060204":1}],["SJ97S",{"19940612":1}]]],["Schistidium apocarpum s.l.",[["SJ98H",{"19840430":1}]]],["Sphagnum palustre",[["SJ77K",{"19760430":1}]]],["Sphagnum papillosum",[["SJ56Z",{"20101201":1}],["SJ65V",{"20020905":1}]]],["Syntrichia latifolia",[["SJ46A",{"20050218":1}]]],["Tetraphis pellucida",[["SJ58B",{"20130104":1}]]],["Tortula freibergii",[["SJ58L",{"20081231":1}],["SJ58Q",{"20081231":1}],["SJ67X",{"20081231":1}],["SJ78P",{"20090503":1}]]],["Tortula muralis",[["SJ58V",{"20130428":1}]]],["Tortula truncata",[["SJ57L",{"19990422":1}]]],["Ulota phyllantha",[["SJ98H",{"20050531":1}]]]]
+{"completed":["set2","whatever","SJ18Y","SJ18Z","SJ28M","SJ47Z","SJ48V","SJ57E","SJ57J","SJ57P","SJ58A","SJ58B","SJ58F","SJ58G","SJ58H","SJ58K","SJ58L","SJ58M","SJ58Q","SJ58R","SJ58S","SJ58V","SJ58W","SJ58X","SJ58Y","SJ68A","SJ68B","SJ68C","SJ68D","SJ68E","SJ68F","SJ68G","SJ68H","SJ68I","SJ68J","SJ68K","SJ68L","SJ68M","SJ68N","SJ68P","SJ68Q","SJ68R","SJ68S","SJ68T","SJ68U","SJ68V","SJ68W","SJ68X","SJ68Y","SJ68Z","SJ69V","SJ78A","SJ78B","SJ78C","SJ78D","SJ78E","SJ79A","SJ79B","SJ79F","SJ79G","SJ79K","SJ79L","SJ79Q","SJ79R","SJ79V","SJ79W","SJ88G","SJ88N","SJ88P","SJ88T","SJ89B"],"taxa":["set2","whatever",["Aloina aloides",[["SJ66P",{"20011204":1}]]],["Amblystegium serpens var. serpens",[["SJ78E",{"20130419":1}]]],["Atrichum undulatum var. undulatum",[["SJ88Y",{"20090702":1}]]],["Aulacomnium androgynum",[["SJ88I",{"20130217":1}]]],["Barbula unguiculata",[["SJ58A",{"20130209":1}],["SJ97S",{"19940806":1}]]],["Brachythecium albicans",[["SJ28M",{"20001231":1}]]],["Brachythecium mildeanum",[["SJ68N",{"20130405":1}]]],["Brachythecium rutabulum",[["SJ58B",{"20130104":1}],["SJ97U",{"19920510":1}],["SJ99T",{"19970906":1}]]],["Bryoerythrophyllum recurvirostrum",[["SJ58G",{"20130101":1}]]],["Bryum capillare",[["SJ37C",{"20070526":1}],["SJ68T",{"20130410":1}],["SJ88S",{"20090125":1}]]],["Bryum dichotomum",[["SJ89V",{"20130420":1}]]],["Bryum rubens",[["SJ68Y",{"20130411":1}]]],["Calypogeia fissa",[["SJ58W",{"20110505":1}]]],["Calypogeia muelleriana",[["SK07E",{"20111213":1}]]],["Campylopus flexuosus",[["SJ87P",{"19641231":1}]]],["Campylopus pyriformis",[["SJ28M",{"20011031":1}]]],["Chiloscyphus polyanthos s.l.",[["SJ98R",{"19910813":1}]]],["Conocephalum conicum s.l.",[["SJ98H",{"19940430":1}]]],["Cratoneuron filicinum",[["SJ88P",{"20130313":1}]]],["Dicranella staphylina",[["SJ68T",{"20130410":1}]]],["Dicranella varia",[["SJ58S",{"20130320":1}]]],["Dicranoweisia cirrata",[["SJ58A",{"20130131":1}],["SJ58G",{"20130101":1}],["SJ68M",{"20130409":1}]]],["Dicranum bonjeanii",[["SJ56T",{"19650331":1}]]],["Dicranum scoparium",[["SJ56Z",{"20070729":1}]]],["Fissidens bryoides var. bryoides",[["SK07E",{"19911124":1}]]],["Fontinalis antipyretica var. antipyretica",[["SJ77U",{"19800930":1}]]],["Fossombronia pusilla",[["SJ58V",{"20130428":1}]]],["Funaria hygrometrica",[["SJ57J",{"20130209":1}],["SJ87N",{"20030527":1}]]],["Grimmia pulvinata",[["SJ58G",{"20130101":1}],["SJ79G",{"20050204":1}]]],["Homalothecium sericeum",[["SJ88P",{"20090513":1}]]],["Hypnum cupressiforme",[["SJ57G",{"20040504":1}]]],["Kindbergia praelonga",[["SJ57P",{"20130406":1}],["SJ77C",{"20040220":1}],["SJ78D",{"20130418":1}]]],["Leptodictyum riparium",[["SJ68T",{"20130410":1}]]],["Lophocolea bidentata",[["SJ67L",{"20001014":1}]]],["Lunularia cruciata",[["SJ58X",{"20130401":1}]]],["Mnium hornum",[["SJ57U",{"20110521":1}],["SJ68Y",{"20130411":1}],["SJ88F",{"20130325":1}]]],["Orthotrichum lyellii",[["SJ58W",{"20110510":1}]]],["Orthotrichum stramineum",[["SJ68C",{"20130402":1}]]],["Oxyrrhynchium hians",[["SJ68T",{"20130411":1}]]],["Oxyrrhynchium pumilum",[["SJ64J",{"19950228":1}]]],["Physcomitrium sphaericum",[["SJ96H",{"20031003":1}],["SJ97K",{"19940923":1}]]],["Plagiomnium undulatum",[["SJ98G",{"19951202":1}]]],["Plagiothecium succulentum",[["SJ37L",{"20130414":1}]]],["Plagiothecium undulatum",[["SJ57K",{"20070406":1}],["SJ99R",{"20020817":1}]]],["Polytrichastrum formosum",[["SJ79K",{"19960413":1}]]],["Polytrichum juniperinum",[["SJ77P",{"20010721":1}]]],["Polytrichum piliferum",[["SJ78L",{"19920718":1}]]],["Pseudoscleropodium purum",[["SJ28M",{"20011031":1}]]],["Pseudotaxiphyllum elegans",[["SJ88G",{"19951231":1}]]],["Racomitrium aciculare",[["SJ98T",{"20010816":1}]]],["Rhizomnium punctatum",[["SJ57L",{"19791231":1}]]],["Rhynchostegium confertum",[["SJ58B",{"20130104":1}]]],["Rhytidiadelphus squarrosus",[["SJ46B",{"20050218":1}],["SJ88F",{"20060204":1}],["SJ97S",{"19940612":1}]]],["Schistidium apocarpum s.l.",[["SJ98H",{"19840430":1}]]],["Sphagnum palustre",[["SJ77K",{"19760430":1}]]],["Sphagnum papillosum",[["SJ56Z",{"20101201":1}],["SJ65V",{"20020905":1}]]],["Syntrichia latifolia",[["SJ46A",{"20050218":1}]]],["Tetraphis pellucida",[["SJ58B",{"20130104":1}]]],["Tortula freibergii",[["SJ58L",{"20081231":1}],["SJ58Q",{"20081231":1}],["SJ67X",{"20081231":1}],["SJ78P",{"20090503":1}]]],["Tortula muralis",[["SJ58V",{"20130428":1}]]],["Tortula truncata",[["SJ57L",{"19990422":1}]]],["Ulota phyllantha",[["SJ98H",{"20050531":1}]]]]}
 SET2
 }
 
@@ -230,6 +230,112 @@ SET1
 SET2
 }
 
+sub bulk_csv_completions {
+    return [<<SET1, <<SET2];
+Tetrad
+SJ79B
+SJ79G
+SJ79L
+SJ79R
+SJ79W
+SJ89B
+SJ69V
+SJ79A
+SJ79F
+SJ79K
+SJ79Q
+SJ79V
+SJ18Z
+SJ68E
+SJ68J
+SJ68P
+SJ68U
+SJ68Z
+SJ78E
+SJ88P
+SJ18Y
+SJ58Y
+SJ68D
+SJ68I
+SJ68N
+SJ68T
+SJ68Y
+SJ78D
+SJ88N
+SJ88T
+SET1
+Tetrad
+SJ79B
+SJ79G
+SJ79L
+SJ79R
+SJ79W
+SJ89B
+SJ69V
+SJ79A
+SJ79F
+SJ79K
+SJ79Q
+SJ79V
+SJ18Z
+SJ68E
+SJ68J
+SJ68P
+SJ68U
+SJ68Z
+SJ78E
+SJ88P
+SJ18Y
+SJ58Y
+SJ68D
+SJ68I
+SJ68N
+SJ68T
+SJ68Y
+SJ78D
+SJ88N
+SJ88T
+SJ28M
+SJ58H
+SJ58M
+SJ58S
+SJ58X
+SJ68C
+SJ68H
+SJ68M
+SJ68S
+SJ68X
+SJ78C
+SJ58B
+SJ58G
+SJ58L
+SJ58R
+SJ58W
+SJ68B
+SJ68G
+SJ68L
+SJ68R
+SJ68W
+SJ78B
+SJ88G
+SJ48V
+SJ58A
+SJ58F
+SJ58K
+SJ58Q
+SJ58V
+SJ68A
+SJ68F
+SJ68K
+SJ68Q
+SJ68V
+SJ78A
+SJ47Z
+SJ57E
+SJ57J
+SJ57P
+SET2
+}
 
 
 1;

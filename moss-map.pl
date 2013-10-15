@@ -137,6 +137,16 @@ group {
                     status => 200},
         );
     };
+
+
+    # get an index of all completion sets
+    get '/completions' => sub {
+        my $self = shift;
+        $self->respond_to(
+            any => {json => $self->model->completion_sets_index,
+                    status => 200},
+        );
+    };
 };
 
 
@@ -198,11 +208,67 @@ group {
         );
     };
 
+    # Add completed data
+    post '/completed.csv' => sub {
+        my $self = shift;
+
+        # Check file size
+        return $self->render(
+            json => {message => 
+                         "File is bigger than the limit ".
+                             "($ENV{MOJO_MAX_MESSAGE_SIZE}"},
+            status => 413,
+        )
+            if $self->req->is_limit_exceeded;
+        
+        # Process uploaded file
+        return $self->render(
+            json => {message => "Expected 'upload' file field is missing."},
+            status => 400,
+        )
+            unless my $upload = $self->param('upload');
+
+        my $source;
+        if($upload->asset->isa('Mojo::Upload::File')) {
+            $upload->asset->cleanup(1);
+            $source = $upload->handle;
+        }
+        else {
+            $source = IO::String->new($upload->asset->slurp);
+        }
+
+        my $id = $self->model->new_csv_completion_set($upload->filename, $source);
+
+        $self->render(
+            json => {message => "ok", id => $id},
+            status => 201,
+        );
+    };
+
     # query a data set
     get '/sets/:id' => sub {
         my $self = shift;
         my $id = $self->param('id');  
         my $data = $self->model->get_bulk_data_set($id);
+        if ($data) {
+            $self->respond_to(
+                any => {json => $data,
+                        status => 200},
+            );
+            return;
+        }
+
+        $self->respond_to(
+            any => {json => {error => 'Invalid id', id => $id},
+                    status => 404},
+        );
+    };
+
+    # query a data set
+    get '/completed/:id' => sub {
+        my $self = shift;
+        my $id = $self->param('id');  
+        my $data = $self->model->get_bulk_completion_set($id);
         if ($data) {
             $self->respond_to(
                 any => {json => $data,
