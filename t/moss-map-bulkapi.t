@@ -112,11 +112,18 @@ $t
     ->status_is(201)
     ->json_is({message => 'ok', id => 3}, 'Posted set ok');
 
+
+sub _rename_to {
+    my ($filename, $data) = @_;
+    return [$filename, @$data[1..$#$data]];
+}
+
 # Check we can get it back
 $t
     ->get_ok('/bulk/set/3')
     ->status_is(200)
-    ->my_json_is(['some-filename.csv', splice @{ $bulk_sets->[0]{taxa} }, 1 ],
+    ->my_json_is(_rename_to('some-filename.csv', 
+                            $bulk_sets->[0]{taxa}),
                  '/bulk/set/3 is correct');
 
 
@@ -136,8 +143,8 @@ $t
 $t
     ->get_ok('/bulk/completed/3')
     ->status_is(200)
-    ->my_json_is(['some-other-filename.csv',
-                  splice @{ $bulk_sets->[0]{completed} }, 1],
+    ->my_json_is(_rename_to('some-other-filename.csv',
+                            $bulk_sets->[0]{completed}),
                  '/bulk/completed/3 is correct');
 
 # Check index
@@ -161,6 +168,12 @@ $t
                    created_on => 'whatever'}],
                  '/data/sets is correct');
 
-
+# Check we can get the full monte
+# containing the latest sets
+$t
+    ->get_ok('/bulk/latest/set1')
+    ->status_is(200)
+    ->my_json_is($bulk_sets->[0],
+                 '/bulk/latest/set1 is correct');
 
 done_testing;

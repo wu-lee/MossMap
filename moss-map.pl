@@ -282,6 +282,27 @@ group {
                     status => 404},
         );
     };
+
+
+    # get the latest set / completed set with a given name
+    get '/latest/:name' => sub {
+        my $self = shift;
+        my $name = $self->param('name');  
+        my $data = $self->model->get_bulk_latest($name);
+        if ($data) {
+            $self->respond_to(
+                any => {json => $data,
+                        status => 200},
+            );
+            return;
+        }
+
+        $self->respond_to(
+            any => {json => {error => 'Invalid name', name => $name},
+                    status => 404},
+        );
+    };
+
 };
 
 post 'login.json' => sub {

@@ -28,12 +28,43 @@ sub _rs {
     return $rs;
 }
 
+sub _hash {
+    $_[0]->result_class('DBIx::Class::ResultClass::HashRefInflator');
+    return $_[0];
+}
+
 # Shortcut which gets a hashref-inflated result set
 sub _hrs {
     my $self = shift;
-    my $rs = $self->_schema->resultset(@_);
-    $rs->result_class('DBIx::Class::ResultClass::HashRefInflator');
+    my $rs = _hash $self->_schema->resultset(@_);
     return $rs;
+}
+
+sub _records_for_set {
+    my ($self, $id) = @_;
+
+    return $self->_rs('Record')->search(
+        { data_set_id => $id },
+        { select => ['taxon.name', 
+                     'grid_ref',
+                     'recorded_on',
+                     { count => 'grid_ref' }],
+          as => ['taxon', 'grid_ref', 'recorded_on', 'record_count'],
+          join => ['taxon'],
+          group_by => [qw(taxon.name grid_ref)],
+          order_by => [qw(taxon.name grid_ref recorded_on)] },
+    );
+}
+
+sub _completed_tetrads_for_set {
+    my ($self, $id) = @_;
+    
+    return $self->_rs('CompletedTetrad')->search(
+        { completion_set_id => $id },
+        { select => ['grid_ref'],
+          as => ['grid_ref'],
+          order_by => [qw(grid_ref)] },
+    );
 }
 
 sub _nest_onto {
@@ -70,8 +101,10 @@ sub data_sets {
     my $self = shift;
     
     my $rs = $self->_rs('DataSet');
-    $rs = $rs->search(undef, {prefetch => {'records' => ['recorder','taxon']}});
-    $rs->result_class('DBIx::Class::ResultClass::HashRefInflator');
+    $rs = _hash $rs->search(
+        undef,
+        {prefetch => {'records' => ['recorder','taxon']}}
+    );
     return [$rs->all];
 }
 
@@ -178,18 +211,8 @@ sub get_bulk_data_set {
     # If we get here we retrieved something
     my @data = ($dataset->{name}, $dataset->{created_on});
 
-    my $rs = $self->_rs('Record')->search(
-        { data_set_id => $id },
-        { select => ['taxon.name', 
-                     'grid_ref',
-                     'recorded_on',
-                     { count => 'grid_ref' }],
-          as => ['taxon', 'grid_ref', 'recorded_on', 'record_count'],
-          join => ['taxon'],
-          group_by => [qw(taxon.name grid_ref)],
-          order_by => [qw(taxon.name grid_ref recorded_on)] },
-    );
-
+    my $rs = $self->_records_for_set($id);
+    
     my $cursor = $rs->cursor;
     $self->_nest_onto(\@data, sub { $cursor->next });
 
@@ -261,6 +284,55 @@ sub get_bulk_completion_set {
         while ($tetrad) = $cursor->next;
 
     return \@data;
+}
+
+# get the latest set / completed set with a given name
+sub get_bulk_latest {
+    my $self = shift;
+    my $name = shift;
+
+    my $rs =
+        $self->_rs('DataSet')
+            ->search(
+                {name => $name},
+                {rows => 1,
+                 order_by => { -desc => 'created_on' }},
+            );
+    my $dataset = $rs->first;
+
+    return
+        unless $dataset;
+
+    # If we get here we retrieved something
+    my $records = $self->_records_for_set($dataset->id);
+
+    $dataset = [$dataset->name, $dataset->created_on];
+
+    my $cursor = $records->cursor;
+    $self->_nest_onto($dataset, sub { $cursor->next });
+
+
+    my $completed_set = $self->_hrs('CompletionSet')
+        ->search(
+            {name => $name},
+            {rows => 1,
+             order_by => { -desc => 'created_on' }},
+        )
+        ->first;
+
+    my @completed;
+    if ($completed_set) {
+        $rs = $self->_completed_tetrads_for_set($completed_set->id);
+        
+        $cursor = $rs->cursor;
+        @completed = ($completed_set->name, $completed_set->created_on);
+        my $tetrad;
+        push @completed, $tetrad
+            while ($tetrad) = $cursor->next;
+    }
+
+    return {taxa => $dataset,
+            completed => \@completed};
 }
 
 
