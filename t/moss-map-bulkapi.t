@@ -56,7 +56,6 @@ for my $ix (0..$#$csv_completion_sets) {
     push @$completion_set_index, $index;
 }
 
-
 # Check we can list the datasets
 $t
     ->get_ok('/data/sets')
@@ -110,8 +109,9 @@ $t
         },
     })
     ->status_is(201)
-    ->json_is({message => 'ok', id => 3}, 'Posted set ok');
-
+    ->json_is({message => 'ok', id => 3,
+               csv_messages => MyTest::Data->expected_csv_logs},
+              'Posted set ok');
 
 sub _rename_to {
     my ($filename, $data) = @_;
@@ -136,7 +136,9 @@ $t
         },
     })
     ->status_is(201)
-    ->json_is({message => 'ok', id => 3}, 'Posted completions ok');
+    ->json_is({message => 'ok', id => 3,
+               csv_messages => []},
+              'Posted completions ok');
 
 
 # Check we can get it back

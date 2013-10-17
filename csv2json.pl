@@ -14,7 +14,10 @@ my $csv_file = shift
     
 open my $fh, "<:encoding(utf8)", $csv_file or die "$csv_file: $!";
 
-my $list = MossMap::CSV->new->bulk_json($fh);
+my $csv = MossMap::CSV->new(
+    trace_cb => sub { warn @_ },
+);
+my $list = $csv->bulk_json($fh);
 
 close $fh;
 

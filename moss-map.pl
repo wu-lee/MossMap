@@ -200,12 +200,22 @@ group {
             $source = IO::String->new($upload->asset->slurp);
         }
 
-        my $id = $self->model->new_csv_data_set($upload->filename, $source);
-
-        $self->render(
-            json => {message => "ok", id => $id},
-            status => 201,
-        );
+        eval {
+            my ($id, $logs) = $self->model->new_csv_data_set($upload->filename, $source);
+            $self->render(
+                json => {message => "ok", id => $id, csv_messages => $logs},
+                status => 201,
+            );
+            1;
+        }
+            or do {
+                my $err = $@;
+                
+                return $self->render(
+                    json => {message => $err},
+                    status => 400,
+                );
+            };
     };
 
     # Add completed data
@@ -237,12 +247,22 @@ group {
             $source = IO::String->new($upload->asset->slurp);
         }
 
-        my $id = $self->model->new_csv_completion_set($upload->filename, $source);
-
-        $self->render(
-            json => {message => "ok", id => $id},
-            status => 201,
-        );
+        eval {
+            my ($id, $log) = $self->model->new_csv_completion_set($upload->filename, $source);
+            $self->render(
+                json => {message => "ok", id => $id, csv_messages => $log},
+                status => 201,
+            );
+            1;
+        }
+            or do {
+                my $err = $@;
+        
+                return $self->render(
+                    json => {message => $err},
+                    status => 400,
+                );
+            };
     };
 
     # query a data set

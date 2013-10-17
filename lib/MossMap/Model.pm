@@ -170,13 +170,21 @@ sub delete_data_set {
 }
 
 sub new_csv_data_set {
+    croak "this method should be called in list context"
+        if defined wantarray
+        && !wantarray;
+
     my $self = shift;
     my $name = shift
         or croak "Please supply a name parameter";
     my $source = shift
         or croak "Please supply a CSV data source";
 
-    my $iterator = MossMap::CSV->new->mk_filtered_row_iterator($source);
+    my @log;
+    my $csv = MossMap::CSV->new(
+        trace_cb => sub { push @log, @_ },
+    );
+    my $iterator = $csv->mk_filtered_row_iterator($source);
 
     my @records;
     while(my @fields = $iterator->()) {
@@ -194,7 +202,7 @@ sub new_csv_data_set {
 
     my $rs = $self->_rs('DataSet')->create($dataset);
 
-    return $rs->id;
+    return $rs->id, \@log;
 }
 
 # Gets a data set in bulk format given the id
@@ -230,13 +238,21 @@ sub completion_sets_index {
 
 
 sub new_csv_completion_set {
+    croak "this method should be called in list context"
+        if defined wantarray
+        && !wantarray;
+
     my $self = shift;
     my $name = shift
         or croak "Please supply a name for this completion set";
     my $source = shift
         or croak "Please supply a CSV data source";
 
-    my $iterator = MossMap::CSV->new->mk_row_iterator($source);
+    my @log;
+    my $csv = MossMap::CSV->new(
+        trace_cb => sub { push @log, @_ },
+    );
+    my $iterator = $csv->mk_row_iterator($source);
 
     my $headings = $iterator->();
     my ($col_ix) = grep { lc $headings->[$_] eq 'tetrad' } 0..$#$headings;
@@ -252,8 +268,7 @@ sub new_csv_completion_set {
 
     my $rs = $self->_rs('CompletionSet')->create($completion_set);
 
-
-    return $rs->id;
+    return $rs->id, \@log;
 }
 
 

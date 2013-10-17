@@ -17,14 +17,14 @@ my %filters = (
     keep_all => sub { shift },
 
     keep_tetrad_attributable => sub {
-        my $row = shift;
+        my ($row, $trace) = @_;
 
         # Reject grid-refs with precision less than
         # PQnnR (tetrad)
         my $grid_ref = $row->{grid_ref};
         my $len = length $grid_ref;
         if ($len < 5) {
-            warn "discarding as too coarse: $grid_ref\n";
+            $trace->("discarding as too coarse: $grid_ref\n");
             return;
         }
             
@@ -45,7 +45,7 @@ my %filters = (
 
 
         $row->{grid_ref} =~ s/$rx/join('',$1,$2,$4,$dinty[$5>>1][$3>>1])/e;
-        warn "converting grid-ref to tetrad: $grid_ref -> $row->{grid_ref}\n";
+        $trace->("converting grid-ref to tetrad: $grid_ref -> $row->{grid_ref}\n");
         return $row;
     },
 );
@@ -82,16 +82,18 @@ my @heading_map = (
 
 sub new {
     my $class = shift;
+    my %params = @_;
 
     my $csv = Text::CSV->new({
         binary => 1,  # should set binary attribute.
         auto_diag => 1,
     })
         or croak "Cannot use CSV: ".Text::CSV->error_diag ();
-    
+
     return bless {
         csv => $csv,
         filter => $filters{keep_tetrad_attributable},
+        trace_cb => $params{trace_cb} || sub {},
     }, $class;
 }
 
@@ -173,7 +175,7 @@ sub mk_filtered_row_iterator {
             
             # Optionally discard data points
             next
-                unless $row = $self->{filter}->($row);
+                unless $row = $self->{filter}->($row, $self->{trace_cb});
 
             return @$row{qw(taxon grid_ref date recorder)};
         }
