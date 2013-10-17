@@ -27,8 +27,6 @@ sub my_json_is {
     my ($p, $data) = ref $_[0] ? ('', shift) : (shift, shift);
     my $desc = shift || qq{exact match for JSON Pointer "$p"};
     my $json = $self->tx->res->json($p);
-    $json = [$json]
-        if ref \$json eq 'SCALAR';
     $self->date2whatever($json);
     return $self->_test('is_deeply', $json, $data, $desc);
 }
@@ -42,12 +40,21 @@ sub date2whatever {
         $_ =~ s/$date_rx/whatever/
             for grep { defined && !ref } @$json;
         $_->{created_on} =~ s/$date_rx/whatever/
-            for grep { defined && ref eq 'HASH' } @$json;
+            for grep {
+                defined 
+             && ref eq 'HASH'
+             && exists $_->{created_on}
+         } @$json;
     }
     elsif (ref $json eq 'HASH') {
         $self->date2whatever($_)
             for grep { defined } values %$json;
     }
+    elsif (ref \$json eq 'SCALAR') {
+        $_[1] =~ s/$date_rx/whatever/
+    }
+
+
     return $json;
 }
 

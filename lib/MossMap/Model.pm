@@ -101,11 +101,11 @@ sub data_sets {
     my $self = shift;
     
     my $rs = $self->_rs('DataSet');
-    $rs = _hash $rs->search(
+    $rs = $rs->search(
         undef,
         {prefetch => {'records' => ['recorder','taxon']}}
     );
-    return [$rs->all];
+    return [_hash($rs)->all];
 }
 
 # Saves a data set, returns the id

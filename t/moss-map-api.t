@@ -95,11 +95,11 @@ is_deeply
 $t
     ->get_ok('/data/set/1')
     ->status_is(200)
-    ->my_json_is([{id => 1, name => 'set1',
-                   created_on => 'whatever',
-                   records => $records}],
+    ->my_json_is({id => 1, name => 'set1',
+                  created_on => 'whatever',
+                  records => $records},
                  'Data set 1 is correct');
- 
+
 # Put a new value for 1
 $t
     ->put_ok('/data/set/1', json => {name => 'set1.1', 
