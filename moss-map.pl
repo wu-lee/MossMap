@@ -39,17 +39,6 @@ helper model => sub {
 # A convenience when running stand-alone
 get '/' => sub { shift->redirect_to('/index.html') };
 
-any '/unauthorized' => sub {
-    my $self = shift;
-    $self->respond_to(
-        any => {status => 401,
-                text => "Log in via <a href='/login.html'>/login.html</a>"},
-        json => {status => 401,
-                 json => {error => "Unauthorized"}},
-    );
-};
-
-
 group {
 
     under '/data' => sub {
@@ -327,20 +316,6 @@ group {
     };
 
 };
-
-post 'login.json' => sub {
-    my $self = shift;
-    my $data = $self->req->json;
-    if ($self->authenticate($data->{user}, $data->{password})) {
-        $self->render(json => {message => 'ok'});
-    }
-    else {
-        $self->render(json => {error => 'Login failed'},
-                      status => 401);
-    }
-};
-
-
 
 
 %Test::Mojo:: or app->start;
