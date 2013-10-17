@@ -36,6 +36,9 @@ helper model => sub {
     return $model;
 };
 
+# A convenience when running stand-alone
+get '/' => sub { shift->redirect_to('/index.html') };
+
 any '/unauthorized' => sub {
     my $self = shift;
     $self->respond_to(
