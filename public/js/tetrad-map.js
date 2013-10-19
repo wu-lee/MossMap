@@ -514,7 +514,7 @@ function Controller($scope, $modal) {
 
     $scope.mapOptions = {
         image: "basemap.jpg",
-        taxonObservationData: "cheshire-dataset.json",
+        taxonObservationData: "bulk/latest/cheshire",
 	datasetVar: "dataset",
         dateThresholds: {p1: new Date(2000,0,1),
                          p2: new Date(1950,0,1)},
