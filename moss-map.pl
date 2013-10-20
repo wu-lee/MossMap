@@ -9,21 +9,20 @@ use MossMap::Model;
 
 use IO::String;
 
-my %users = (
-    user1 => {password => 'secret'},
-);
+# A package variable, to make over-riding in tests easier.
+our $config = plugin 'JSONConfig';
 
 plugin authentication => {
     session_key => 'moss-map',
     load_user => sub {
         my ($app, $uid) = @_;
-        return $users{$uid};
+        return $config->{users}{$uid};
     },
     validate_user => sub {
         my ($app, $username, $password) = @_;
         return $username
-            if $users{$username}
-            && $users{$username}{password} eq $password;
+            if $config->{users}{$username}
+            && $config->{users}{$username}{password} eq $password;
         return undef;
     },
 };

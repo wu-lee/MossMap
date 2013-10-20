@@ -3,9 +3,19 @@ use strict;
 use warnings;
 use base 'Test::Mojo';
 
+# Override the users defined in the application
+
+
 
 sub new {
     my $self = shift->SUPER::new(@_);
+
+    # Override the default users
+    $main::config = {
+        users => {
+            user1 => {password => 'secret'},
+        },
+    };
 
     # Don't hide internal exceptions, show them on STDERR
     $self->app->hook(around_dispatch => sub {
