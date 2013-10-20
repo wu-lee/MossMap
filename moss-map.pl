@@ -115,12 +115,72 @@ helper csv_upload_wrapper => sub {
 # A convenience when running stand-alone
 get '/' => sub { shift->redirect_to('/index.html') };
 
+
+# Using the 'pub' prefix is mainly to make them proxy-passable as a
+# group.
+group {
+    under '/session';
+
+    get '/' => sub {
+        my $self = shift;
+        
+        my $session = $self->session->{'moss-map'};
+        my $data = $session? {username => $session} : {};
+        $self->render(json => $data,
+                      status => 200);
+    };
+
+    post '/login' => sub {
+        my $self = shift;
+        my $data = $self->req->json;
+        my ($username, $password) = @$data{'username', 'password'};
+        if ($self->authenticate($username,
+                                $password)) {
+            $self->render(json => {message => 'logged in', 
+                                   username => $username});
+        }
+        else {
+            $self->render(json => {error => 'authentication failed',
+                                   username => $username},
+                          status => 401);
+        }
+    };
+
+    post '/logout' => sub {
+        my $self = shift;
+
+        my $session = $self->session->{'moss-map'};
+        my $data = defined $session?
+            {username => $session} : {};
+        $data->{message} = 'logged out';
+        
+        $self->logout;
+        $self->render(json => $data,
+                      status => 200),
+    };
+
+    any '/unauthorized' => sub {
+        my $self = shift;
+        $self->respond_to(
+            any => {status => 401,
+                    text => "Log in via <a href='/pub/login.html'>/pub/login.html</a>"},
+            json => {status => 401,
+                     json => {error => "Unauthorized"}},
+        );
+    };
+
+};
+
+
+
+
 group {
 
     under '/data' => sub {
         my $self = shift;
         # GET requests require no authentication
         return 1 if $self->req->method eq 'GET';
+        return 1 if $self->req->url->path =~ m{^/data/login(:?\..+)?$};
 
         # Otherwise, insist on it, sending a 401 Unauthorized
         # otherwise

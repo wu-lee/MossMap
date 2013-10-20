@@ -31,15 +31,6 @@ $t
     ->json_is([],'data_sets is empty');
  
 
-$t
-    ->get_ok('/unauthorized')
-    ->status_is(401, "/unauthorized url is 401");
-$t
-    ->post_ok('/unauthorized')
-    ->status_is(401, "/unauthorized url is 401");
-
-
-
 # Check authentication works
 $t
     ->post_ok('/data/sets')
@@ -47,14 +38,11 @@ $t
     ->json_is({error => 'Unauthorized'},'Unauthorized error result');
 
 $t
-    ->post_ok('/login.json', json => {user => 'nonesuch', password => 'secret'})
-    ->status_is(401)
-    ->json_is({error => 'Login failed'}, 'Login failed');
-
-$t
-    ->post_ok('/login.json', json => {user => 'user1', password => 'secret'})
+    ->post_ok('/session/login', json => {username => 'user1',
+                                         password => 'secret'})
     ->status_is(200)
-    ->json_is({message => 'ok'}, 'Login ok');
+    ->json_is({message => 'logged in', username => 'user1'},
+              'Login ok');
 
 
 # Invalid item id 1

@@ -90,9 +90,10 @@ $t
 
 # Log in
 $t
-    ->post_ok('/login.json', json => {user => 'user1', password => 'secret'})
+    ->post_ok('/session/login', json => {username => 'user1', password => 'secret'})
     ->status_is(200)
-    ->json_is({message => 'ok'}, 'Login ok');
+    ->json_is({message => 'logged in', username => 'user1'},
+              'Login ok');
 
 # Ensure set 3 is absent
 $t
