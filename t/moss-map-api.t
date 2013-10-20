@@ -17,14 +17,6 @@ my $t = MyTest::Mojo->new;
 # Populate the (assumed empty) test database
 $t->app->model->_schema->deploy;
 
-# Don't hide internal exceptions, show them on STDERR
-$t->app->hook(around_dispatch => sub {
-                  my ($next, $c) = @_;
-                  return if eval { $next->(); 1 };
-                  warn $@;
-                  die $@;
-              });
-
 my $records = [
     { id => 1, data_set_id => 1, grid_ref => 'sj1234', taxon => {id => 1, name => 'foo'}, recorder => {id => 1, name => 'alice'}, recorded_on => '2011-11-11'},
     { id => 2, data_set_id => 1, grid_ref => 'sj1234', taxon => {id => 2, name => 'goo'}, recorder => {id => 2, name => 'bob'}, recorded_on => '2012-12-12'},
