@@ -320,35 +320,3 @@ group {
 
 %Test::Mojo:: or app->start;
 
-__DATA__
-
-
-
-__END__
-
-static stuff gets served as is,
-
-index.html -> index.html, etc.
-
-dynamic API:
-
-# set/taxon/gridref/date/who
-GET  data/set - show uploaded data sets
-GET  data/set/:setid - show uploaded data set
-GET  data/set/:setid/:taxon - show taxon data
-GET  data/set/:setid/:taxon/:gridref - show taxon data
-GET  data/set/:setid/:taxon/:gridref/:date - show taxon data
-GET  data/set/:setid/:taxon/:gridref/:date/:index - show taxon data
-
-PUT data/set/:setid - create/modify data
-PUT data/set/:setid/... - modify data
-
-DELETE data/set/:setid - delete data
-DELETE data/set/:setid/... - delete data
-
-
-GET login
-POST login
-POST logout
-
-
