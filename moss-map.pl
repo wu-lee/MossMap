@@ -3,6 +3,7 @@
 # map.  Much of the map is javascript driven, so doesn't need much
 # server-side dynamism, but some things, like uploading and managing
 # data-sets, do need some dynamism.
+use v5.10;
 use Mojolicious::Lite;
 use Mojolicious::Plugin::Authentication;
 use MossMap::Model;
@@ -34,6 +35,82 @@ helper model => sub {
 
     return $model;
 };
+
+
+helper get_upload_source =>  sub {
+    my $self = shift;
+    my $upload_param = shift;
+
+    if ($self->req->is_limit_exceeded) {
+        $self->render(
+            json => {message => 
+                         "File is bigger than the limit ".
+                             "($ENV{MOJO_MAX_MESSAGE_SIZE}"},
+            status => 413,
+        );
+        return;
+    }
+
+    if (!$upload_param) { 
+        $self->render(
+            json => {
+                message => "Expected '".
+                    $upload_param->name.
+                        "' file field is missing." 
+            },
+            status => 400,
+        );
+        return;
+    }
+
+    my $source;
+    if ($upload_param->asset->isa('Mojo::Upload::File')) {
+        $upload_param->asset->cleanup(1);
+        $source = $upload_param->handle;
+    }
+    else {
+        $source = IO::String->new($upload_param->asset->slurp);
+    }
+    return $source;
+};
+
+helper csv_upload_wrapper => sub {
+    my $self = shift;
+    my $method = shift;
+
+    my $upload = $self->param('upload');
+    return unless
+        my $source = $self->get_upload_source($upload);
+
+    # Process uploaded file
+    my $filename = $upload->filename;
+    my $name = $self->param('name')
+        // $filename;
+
+    eval {
+        app->log->debug("Processing '$filename' using $method");
+
+        my ($id, $logs) = $self->model->$method($name, $source);
+
+        app->log->debug("Finished processing '$filename', assigned id $id");
+
+        $self->render(
+            json => {message => "ok", id => $id, csv_messages => $logs},
+            status => 201,
+        );
+        1;
+    }
+        or do {
+            my $err = $@;
+            app->log->debug("Error processing '$filename': $err");
+            return $self->render(
+                json => {message => $err},
+                status => 400,
+            );
+        };
+};
+
+
 
 # A convenience when running stand-alone
 get '/' => sub { shift->redirect_to('/index.html') };
@@ -159,101 +236,18 @@ group {
     };
 
 
-    # FIXME error handling?
-    # fixme return 20x statuses?
-
-    # create a data set
+    # Create a data set
     post '/sets.csv' => sub {
         my $self = shift;
 
-        # Check file size
-        return $self->render(
-            json => {message => 
-                         "File is bigger than the limit ".
-                             "($ENV{MOJO_MAX_MESSAGE_SIZE}"},
-            status => 413,
-        )
-            if $self->req->is_limit_exceeded;
-        
-        # Process uploaded file
-        return $self->render(
-            json => {message => "Expected 'upload' file field is missing."},
-            status => 400,
-        )
-            unless my $upload = $self->param('upload');
-
-        my $source;
-        if($upload->asset->isa('Mojo::Upload::File')) {
-            $upload->asset->cleanup(1);
-            $source = $upload->handle;
-        }
-        else {
-            $source = IO::String->new($upload->asset->slurp);
-        }
-
-        eval {
-            my ($id, $logs) = $self->model->new_csv_data_set($upload->filename, $source);
-            $self->render(
-                json => {message => "ok", id => $id, csv_messages => $logs},
-                status => 201,
-            );
-            1;
-        }
-            or do {
-                my $err = $@;
-                
-                return $self->render(
-                    json => {message => $err},
-                    status => 400,
-                );
-            };
+        $self->csv_upload_wrapper('new_csv_data_set');
     };
 
-    # Add completed data
+    # Create a completed data set
     post '/completed.csv' => sub {
         my $self = shift;
 
-        # Check file size
-        return $self->render(
-            json => {message => 
-                         "File is bigger than the limit ".
-                             "($ENV{MOJO_MAX_MESSAGE_SIZE}"},
-            status => 413,
-        )
-            if $self->req->is_limit_exceeded;
-        
-        # Process uploaded file
-        return $self->render(
-            json => {message => "Expected 'upload' file field is missing."},
-            status => 400,
-        )
-            unless my $upload = $self->param('upload');
-
-        my $source;
-        if($upload->asset->isa('Mojo::Upload::File')) {
-            $upload->asset->cleanup(1);
-            $source = $upload->handle;
-        }
-        else {
-            $source = IO::String->new($upload->asset->slurp);
-        }
-
-        eval {
-            my ($id, $log) = $self->model->new_csv_completion_set($upload->filename, $source);
-            $self->render(
-                json => {message => "ok", id => $id, csv_messages => $log},
-                status => 201,
-            );
-            1;
-        }
-            or do {
-                my $err = $@;
-        
-                return $self->render(
-                    json => {message => $err},
-                    status => 400,
-                );
-            };
+        $self->csv_upload_wrapper('new_csv_completion_set');
     };
 
     # query a data set
