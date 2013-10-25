@@ -222,7 +222,7 @@ group {
 
     # query a data set
     # FIXME csv version required
-    get '/set/:id' => sub {
+    get '/sets/:id' => sub {
         my $self = shift;
         my $id = $self->param('id');  
         my $data = $self->model->get_data_set($id);
@@ -242,7 +242,7 @@ group {
 
     # alter data set
     # FIXME csv version required
-    put '/set/:id' => sub {
+    put '/sets/:id' => sub {
         my $self = shift;
         my $id = $self->param('id');  
         my $data = $self->req->json;
@@ -255,7 +255,7 @@ group {
     };
 
     # remove a data set
-    del 'set/:id' => sub {
+    del 'sets/:id' => sub {
         # remove set
         my $self = shift;
         my $id = $self->param('id');

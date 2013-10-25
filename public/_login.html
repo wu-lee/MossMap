@@ -1,0 +1,10 @@
+  <form ng-submit>
+    <label>User:
+      <input type="text" name="username" ng-model="credentials.username">
+    </label>
+    <label>Password:
+      <input type="password" name="password" ng-model="credentials.password">
+    </label>
+    <input type="submit" name="ok" ng-click="ok()" value="Log in">
+    <input type="submit" name="cancel" ng-click="cancel()" value="Cancel">
+  </form>
