@@ -159,6 +159,21 @@ sub get_data_set {
     return $rs;
 }
 
+# Gets a data set as a hash given the id
+sub get_current_data_set {
+    my $self = shift;
+    my $name = shift;
+
+    my $rs = $self->_rs('DataSet')->search(
+        {'me.name' => $name},
+        {rows => 1,
+         order_by => { -desc => 'me.id' },
+         prefetch => {'records' => ['recorder','taxon']}},
+    );
+    
+    return _hash($rs)->first;
+}
+
 # Deletes a data set given the id. Returns true
 sub delete_data_set {
     my $self = shift;

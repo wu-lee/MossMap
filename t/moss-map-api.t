@@ -22,6 +22,12 @@ my $records = [
     { id => 2, data_set_id => 1, grid_ref => 'sj1234', taxon => {id => 2, name => 'goo'}, recorder => {id => 2, name => 'bob'}, recorded_on => '2012-12-12'},
 ];
 
+# Return selected items from the above records with their IDs
+# reassigned.
+sub records {
+    my $id = pop or die;
+    [ map {{ %{ $records->[$_] }, data_set_id => $id }} @_ ]
+}
 
 
 # Check our database is empty
@@ -49,10 +55,18 @@ $t
 $t
     ->get_ok('/data/sets/1')
     ->status_is(404)
-    ->json_is({id => 1, error => 'Invalid id'}, 'Data set 1 is absent');
+    ->json_is({id => 1, error => 'Invalid name or id'},
+              'Data set 1 is absent');
 
 $t
-    ->post_ok('/data/sets', json => {name => 'set1', records => $records})
+    ->get_ok('/data/sets/set1')
+    ->status_is(404)
+    ->json_is({id => 'set1', error => 'Invalid name or id'},
+              'No data set "set1"');
+
+$t
+    ->post_ok('/data/sets', json => {name => 'set1', 
+                                     records => records(0,1 => 1)})
     ->status_is(201)
     ->json_is({message => 'ok', id => 1}, 'Posted set ok');
 
@@ -68,8 +82,8 @@ is_deeply
     +MyTest::Mojo->date2whatever($t->app->model->data_sets),
     [{id => 1, name => 'set1',
       created_on => 'whatever',
-      records => $records }],
-    'Data sets are is correct';
+      records => records(0,1 => 1) }],
+    'Data sets are correct';
 
 # Get the item we just obtained
 $t
@@ -77,13 +91,21 @@ $t
     ->status_is(200)
     ->my_json_is({id => 1, name => 'set1',
                   created_on => 'whatever',
-                  records => $records},
+                  records => records(0,1 => 1)},
                  'Data set 1 is correct');
 
-# Put a new value for 1
 $t
-    ->put_ok('/data/sets/1', json => {name => 'set1.1', 
-                                     records => [ $records->[0] ]})
+    ->get_ok('/data/sets/set1')
+    ->status_is(200)
+    ->my_json_is({id => 1, name => 'set1',
+                  created_on => 'whatever',
+                  records => records(0,1 => 1)},
+                 'We can also get is as "set1"');
+
+# Put a new value /  name for 1
+$t
+    ->put_ok('/data/sets/1', json => {name => 'set1-1', 
+                                      records => records(0 => 1)})
     ->status_is(200)
     ->json_is({message => 'ok', id => 1}, 'Put set update ok');
 
@@ -92,21 +114,21 @@ $t
 $t
     ->get_ok('/data/sets')
     ->status_is(200)
-    ->my_json_is([{id => 1, name => 'set1.1',
+    ->my_json_is([{id => 1, name => 'set1-1',
                    created_on => 'whatever'}],
-                 'Data set 1.1 is listed');
+                 'Data set 1-1 is listed');
 
 is_deeply
     +MyTest::Mojo->date2whatever($t->app->model->data_sets),
-    [{id => 1, name => 'set1.1',
+    [{id => 1, name => 'set1-1',
       created_on => 'whatever',
-      records => [$records->[0]]}],
+      records => records(0 => 1)}],
     'Data sets are correct';
 
 # Make sure id is ignored FIXME or should it be an error?
 $t
-    ->put_ok('/data/sets/1', json => {name => 'set1.2', id => 3,
-                                     records => [ $records->[1] ]})
+    ->put_ok('/data/sets/1', json => {name => 'set1-2', id => 3,
+                                     records => records(1 => 1)})
     ->status_is(200)
     ->json_is({message => 'ok', id => 1}, 
               'Put set update with redundant id ignored ok');
@@ -114,19 +136,19 @@ $t
 $t
     ->get_ok('/data/sets')
     ->status_is(200)
-    ->my_json_is([{id => 1, name => 'set1.2',
+    ->my_json_is([{id => 1, name => 'set1-2',
                    created_on => 'whatever'}],
-                 'Data set 1.2 is listed');
+                 'Data set 1-2 is listed');
 
 is_deeply
     +MyTest::Mojo->date2whatever($t->app->model->data_sets),
-    [{id => 1, name => 'set1.2',
+    [{id => 1, name => 'set1-2',
       created_on => 'whatever',
-      records => [$records->[1]]}],
+      records => records(1 => 1)}],
     'Data sets are correct';
 
 
-# Put a new value for 1
+# Put a new value for 3
 $t
     ->put_ok('/data/sets/3', json => {name => 'set3', id => 7})
     ->status_is(200)
@@ -135,21 +157,23 @@ $t
 $t
     ->get_ok('/data/sets')
     ->status_is(200)
-    ->my_json_is([{id => 1, name => 'set1.2',
+    ->my_json_is([{id => 1, name => 'set1-2',
                    created_on => 'whatever'},
                    {id => 3, name => 'set3',
                     created_on => 'whatever'}],
-                 'Data sets 1.2 and 3 are listed');
+                 'Data sets 1-2 and 3 are listed');
 
 is_deeply
     +MyTest::Mojo->date2whatever($t->app->model->data_sets),
-    [{id => 1, name => 'set1.2',
+    [{id => 1, name => 'set1-2',
       created_on => 'whatever',
-      records => [$records->[1]]},
+      records => records(1 => 1)},
      {id => 3, name => 'set3',
       created_on => 'whatever',
       records => []}],
     'Data sets are correct';
+
+
 
 # Delete 1
 $t
@@ -160,16 +184,55 @@ $t
 $t
     ->get_ok('/data/sets')
     ->status_is(200)
-    ->my_json_is([{id => 1, name => 'set1.2',
+    ->my_json_is([{id => 1, name => 'set1-2',
                    created_on => 'whatever'}],
-                 'Data sets 1.2 is listed');
+                 'Data sets 1-2 is listed');
+
 
 is_deeply
     +MyTest::Mojo->date2whatever($t->app->model->data_sets),
-    [{id => 1, name => 'set1.2',
+    [{id => 1, name => 'set1-2',
       created_on => 'whatever',
-      records => [$records->[1]]}],
+      records => records(1 => 1)}],
     'Data sets are correct';
+
+# Post a new set named set1-2
+$t
+    ->post_ok('/data/sets', json => {name => 'set1-2',
+                                     records => records(0 => 2)})
+    ->status_is(201)
+    ->json_is({message => 'ok', id => 2}, 'Posted set ok');
+
+# Check the contents
+$t
+    ->get_ok('/data/sets')
+    ->status_is(200)
+    ->my_json_is([{id => 1, name => 'set1-2',
+                   created_on => 'whatever'},
+                  {id => 2, name => 'set1-2',
+                   created_on => 'whatever'}],
+                 'Data sets 1-2 is listed');
+
+is_deeply
+   +MyTest::Mojo->date2whatever($t->app->model->data_sets),
+   [{id => 1, name => 'set1-2',
+     created_on => 'whatever',
+     records => records(1 => 1)},
+    {id => 2, name => 'set1-2',
+     created_on => 'whatever',
+     records => records(0 => 2)}],
+   'Data sets are correct';
+
+# Check we can get the current set1-2 back by name
+$t
+    ->get_ok('/data/sets/set1-2')
+    ->status_is(200)
+    ->my_json_is({id => 2, name => 'set1-2',
+                  created_on => 'whatever',
+                  records => records(0 => 2)},
+                 'We can get "set1-2"');
+
+
 
 # FIXME edge cases... logout?
 # FIXME multi-set post? delete?

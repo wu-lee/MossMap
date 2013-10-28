@@ -9,6 +9,7 @@ use Mojolicious::Plugin::Authentication;
 use MossMap::Model;
 
 use IO::String;
+use Scalar::Util 'looks_like_number';
 
 # A package variable, to make over-riding in tests easier.
 our $config = plugin 'JSONConfig';
@@ -225,7 +226,9 @@ group {
     get '/sets/:id' => sub {
         my $self = shift;
         my $id = $self->param('id');  
-        my $data = $self->model->get_data_set($id);
+        my $data = looks_like_number($id)?
+            $self->model->get_data_set($id) :
+            $self->model->get_current_data_set($id);
         if ($data) {
             $self->respond_to(
                 any => {json => $data,
@@ -235,7 +238,7 @@ group {
         }
 
         $self->respond_to(
-            any => {json => {error => 'Invalid id', id => $id},
+            any => {json => {error => 'Invalid name or id', id => $id},
                     status => 404},
         );
     };
