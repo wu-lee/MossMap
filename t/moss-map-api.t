@@ -47,7 +47,7 @@ $t
 
 # Invalid item id 1
 $t
-    ->get_ok('/data/set/1')
+    ->get_ok('/data/sets/1')
     ->status_is(404)
     ->json_is({id => 1, error => 'Invalid id'}, 'Data set 1 is absent');
 
@@ -73,7 +73,7 @@ is_deeply
 
 # Get the item we just obtained
 $t
-    ->get_ok('/data/set/1')
+    ->get_ok('/data/sets/1')
     ->status_is(200)
     ->my_json_is({id => 1, name => 'set1',
                   created_on => 'whatever',
@@ -82,7 +82,7 @@ $t
 
 # Put a new value for 1
 $t
-    ->put_ok('/data/set/1', json => {name => 'set1.1', 
+    ->put_ok('/data/sets/1', json => {name => 'set1.1', 
                                      records => [ $records->[0] ]})
     ->status_is(200)
     ->json_is({message => 'ok', id => 1}, 'Put set update ok');
@@ -105,7 +105,7 @@ is_deeply
 
 # Make sure id is ignored FIXME or should it be an error?
 $t
-    ->put_ok('/data/set/1', json => {name => 'set1.2', id => 3,
+    ->put_ok('/data/sets/1', json => {name => 'set1.2', id => 3,
                                      records => [ $records->[1] ]})
     ->status_is(200)
     ->json_is({message => 'ok', id => 1}, 
@@ -128,7 +128,7 @@ is_deeply
 
 # Put a new value for 1
 $t
-    ->put_ok('/data/set/3', json => {name => 'set3', id => 7})
+    ->put_ok('/data/sets/3', json => {name => 'set3', id => 7})
     ->status_is(200)
     ->json_is({message => 'ok', id => 3}, 'Put create new set id 3 ok');
 
@@ -153,7 +153,7 @@ is_deeply
 
 # Delete 1
 $t
-    ->delete_ok('/data/set/3')
+    ->delete_ok('/data/sets/3')
     ->status_is(200)
     ->json_is({message => 'ok', id => 3}, 'Delete set id 3 ok');
 
