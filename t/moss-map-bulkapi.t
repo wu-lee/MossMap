@@ -65,10 +65,10 @@ $t
 
 # Check we can access the data
 $t
-    ->get_ok('/bulk/set/1')
+    ->get_ok('/bulk/sets/1')
     ->status_is(200)
     ->my_json_is($bulk_sets->[0]{taxa}, 
-              '/bulk/set/1 is correct');
+              '/bulk/sets/1 is correct');
 
 # Check we can't set data before logging in
 $t
@@ -97,7 +97,7 @@ $t
 
 # Ensure set 3 is absent
 $t
-    ->get_ok('/bulk/set/3')
+    ->get_ok('/bulk/sets/3')
     ->status_is(404)
     ->json_is({id => 3, error => 'Invalid id'}, 'Data set 3 is absent');
 
@@ -121,11 +121,11 @@ sub _rename_to {
 
 # Check we can get it back
 $t
-    ->get_ok('/bulk/set/3')
+    ->get_ok('/bulk/sets/3')
     ->status_is(200)
     ->my_json_is(_rename_to('some-filename.csv', 
                             $bulk_sets->[0]{taxa}),
-                 '/bulk/set/3 is correct');
+                 '/bulk/sets/3 is correct');
 
 
 # Check we can post a completion set
