@@ -152,7 +152,7 @@ $t
 
 # Check index
 $t
-    ->get_ok('/data/completions')
+    ->get_ok('/data/completed')
     ->status_is(200)
     ->my_json_is([@$completion_set_index, 
                   {id => 3,

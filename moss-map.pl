@@ -271,13 +271,75 @@ group {
 
 
     # get an index of all completion sets
-    get '/completions' => sub {
+    get '/completed' => sub {
         my $self = shift;
         $self->respond_to(
-            any => {json => $self->model->completion_sets_index,
+            any => {json => $self->model->completed_sets_index,
                     status => 200},
         );
     };
+
+    # create a completed tetrad set
+    post '/completed' => sub {
+        my $self = shift;
+        my $data = $self->req->json;
+        # force creation rather than modification of any existing set
+        delete $data->{id}; 
+        my $id = $self->model->new_completed_set($data);
+
+        $self->respond_to(
+            any => {json => {message => "ok", id => $id},
+                    status => 201},
+        );
+    };
+
+    # query a completed tetrad set
+    get '/completed/:id' => sub {
+        my $self = shift;
+        my $id = $self->param('id');  
+        my $data = looks_like_number($id)?
+            $self->model->get_completed_set($id) :
+            $self->model->get_current_completed_set($id);
+        if ($data) {
+            $self->respond_to(
+                any => {json => $data,
+                        status => 200},
+            );
+            return;
+        }
+
+        $self->respond_to(
+            any => {json => {error => 'Invalid name or id', id => $id},
+                    status => 404},
+        );
+    };
+
+    # alter completed tetrad set
+    put '/completed/:id' => sub {
+        my $self = shift;
+        my $id = $self->param('id');  
+        my $data = $self->req->json;
+        $data->{id} = $id;
+        $self->model->set_completed_set($data);
+        $self->respond_to(
+            any => {json => {message => "ok", id => $id},
+                    status => 200},
+        );
+    };
+
+    # remove a completed tetrad set
+    del 'completed/:id' => sub {
+        # remove set
+        my $self = shift;
+        my $id = $self->param('id');
+        $self->model->delete_completed_set($id);
+        $self->respond_to(
+            any => {json => {message => "ok", id => $id},
+                    status => 200},
+        );
+    };
+
+
 };
 
 

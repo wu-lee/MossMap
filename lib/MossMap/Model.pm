@@ -243,13 +243,103 @@ sub get_bulk_data_set {
 }
 
 
-# Get a ref to an array of all data sets (without the records).
-sub completion_sets_index {
+# Get a ref to an array of all completed sets (without the records).
+sub completed_sets_index {
     my $self = shift;
     
     my $rs = $self->_hrs('CompletionSet');
     return [$rs->all];
 }
+
+# Get a ref to an array of all completed sets
+sub completed_sets {
+    my $self = shift;
+    
+    my $rs = $self->_rs('CompletionSet');
+    $rs = $rs->search(
+        undef,
+        {prefetch => 'completed_tetrads'},
+    );
+    return [_hash($rs)->all];
+}
+
+# Saves a completed set, returns the id
+sub set_completed_set {
+    my $self = shift;
+    my $data = shift;
+
+    # FIXME recorders? taxons?
+
+    # We can't insert the datastructure all at once, it seems, so we
+    # must take out the records and insert those separately
+    # afterwards.
+    my $completed = delete $data->{completed_tetrads};
+    my $completedset = $self->_rs('CompletionSet')->update_or_create($data);
+
+
+    # Remove all existing records associated with this set.  (We can't
+    # really equate them by ID, we'd have to compare all the fields.
+    # Deleting them all seems simpler, if possibly less efficient in
+    # some cases).
+    $completedset->completed_tetrads->delete;
+
+    # Re-insert the new records
+    $completedset->add_to_completed_tetrads( $_ )
+        for @$completed;
+
+    return $completedset->id;    
+}
+
+# Creates a new completed set, returns the id
+sub new_completed_set {
+    my $self = shift;
+    my $data = shift;
+
+    delete $data->{id};
+    my $rs = $self->_rs('CompletionSet')->create($data);
+
+    return $rs->id;
+}
+
+# Gets a completed set as a hash given the id
+sub get_completed_set {
+    my $self = shift;
+    my $id = shift;
+
+    my $rs = $self->_hrs('CompletionSet')->find(
+        {id => $id},
+        {prefetch => 'completed_tetrads'},
+    );
+    
+    return $rs;
+}
+
+# Gets a completed set as a hash given the id
+sub get_current_completed_set {
+    my $self = shift;
+    my $name = shift;
+
+    my $rs = $self->_rs('CompletionSet')->search(
+        {'me.name' => $name},
+        {rows => 1,
+         order_by => { -desc => 'me.id' },
+         prefetch => 'completed_tetrads'},
+    );
+    
+    return _hash($rs)->first;
+}
+
+# Deletes a completed set given the id. Returns true
+sub delete_completed_set {
+    my $self = shift;
+    my $id = shift;
+
+    my $rs = $self->_rs('CompletionSet')->find({id => $id})->delete;
+    
+    return 1;
+}
+
+
 
 
 sub new_csv_completion_set {
