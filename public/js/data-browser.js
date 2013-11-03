@@ -118,19 +118,45 @@ angular.module('DataBrowserModule')
             var modalInstance = $modal.open({
                 templateUrl: '_upload.html',
                 controller: 'UploadController',
-                scope: $scope,
+                scope: this,
             });
         };
+
+        // FIXME make this a service
+        function reloadData() {
+            var myScope = this;
+            var resource = myScope.resource;
+            var id = myScope.regionName;
+
+            $scope.message = "Loading data..."; 
+            var loadingDialog = $modal.open({
+                templateUrl: '_loading.html',
+            });
+
+            var promise = loadingDialog.opened.then(function() {
+                myScope.data = resource.get(
+                    {setId: id},
+                    function() {
+                        $scope.message = "";
+                        loadingDialog.close();
+                    }
+                );
+            });
+
+            return promise;
+        };
+
+        $scope.reloadData = reloadData;
     });
 
 
 angular.module('DataBrowserModule')
     .controller('ObservationsController', function($scope, $rootScope, $resource, $templateCache, $modal) {
 
-        $rootScope.dataType = 'Observations';
-        $rootScope.uploadUrl = '/bulk/sets.csv';
+        $scope.dataType = 'Observations';
+        $scope.uploadUrl = '/bulk/sets.csv';
 
-        var observations = $resource(
+        $scope.resource = $resource(
             '/data/sets/:setId',
             {setId: '@id'}
         );
@@ -152,29 +178,16 @@ angular.module('DataBrowserModule')
             {field: 'recorder.name', displayName: 'Recorder'},
         ];
 
-        $rootScope.message = "Loading data..."; 
-        var loadingDialog = $modal.open({
-            templateUrl: '_loading.html',
-        });
-
-        loadingDialog.opened.then(function() {
-            $scope.data = observations.get(
-                {setId: 'cheshire'},
-                function() {
-                    $rootScope.message = "";
-                    loadingDialog.close();
-                }
-            );
-        });
+        $scope.reloadData();
     });
 
 angular.module('DataBrowserModule')
     .controller('CompletedTetradsController', function($scope, $rootScope, $resource, $templateCache, $modal) {
 
-        $rootScope.dataType = 'Completed Tetrads';
-        $rootScope.uploadUrl = '/bulk/completed.csv';
+        $scope.dataType = 'Completed Tetrads';
+        $scope.uploadUrl = '/bulk/completed.csv';
 
-        var completedTetrads = $resource(
+        $scope.resource = $resource(
             '/data/completed/:setId',
             {setId: '@id'}
         );
@@ -192,21 +205,8 @@ angular.module('DataBrowserModule')
         $scope.columnDefs = [
             {field: 'grid_ref', displayName: 'Grid Ref', width: 100},
         ];
-
-        $rootScope.message = "Loading data..."; 
-        var loadingDialog = $modal.open({
-            templateUrl: '_loading.html',
-        });
-
-        loadingDialog.opened.then(function() {
-            $scope.data = completedTetrads.get(
-                {setId: 'cheshire'},
-                function() {
-                    $rootScope.message = "";
-                    loadingDialog.close();
-                }
-            );
-        });
+ 
+        $scope.reloadData();
     });
 
 
@@ -266,7 +266,7 @@ angular.module('DataBrowserModule')
 
         $scope.uploadPercent = 0;
 
-        $scope.dataName = 'cheshire'; // FIXME
+        $scope.regionName = 'cheshire'; // FIXME
 
         // A hack to work around angular's lack of support for the file input
         $scope.uploadInput = function() {
@@ -296,7 +296,7 @@ angular.module('DataBrowserModule')
                 console.log("onload ");
                 var fd = new FormData();
                 fd.append("upload", file);
-                fd.append("name", $scope.dataName);
+                fd.append("name", $scope.regionName);
                 $scope.uploading = true;
                 $scope.uploadPercent = 100;
                 $scope.uploadMessage = "Uploading...";
@@ -310,15 +310,22 @@ angular.module('DataBrowserModule')
                     }
                 );
                 promise
-                    .success(function(d) {
-                        $scope.uploadMessage = "Done!";
-                        $scope.uploading = false;
-                        $scope.uploadFilename = '';
-                    })
-                    .error(function(d) {
-                        $scope.uploadMessage = "Error: "+d.message;
-                        $scope.uploading = false;
-                    });
+                    .then(
+                        function(success) {
+                            $scope.uploadMessage = "Done!";
+                            $scope.uploading = false;
+                            $scope.uploadFilename = '';
+                        },
+                        function(err) {
+                            $scope.uploadMessage = "Error: "+err.message;
+                            $scope.uploading = false;
+                        }
+                    )
+                    .then(
+                        function(success) {
+                            $scope.reloadData();
+                        }
+                    );
 
                 // sometimes angular doesn't start uploading first
                 // click, unless we give it a prod...
