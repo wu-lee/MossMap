@@ -1,10 +1,29 @@
-  <form ng-submit>
-    <label>User:
-      <input type="text" name="username" ng-model="credentials.username">
-    </label>
-    <label>Password:
-      <input type="password" name="password" ng-model="credentials.password">
-    </label>
-    <input type="submit" name="ok" ng-click="ok()" value="Log in">
-    <input type="submit" name="cancel" ng-click="cancel()" value="Cancel">
+<div class="modal-header">
+   <h3>Log In<h3>
+</div>
+<div class="modal-body">
+  <form ng-submit class="form-horizontal">
+    <div class="control-group">
+      <label class="control-label" for="login-username">User:</label>
+      <div class="controls">
+	<input type="text" id="login-username" name="username"
+	       ng-model="credentials.username"/>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="login-password">Password:</label>
+      <div class="controls">
+	<input type="password" id="login-password" name="password"
+	       ng-model="credentials.password"/>
+      </div>
+    </div>
+    <div class="control-group">
+      <div class="controls">
+	<input type="submit" class="btn btn-primary" 
+	       name="ok" ng-click="ok()" value="Log in"/>
+	<input type="submit" class="btn"
+	       name="cancel" ng-click="$dismissl()" value="Cancel".>
+      </div>
+    </div>
   </form>
+</div>

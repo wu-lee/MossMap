@@ -1,0 +1,58 @@
+<div class="modal-header">
+   <h3>Upload {{ dataType }}<h3>
+</div>
+<div class="modal-body">
+  <form ng-submit class="form-horizontal" name="uploadForm"
+	enctype="multipart/form-data" novalidate>
+
+    <div class="control-group">
+      <span class="help-block">
+	Use this to a upload CSV file containing {{ dataType | lowercase }}
+	records. FIXME more info here. FIXME also on completion, the
+	data should be updated. FIXME link back to map.
+      </span>
+    </div>
+
+    <div class="control-group" >
+      <label class="control-label" for="upload-file-input">
+	CSV file:
+      </label>
+      <div class="controls">
+	<input id="upload-file-input" type="file"
+	       required
+	       ng-disabled="uploading"
+	       ng-model="uploadFilename"/>
+      </div>
+    </div>
+    <div>
+      
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+	<input type="submit" class="btn btn-primary"
+	       value="Upload"
+	       ng-disabled="uploadForm.$pristine || uploadForm.$invalid || uploading"
+	       ng-click="uploadFile('#upload-file-input')"/>
+	<input type="submit" class="btn"
+	       name="cancel" ng-click="$dismiss()" value="Dismiss"/>
+      </div>
+  </form>
+</div>
+<div class="modal-footer progress-bar">
+    <div class="control-group">
+      <div>{{ uploadMessage }}</div>
+    </div>
+    <div class="control-group">
+      <div class="progress progress-striped"
+	   ng-class="{active: uploading}">
+	<div class="bar" ng-style="{width: uploadPercent+'%'}"></div>
+      </div>
+      <!--The following was replaced with the above, since ng-class
+	  and angular-ui's progress directive seem not to play together.
+	  progress percent="uploadPercent" 
+		ng-class="{'progress-striped': true, active: uploading}"
+		animate="false"
+		></progress-->
+    </div>
+</div>
