@@ -54,6 +54,7 @@ my %filters = (
 my @heading_map = (
     taxon => 'Taxon',
     grid_ref => 'GR',
+    recorder => 'Recorder',
 
     # Dates are formatted as either '', 'YYYY', 'YYYYMM', or 'YYYYMMDD'
     # depending on the precision
