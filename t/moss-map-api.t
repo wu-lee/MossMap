@@ -18,8 +18,8 @@ my $t = MyTest::Mojo->new;
 $t->app->model->_schema->deploy;
 
 my $records = [
-    { id => 1, data_set_id => 1, grid_ref => 'sj1234', taxon => {id => 1, name => 'foo'}, recorder => {id => 1, name => 'alice'}, recorded_on => '2011-11-11'},
-    { id => 2, data_set_id => 1, grid_ref => 'sj1234', taxon => {id => 2, name => 'goo'}, recorder => {id => 2, name => 'bob'}, recorded_on => '2012-12-12'},
+    { id => 1, data_set_id => 1, grid_ref => 'sj1234', taxon => {id => 1, name => 'foo'}, recorder_records => [{recorder => {id => 1, name => 'alice'}, record_id => 1, recorder_id => 1}], recorded_on => '2011-11-11'},
+    { id => 2, data_set_id => 1, grid_ref => 'sj1234', taxon => {id => 2, name => 'goo'}, recorder_records => [{recorder => {id => 2, name => 'bob'}, recorder_id => 2, record_id => 2}, {recorder => {id => 3, name => 'charlie'}, recorder_id => 3, record_id => 2}], recorded_on => '2012-12-12'},
 ];
 
 # Return selected items from the above records with their IDs
@@ -108,8 +108,6 @@ $t
                                       records => records(0 => 1)})
     ->status_is(200)
     ->json_is({message => 'ok', id => 1}, 'Put set update ok');
-
-
 
 $t
     ->get_ok('/data/sets')

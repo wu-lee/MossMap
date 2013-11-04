@@ -50,7 +50,7 @@ SET2
 
 sub bulk_csv_sets {
     return [<<SET1, <<SET2];
-"Taxon","GR","Easting","Northing","Buffer","Precision","Monad","Tetrad","Hectad","Habitat species","Habitat site","Site","Day","Month","Year","Finder","Determiner","COLLECTION","COLLNO","Confirmer","Comments","ALTITUDE","ZeroAbund","Seen?","DateType","StartDate","EndDate","COMPILER","BULBILS","FEMALE_PRESENT","FRUITING","GEMMAE","LIT_REFERENCE"
+"Taxon","GR","Easting","Northing","Buffer","Precision","Monad","Tetrad","Hectad","Habitat species","Habitat site","Site","Day","Month","Year","Recorder","Determiner","COLLECTION","COLLNO","Confirmer","Comments","ALTITUDE","ZeroAbund","Seen?","DateType","StartDate","EndDate","COMPILER","BULBILS","FEMALE_PRESENT","FRUITING","GEMMAE","LIT_REFERENCE"
 "Amblystegium serpens var. serpens","SJ8584",385500,384500,500,"1km","SJ8584","SJ88M","SJ88",,,"Stanley Green",15,2,2013,"Lowell, J.","Lowell, J.",,,,,,,,"Day",15/02/2013,,,,,,,
 "Aulacomnium palustre","SJ8061",380500,361500,500,"1km","SJ8061","SJ86A","SJ86",,,"Brookhouse Moss",1,9,2001,"Hodgetts, N.G.","Unknown",,,,"NVC survey for EN, subcontracted by Alex Lockton.",,,,"Day",01/09/2001,01/09/2001,"Hodgetts, N.G.",,,,,
 "Barbula unguiculata","SJ8475",384500,375500,500,"1km","SJ8475","SJ87M","SJ87",,,"Alderley Park",13,3,1993,"British Bryological Society - North West Group","Unknown",,,,,100,,,"Day",13/03/1993,13/03/1993,,,,"Y",,
@@ -126,7 +126,7 @@ sub bulk_csv_sets {
 "Tortula muralis","SJ699841",369950,384150,50,"100m","SJ6984","SJ68X","SJ68",,"Carpark","St John's Church, High Legh",19,4,2013,"Callaghan, D.A.","Callaghan, D.A.",,,,,,,,,,,,,,,,
 "Zygodon viridissimus var. viridissimus","SJ4975",349500,375500,500,"1km","SJ4975","SJ47X","SJ47",,,"Helsby Hill SBI",6,12,2008,"North Western Naturalists Union","Unknown",,,,,,,,"Day",06/12/2008,06/12/2008,"Hanson, P.",,,,"Y",
 SET1
-"Taxon","GR","Easting","Northing","Buffer","Precision","Monad","Tetrad","Hectad","Habitat species","Habitat site","Site","Day","Month","Year","Finder","Determiner","COLLECTION","COLLNO","Confirmer","Comments","ALTITUDE","ZeroAbund","Seen?","DateType","StartDate","EndDate","COMPILER","BULBILS","FEMALE_PRESENT","FRUITING","GEMMAE","LIT_REFERENCE"
+"Taxon","GR","Easting","Northing","Buffer","Precision","Monad","Tetrad","Hectad","Habitat species","Habitat site","Site","Day","Month","Year","Recorder","Determiner","COLLECTION","COLLNO","Confirmer","Comments","ALTITUDE","ZeroAbund","Seen?","DateType","StartDate","EndDate","COMPILER","BULBILS","FEMALE_PRESENT","FRUITING","GEMMAE","LIT_REFERENCE"
 "Aloina aloides","SJ656680",365650,368050,50,"100m","SJ6568","SJ66P","SJ66",,,"Winsford, Weaver Navigation",4,12,2001,"Hodgetts, N.G.","Unknown",,,,"T. cernua survey for Plantlife.",,,,"Day",04/12/2001,04/12/2001,"Hodgetts, N.G.",,,"Y",,
 "Amblystegium serpens var. serpens","SJ7089",370500,389500,500,"1km","SJ7089","SJ78E","SJ78",,"Churchyard","St Werburgh's Church (newer church), Warburton",19,4,2013,"Callaghan, D.A.","Callaghan, D.A.",,,,,,,,,,,,,,,,
 "Aneura pinguis","SJ55",355000,355000,5000,"10km","NA","NA","SJ55",,,"No site name available",31,12,1989,"Unknown","Unknown",,,,,,,,"Year Range",01/01/1950,31/12/1989,,,,,,

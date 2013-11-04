@@ -54,8 +54,7 @@ my %filters = (
 my @heading_map = (
     taxon => 'Taxon',
     grid_ref => 'GR',
-    recorder => 'Recorder',
-
+    
     # Dates are formatted as either '', 'YYYY', 'YYYYMM', or 'YYYYMMDD'
     # depending on the precision
     date => sub {
@@ -77,6 +76,17 @@ my @heading_map = (
             if length($y);
 
         return '';
+    },
+
+    # Converts a delimited list of recorders into an array ref
+    # Trims whitespace.
+    recorders => sub {
+        my $row = shift;
+        my $recorder = $row->{Recorder};
+        
+        return [ grep { length $_ } 
+                 map  { /^\s*(.*?)\s*$/sm }
+                 split ';', $recorder        ];
     },
 );
 
@@ -178,7 +188,7 @@ sub mk_filtered_row_iterator {
             next
                 unless $row = $self->{filter}->($row, $self->{trace_cb});
 
-            return @$row{qw(taxon grid_ref date recorder)};
+            return @$row{qw(taxon grid_ref date recorders)};
         }
 
         # If we get here we ran out of data

@@ -11,7 +11,11 @@ sub new {
     my $db_path = shift
         or croak "you must supply a path to a sqlite database file"; 
 
-    my $schema = MossMap::Schema->connect("dbi:SQLite:$db_path");
+    my $schema = MossMap::Schema->connect({
+        dsn => "dbi:SQLite:$db_path",
+        # We must enable foreign_keys to have cascading deletes etc. work
+        on_connect_do => 'PRAGMA foreign_keys = ON',
+    });
 
     return bless { schema => $schema }, $class;
 }
@@ -103,7 +107,7 @@ sub data_sets {
     my $rs = $self->_rs('DataSet');
     $rs = $rs->search(
         undef,
-        {prefetch => {'records' => ['recorder','taxon']}}
+        {prefetch => {'records' => [{'recorder_records' => 'recorder'},'taxon']}}
     );
     return [_hash($rs)->all];
 }
@@ -153,7 +157,7 @@ sub get_data_set {
 
     my $rs = $self->_hrs('DataSet')->find(
         {id => $id},
-        {prefetch => {'records' => ['recorder','taxon']}},
+        {prefetch => {'records' => [{'recorder_records' => 'recorder'},'taxon']}},
     );
     
     return $rs;
@@ -168,7 +172,7 @@ sub get_current_data_set {
         {'me.name' => $name},
         {rows => 1,
          order_by => { -desc => 'me.id' },
-         prefetch => {'records' => ['recorder','taxon']}},
+         prefetch => {'records' => [{'recorder_records' => 'recorder'},'taxon']}},
     );
     
     return _hash($rs)->first;
@@ -204,8 +208,11 @@ sub new_csv_data_set {
     my @records;
     while(my @fields = $iterator->()) {
         my %record;
+        my $recorders = $fields[3];
         $record{taxon} = { name => $fields[0] };
-        $record{recorder} = { name => $fields[3] };
+        $record{recorder_records} = [map {
+            { recorder => { name => $_ }};
+        } @$recorders]; 
         @record{qw(grid_ref recorded_on)} = @fields[1,2];
         push @records, \%record;
     }
