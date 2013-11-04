@@ -17,11 +17,16 @@ CREATE TABLE records (
     grid_ref TEXT NOT NULL,
     taxon INTEGER NOT NULL REFERENCES taxa(id)
     ON DELETE RESTRICT ON UPDATE CASCADE,
-    recorder INTEGER NOT NULL REFERENCES recorders(id)
-    ON DELETE RESTRICT ON UPDATE CASCADE,
     recorded_on TEXT NOT NULL
 );
 
+CREATE TABLE recorder_records (
+    record_id INTEGER NOT NULL REFERENCES records(id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    recorder_id INTEGER NOT NULL REFERENCES recorders(id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY(record_id, recorder_id)
+);
 
 CREATE TABLE completion_set (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
