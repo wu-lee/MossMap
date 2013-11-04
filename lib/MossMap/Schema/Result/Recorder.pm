@@ -69,24 +69,34 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
-=head2 records
+=head2 recorder_records
 
 Type: has_many
 
-Related object: L<MossMap::Schema::Result::Record>
+Related object: L<MossMap::Schema::Result::RecorderRecord>
 
 =cut
 
 __PACKAGE__->has_many(
-  "records",
-  "MossMap::Schema::Result::Record",
-  { "foreign.recorder" => "self.id" },
+  "recorder_records",
+  "MossMap::Schema::Result::RecorderRecord",
+  { "foreign.recorder_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 records
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-13 10:51:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xlkWJPc/DhEFZIoPv3RSbg
+Type: many_to_many
+
+Composing rels: L</recorder_records> -> record
+
+=cut
+
+__PACKAGE__->many_to_many("records", "recorder_records", "record");
+
+
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-11-04 21:33:05
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:aVZJarGCuTXzlalOcrgpog
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

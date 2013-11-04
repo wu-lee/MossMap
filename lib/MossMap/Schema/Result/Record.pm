@@ -58,12 +58,6 @@ __PACKAGE__->table("records");
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 recorder
-
-  data_type: 'integer'
-  is_foreign_key: 1
-  is_nullable: 0
-
 =head2 recorded_on
 
   data_type: 'text'
@@ -79,8 +73,6 @@ __PACKAGE__->add_columns(
   "grid_ref",
   { data_type => "text", is_nullable => 0 },
   "taxon",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "recorder",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "recorded_on",
   { data_type => "text", is_nullable => 0 },
@@ -115,19 +107,19 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
-=head2 recorder
+=head2 recorder_records
 
-Type: belongs_to
+Type: has_many
 
-Related object: L<MossMap::Schema::Result::Recorder>
+Related object: L<MossMap::Schema::Result::RecorderRecord>
 
 =cut
 
-__PACKAGE__->belongs_to(
-  "recorder",
-  "MossMap::Schema::Result::Recorder",
-  { id => "recorder" },
-  { is_deferrable => 0, on_delete => "RESTRICT", on_update => "CASCADE" },
+__PACKAGE__->has_many(
+  "recorder_records",
+  "MossMap::Schema::Result::RecorderRecord",
+  { "foreign.record_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 taxon
@@ -145,9 +137,19 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "RESTRICT", on_update => "CASCADE" },
 );
 
+=head2 recorders
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-06 22:04:29
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TYNaYgaMaerJVfF4Ia+RoA
+Type: many_to_many
+
+Composing rels: L</recorder_records> -> recorder
+
+=cut
+
+__PACKAGE__->many_to_many("recorders", "recorder_records", "recorder");
+
+
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-11-04 21:33:05
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ZNkIllH/wf0GwQClT9pxqw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
