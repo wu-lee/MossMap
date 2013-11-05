@@ -74,7 +74,7 @@ angular.module('DataBrowserModule')
     });
 
 angular.module('DataBrowserModule')
-    .controller('DataViewController', function($scope, $modal, $http, $window, $document, $resource, $templateCache, $location, session) {
+    .controller('DataViewController', function($scope, $window, $modal, $location, session) {
 
         $scope.session = session;
 
@@ -151,7 +151,7 @@ angular.module('DataBrowserModule')
 
 
 angular.module('DataBrowserModule')
-    .controller('ObservationsController', function($scope, $rootScope, $resource, $templateCache, $modal) {
+    .controller('ObservationsController', function($scope, $resource, $templateCache) {
 
         $scope.dataType = 'Observations';
         $scope.uploadUrl = '/bulk/sets.csv';
@@ -182,7 +182,7 @@ angular.module('DataBrowserModule')
     });
 
 angular.module('DataBrowserModule')
-    .controller('CompletedTetradsController', function($scope, $rootScope, $resource, $templateCache, $modal) {
+    .controller('CompletedTetradsController', function($scope, $resource, $templateCache) {
 
         $scope.dataType = 'Completed Tetrads';
         $scope.uploadUrl = '/bulk/completed.csv';
