@@ -127,10 +127,12 @@ angular.module('DataBrowserModule')
             var myScope = this;
             var resource = myScope.resource;
             var id = myScope.regionName;
+            var transform = myScope.resourceTransform;
 
-            $scope.message = "Loading data..."; 
+            myScope.message = "Loading data, please wait..."; 
             var loadingDialog = $modal.open({
                 templateUrl: '_loading.html',
+                scope: myScope,
             });
 
             var promise = loadingDialog.opened.then(function() {
@@ -139,6 +141,12 @@ angular.module('DataBrowserModule')
                     function() {
                         $scope.message = "";
                         loadingDialog.close();
+                    },
+                    function(err) {
+                        myScope.message = "Loading failed.";
+                        myScope.details = "Server returned error code "+
+                            err.status+", reason: "+err.data.error+
+                            ", '"+id+"'";
                     }
                 );
             });
