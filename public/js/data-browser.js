@@ -139,7 +139,12 @@ angular.module('DataBrowserModule')
                 myScope.data = resource.get(
                     {setId: id},
                     function() {
-                        $scope.message = "";
+                        if (transform) {
+                            var d = myScope.data.records;
+                            for(var ix = 0; ix < d.length; ++ix) {
+                                transform(d[ix]);
+                            }
+                        }
                         loadingDialog.close();
                     },
                     function(err) {
@@ -169,6 +174,16 @@ angular.module('DataBrowserModule')
             {setId: '@id'}
         );
 
+        $scope.resourceTransform = function(item) {
+            var rr = item.recorder_records;
+            delete item.recorder_records;
+            var recorders = rr.map(function(it) {
+                return it.recorder.name;
+            });
+            
+            item.recorders = recorders.sort().join('; ');
+        };
+
         $scope.gridOptions = {
             showFooter: true,
             footerTemplate:  $templateCache.get('_footer.html'),
@@ -183,7 +198,7 @@ angular.module('DataBrowserModule')
             {field: 'id', width: 100},
             {field: 'grid_ref', displayName: 'Grid Ref', width: 100},
             {field: 'taxon.name', displayName: 'Taxon'},
-            {field: 'recorder.name', displayName: 'Recorder'},
+            {field: 'recorders', displayName: 'Recorder'},
         ];
 
         $scope.reloadData();
