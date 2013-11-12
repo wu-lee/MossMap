@@ -4,6 +4,9 @@ use warnings;
 use Text::CSV;
 use Time::Local;
 use Carp qw(croak);
+use Scalar::Util qw(blessed);
+
+my $noop = sub {};
 
 my @dinty = map { [split '', $_] } reverse (
     'EJPUZ',
@@ -52,8 +55,8 @@ my %filters = (
 
 # Defines what we keep, and name mappings thereof
 my @heading_map = (
-    taxon => 'Taxon',
-    grid_ref => 'GR',
+    taxon => 'taxon',
+    grid_ref => 'gr',
     
     # Dates are formatted as either '', 'YYYY', 'YYYYMM', or 'YYYYMMDD'
     # depending on the precision
@@ -64,7 +67,7 @@ my @heading_map = (
             /^#VALUE!$/? '' :
             /^\s*$/    ? '' :
                 int;
-        } @$row{qw(Year Month Day)};
+        } @$row{qw(year month day)};
 
         return sprintf '%04u%02u%02u', $y, $m, $d
             if length($y) && length($m) && $d;
@@ -82,7 +85,7 @@ my @heading_map = (
     # Trims whitespace.
     recorders => sub {
         my $row = shift;
-        my $recorder = $row->{Recorder};
+        my $recorder = $row->{recorder};
         
         return [ grep { length $_ } 
                  map  { /^\s*(.*?)\s*$/sm }
@@ -104,7 +107,7 @@ sub new {
     return bless {
         csv => $csv,
         filter => $filters{keep_tetrad_attributable},
-        trace_cb => $params{trace_cb} || sub {},
+        trace_cb => $params{trace_cb} || $noop,
     }, $class;
 }
 
@@ -127,7 +130,10 @@ sub mk_row_iterator {
 
     # Map scalars or arrayrefs into filehandles or coderefs, respectively
     if (!ref $source) {
-        $source = IO::File->open($source);
+        require 'IO/File.pm';
+        my $fh = IO::File->new($source, "r")
+            or croak "Failed to open file '$source': $!";
+        $source = $fh;
     }
     elsif (ref $source eq 'ARRAY') {
         $source = sub { $source->[$ix++] };
@@ -140,8 +146,13 @@ sub mk_row_iterator {
             return ($line && $csv->parse($line));
         };
     }
-    elsif (ref $source eq 'GLOB'
-        || $source->isa('IO::Handle')
+    elsif (ref $source eq 'GLOB') {
+        $iterator = sub { $csv->getline($source) }
+    }
+    elsif (!blessed $source) {
+        # drop non-blessed scalars now
+    }
+    elsif ($source->isa('IO::Handle')
         || $source->isa('IO::String')) {
         $iterator = sub { $csv->getline($source) }
     }
@@ -157,6 +168,7 @@ sub mk_row_iterator {
 # headings, and returned items are taxon, grid_ref, date, and recorder.
 sub mk_filtered_row_iterator {
     my $self = shift;
+    my $trace = $_[1] || $noop;
     
     my $iterator = $self->mk_row_iterator(@_);
 
@@ -164,9 +176,26 @@ sub mk_filtered_row_iterator {
     $headings && @$headings
         or croak "No headings found\n";
 
-    my %csv_row;
+    # Normalise by stripping non alpha-numeric chars, and lower-casing.
+    # Some additional special-case mapping too.
+    my %count;
+    s/[\W_]+//g, $_ = lc, s/^recorders$/recorder/, 
+        s/^gridref.*/gr/, $count{$_}++
+            for @$headings;
 
+    # Warn about missing and duplicate headings
+    my @missing = grep { $count{$_} < 1 } qw(taxon gr recorder year);
+    my @dupes = grep { $count{$_} > 1 } qw(taxon gr recorder year month day);
+
+    croak "These mandatory headings are missing even after ".
+        "normalising the input headings: @missing"
+            if @missing;
+
+    $trace->("these headings are duplicated after normalising, ".
+                 "so you may not be getting the result you expect: @dupes");
+    
     return sub {
+        my %csv_row;
         while ( my $csv_row_ref = $iterator->() ) {
             @csv_row{@$headings} = @$csv_row_ref;
 
