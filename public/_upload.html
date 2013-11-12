@@ -8,10 +8,11 @@
     <div class="control-group">
       <span class="help-block">
 	Use this to a upload CSV file containing {{ dataType | lowercase }}
-	records. FIXME more info here. FIXME also on completion, the
-	data should be updated. FIXME link back to map.
+	records.
       </span>
     </div>
+
+    <div ng-include="uploadHelp" />
 
     <div class="control-group" >
       <label class="control-label" for="upload-file-input">

@@ -169,6 +169,8 @@ angular.module('DataBrowserModule')
         $scope.dataType = 'Observations';
         $scope.uploadUrl = '/bulk/sets.csv';
 
+        $scope.uploadHelp = '_observationUploadHelp.html';
+
         $scope.resource = $resource(
             '/data/sets/:setId',
             {setId: '@id'}
