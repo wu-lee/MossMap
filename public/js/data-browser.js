@@ -287,7 +287,7 @@ angular.module('DataBrowserModule')
 
 
 angular.module('DataBrowserModule')
-    .controller('UploadController', function($scope, $http) {
+    .controller('UploadController', function($scope, $http, $log) {
 
         $scope.uploadPercent = 0;
 
@@ -341,8 +341,12 @@ angular.module('DataBrowserModule')
                             $scope.uploading = false;
                             $scope.uploadFilename = '';
                         },
-                        function(err) {
-                            $scope.uploadMessage = "Error: "+err.message;
+                        function(resp) {
+                            $log.debug("Upload error: ", resp);
+                            var data = resp.data;
+                            var message = 'message' in data?
+                                data.message : data;
+                            $scope.uploadMessage = "Error: "+message;
                             $scope.uploading = false;
                         }
                     )
