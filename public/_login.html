@@ -18,6 +18,11 @@
       </div>
     </div>
     <div class="control-group">
+      <div class="alert" style="text-align: center;" ng-show="session.error">
+	{{ session.error }}
+      </div>
+    </div>
+    <div class="control-group">
       <div class="controls">
 	<input type="submit" class="btn btn-primary" 
 	       name="ok" ng-click="ok()" value="Log in"/>
