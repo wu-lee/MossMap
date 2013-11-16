@@ -279,7 +279,7 @@ angular.module('DataBrowserModule')
                     $scope.$close("Logged out");
                 },
                       function(err) {
-                          $scope.$close("Log out failed: "+err);
+                          $scope.$close("Log out failed: "+err.data);
                       });
 
         };
