@@ -243,6 +243,7 @@ angular.module('DataBrowserModule')
             username: session.username,
             password: '',
         };
+        $scope.session = session;
         $scope.ok = function() {
             $http.post('/session/login',
                        { username: credentials.username, 
@@ -264,7 +265,6 @@ angular.module('DataBrowserModule')
                       function(p){ 
                           session.error = 
                               p? p.data? p.data.error : 'failed' : 'failed';
-                          $scope.close("Log in failed");
                       });
         };
     });
