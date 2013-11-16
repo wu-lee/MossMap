@@ -104,6 +104,7 @@ helper csv_upload_wrapper => sub {
         or do {
             my $err = $@;
             app->log->debug("Error processing '$filename': $err");
+            $err =~ s/ at .*//;
             return $self->render(
                 json => {message => $err},
                 status => 400,
