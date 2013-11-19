@@ -1,0 +1,12 @@
+#!/bin/bash
+
+export appdir=$(readlink -f "${BASH_SOURCE[0]%/*}/..")
+export locallib="$appdir/ll"
+
+export PERL_MB_OPT="--install_base $locallib"
+export PERL_MM_OPT=INSTALL_BASE="$locallib"
+export PERL_LOCAL_LIB_ROOT="$locallib"
+export PERL5LIB="$appdir/lib:$locallib/lib/perl5/x86_64-linux-gnu-thread-multi:$locallib/lib/perl5:$PERL5LIB"
+export PATH="$appdir/bin:$locallib/bin:$PATH"
+
+exec "$@"
