@@ -4,3 +4,6 @@
 /db/moss-map.db
 /t/temp/
 /moss-map.json
+*.gz
+MossMap-*/
+/tmp/
