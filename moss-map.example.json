@@ -1,7 +1,7 @@
 {
     "users": {
         "foo": { "password" : "bar" }
-    }
+    },
 
     "hypnotoad": {
         "listen": ["http://*:8080"],
