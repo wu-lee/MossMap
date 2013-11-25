@@ -14,6 +14,15 @@ use Scalar::Util 'looks_like_number';
 # A package variable, to make over-riding in tests easier.
 our $config = plugin 'JSONConfig';
 
+if (my $logfile = $config->{log}{file}) {
+    $logfile = File::Spec->rel2abs($logfile, app->home);
+    my $loglevel = $config->{log}{level} || 'warn';
+    app->log( Mojo::Log->new( path => $logfile, 
+                              level => $loglevel ) );
+}
+
+
+
 plugin authentication => {
     session_key => 'moss-map',
     load_user => sub {
