@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export appdir=$(readlink -f "${BASH_SOURCE[0]%/*}/..")
-export locallib="$appdir/ll"
+export locallib="$appdir/local"
 
 export PERL_MB_OPT="--install_base $locallib"
 export PERL_MM_OPT=INSTALL_BASE="$locallib"
