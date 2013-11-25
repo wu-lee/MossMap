@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use JSON::PP;
 use FindBin qw($Bin);
-use lib "$Bin/ll/lib/perl5";
+use lib "$Bin/local/lib/perl5";
 use lib "$Bin/lib";
 
 use MossMap::CSV;
