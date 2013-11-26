@@ -1,4 +1,6 @@
 {
+    "secret": "Some passphrase",
+
     "users": {
         "foo": { "password" : "bar" }
     },
