@@ -21,7 +21,9 @@ if (my $logfile = $config->{log}{file}) {
                               level => $loglevel ) );
 }
 
-
+if (my $secret = $config->{secret}) {
+    app->secret($secret);
+}
 
 plugin authentication => {
     session_key => 'moss-map',
