@@ -1,1 +1,0 @@
-ui-bootstrap-tpls-0.6.0.min.js
