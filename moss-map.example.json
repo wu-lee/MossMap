@@ -1,0 +1,18 @@
+{
+    "secret": "Some passphrase",
+
+    "users": {
+        "foo": { "password" : "bar" }
+    },
+
+    "hypnotoad": {
+        "listen": ["http://*:8080"],
+        "proxy": true,
+        "heartbeat_timeout": 120
+    },
+
+    "log": {
+    	   "file": "moss-map.log",
+    	   "level": "warn"
+    }
+}

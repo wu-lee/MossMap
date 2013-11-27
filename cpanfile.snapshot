@@ -1,0 +1,41 @@
+# carton snapshot format: version 1.0
+DISTRIBUTIONS
+  IO-String-1.08
+    pathname: G/GA/GAAS/IO-String-1.08.tar.gz
+    provides:
+      IO::String 1.08
+    requirements:
+      ExtUtils::MakeMaker 0
+  Test-DataDirs-0.1.0
+    pathname: W/WU/WULEE/Test-DataDirs-0.1.0.tar.gz
+    provides:
+      Test::DataDirs 0.001000
+      Test::DataDirs::Exporter 0.001000
+    requirements:
+      Module::Build 0.2808
+  Test-Pod-1.48
+    pathname: D/DW/DWHEELER/Test-Pod-1.48.tar.gz
+    provides:
+      Test::Pod 1.48
+    requirements:
+      File::Find 0
+      File::Spec 0
+      Module::Build 0.30
+      Pod::Simple 3.05
+      Test::Builder::Tester 1.02
+      Test::More 0.62
+  Test-Pod-Coverage-1.08
+    pathname: P/PE/PETDANCE/Test-Pod-Coverage-1.08.tar.gz
+    provides:
+      Nopod undef
+      Nosymbols undef
+      PC_Inherited undef
+      PC_Inherits undef
+      Privates undef
+      Simple undef
+      Test::Pod::Coverage 1.08
+    requirements:
+      ExtUtils::MakeMaker 0
+      Pod::Coverage 0
+      Test::Builder::Tester 0
+      Test::More 0

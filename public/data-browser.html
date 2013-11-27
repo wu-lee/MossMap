@@ -1,0 +1,152 @@
+<!doctype html>
+<html ng-app="DataBrowserModule">
+<head>
+  <title>The Mosses and Liverworts of Cheshire: Data Browser</title>
+  <script src="3p/jquery-2.0.3.min.js"></script>
+  <script src="3p/angular-1.1.5.min.js"></script>
+  <script src="3p/angular-resource-1.1.5.min.js"></script>
+  <script src="3p/ui-bootstrap-tpls-0.6.0.min.js"></script>
+  <script src="3p/ng-grid-2.0.7.min.js"></script>
+  <script src="3p/js-webshim-1.10.10/minified/extras/modernizr-custom.js"></script> 
+  <script src="3p/js-webshim-1.10.10/minified/polyfiller.js"></script> 
+
+  <script src="js/utils.js"></script>
+  <script src="js/data-browser.js"></script>
+
+  <link rel="stylesheet" href="3p/bootstrap-combined-2.3.2.min.css"></link>
+  <link rel="stylesheet" href="3p/ng-grid-2.0.7.min.css"></link>
+
+<script> 
+    $.webshims.polyfill('filereader');
+</script>
+
+
+<style>
+html, body, #top {
+    width: 100%;
+    height: 100%;
+}
+#top { background: #eee; position: relative; }
+.border-box > * {
+    background: white;
+    border: 1px solid green;
+    border-radius: 5px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    padding: 5px;
+    margin: 5px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+#top > * {
+    position: absolute;
+}
+.navbar {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 52px;
+}
+.navbar .navbar-inner {
+    padding: 0 10px;    
+}
+.nav-right {
+    float: right;
+    display: inline-block;
+    padding: 10px 15px;
+}
+.nav-right span {
+    margin-left: 1em;
+}
+#data {
+    top: 47px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+div[ng-grid-footer] {
+  padding: 10px;
+  background: #eee;
+  border: solid 1px green;
+  border-radius: 3px;
+  line-height: 40px;
+  padding: 0 10px;
+}
+dd, dt {
+    display: inline;
+}
+dt:after {
+    content: ":";
+}
+dd {
+    margin-left: 10px;
+    margin-right: 3em;
+}
+div.progress-bar {
+    text-align: center;
+    font-size: large;
+}
+
+div.progress-bar  {
+}
+</style>
+
+<script ng-script type="text/ng-template" id="_footer.html">
+<span><dt>Set name</dt><dd>{{ data.name }}</dd></span>
+<span><dt>Id</dt><dd>{{ data.id }}</dd></span>
+<span><dt>Created on</dt><dd>{{ data.created_on }}</dd></span>
+<span><dt>Number of items</dt><dd>{{ data.$resolved? maxRows() : '...' }}</dd></span>
+<span class="pull-right" ng-show="session && session.active">
+<button class="btn btn-primary" ng-click="uploadDialog()">Upload {{ dataType }}</button>
+</span>
+</script>
+
+<script ng-script type="text/ng-template" id="_data-grid.html">
+  <div ng-grid="gridOptions">
+  </div>
+</script>
+
+</head>
+<body>
+<div id="top" ng-controller="DataViewController">
+
+  <div class="border-box navbar">
+
+    <div class="navbar-inner">
+    <a class="brand" href="">Data:</a>
+    <ul class="nav">
+      <li ng-class="{active: path() == '/observations'}">
+	<a href="#/observations">Observations</a>
+      </li>
+      <li ng-class="{active: path() == '/completed-tetrads'}">
+	<a href="#/completed-tetrads">Completed Tetrads</a>
+      </li>
+    </ul>
+    <div class="nav-right">
+      <span ng-show="message">{{ message }}</span>
+
+      <span ng-hide="session && session.active"
+	   tooltip="You need to log in to upload data..."
+	   tooltip-placement="left">      
+	{{ session.error }}
+	<a ng-click="loginDialog()">Log in</a>
+      </span>
+
+      <span ng-show="session && session.active">
+	You are logged in as {{ session.username }}.
+	<a ng-click="logoutDialog()" >Log out</a>
+      </span>
+    </div>
+    </div>
+
+  </div>
+
+
+  <div id="data"  class="border-box" ng-view>
+  </div>
+</div>
+</body>
+</html>

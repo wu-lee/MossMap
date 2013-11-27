@@ -1,0 +1,42 @@
+x remove prints in MossMap::CSV
+x implement a "latest data for X" url
+x loading dialog for ct
+x wire GUI to back end
+x uploads should allow a name to override the filename
+x fix CSV parser to get recorder etc.
+x has_recorder -> has_recorders
+x show when log-in is unauthorized
+x deployment
+* better help 
+* ask des/john: what should be public?
+* check format with des
+* show info/errors from CSV parsing
+x uploading a bad file should get a diagnostic (not "undefined")
+* can we get rid of scrollbar on upload dialog?
+x better error handling / diagnostics
+* implement lookups for recorder in map
+* show upload progress
+* view recorders in browser
+* user accounts for uploading
+* user account management
+* password management
+* view taxa?
+* general crud / data set history
+* multiple regions
+* export as csv
+* allow uploading images
+* excel format upload / export
+* client-side CSV parsing?
+* transactions
+
+* recorders separated by "and"?  "et al" by itself?
+
+* test what happens with http://localhost:3000/data/completed/cheshire -> 404
+* note extra prereqs
+- build-essentials
+- libc6-dev
+- sqlite3
+install schema
+link links?
+
+* hypnotoad logging
