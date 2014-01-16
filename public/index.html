@@ -2,22 +2,22 @@
 <html xmlns:ng="http://angularjs.org" id="ng-app" ng-app="TetradMapModule">
 <head>
   <title>The Mosses and Liverworts of Cheshire</title>
-  <script src="3p/jquery-2.0.3.min.js"></script>
+  <script src="3p/jquery-1.10.2.min.js"></script>
+  <script src="3p/js-webshim-1.10.10/minified/extras/modernizr-custom.js"></script>
+  <script src="3p/js-webshim-1.10.10/minified/polyfiller.js"></script> 
+
+<script> 
+    $.webshims.polyfill(); /* this needs to be ahead of d3.js */
+</script>
+
   <script src="3p/angular-1.1.5.min.js"></script>
   <script src="3p/ui-bootstrap-tpls-0.6.0.min.js"></script>
-  <script src="3p/d3-3.2.2.min.js"></script>
-  <script src="3p/js-webshim-1.10.10/minified/extras/modernizr-custom.js"></script> 
-  <script src="3p/js-webshim-1.10.10/minified/polyfiller.js"></script> 
+  <script src="3p/d3-3.2.2.js"></script>
 
   <script src="js/utils.js"></script>
   <script src="js/tetrad-map.js"></script>
 
   <link rel="stylesheet" href="3p/bootstrap-combined-2.3.2.min.css"></link>
-
-<script> 
-    $.webshims.polyfill();
-</script>
-
 
 <style>
 html, body, #top, div[tetrad-map] {
