@@ -12,7 +12,7 @@ angular.module('TetradMapModule')
 
 
         function DateThreshold(thresholds, defaultVal) {
-            this.default = defaultVal;
+            this.defaultVal = defaultVal;
             if (!(thresholds instanceof Object))
                 throw new Error("thresholds parameter must be an object");
 
@@ -42,7 +42,7 @@ angular.module('TetradMapModule')
                 if (date < threshold.date)
                     return threshold.key;
             }
-            return this.default;
+            return this.defaultVal;
         };
 
 	function Record(gridref, datestr) {
@@ -318,7 +318,7 @@ angular.module('TetradMapModule')
                                  "Recordings before "+
                                  (it.date.getYear()+1900) ];
                     })
-                    .concat([[ dateThresholds.default, 
+                    .concat([[ dateThresholds.defaultVal, 
                                "Recordings since "+
                                (dateThresholds.thresholds
                                 .slice(-1)[0].date.getYear()+1900) ],
