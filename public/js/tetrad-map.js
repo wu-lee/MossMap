@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('TetradMapModule', ['ui.bootstrap']);
 
 
@@ -399,6 +401,15 @@ angular.module('TetradMapModule')
 		    if (err)
 			throw new Error(err);
 
+                    // Remove the leading name and created_on fields
+                    var datasetName = json.taxa.shift();
+                    var datasetChangedDate = json.taxa.shift();
+                    console.log(datasetName,datasetChangedDate);
+                    // Ditto for the completed set
+                    var completedSetName = json.completed.shift();
+                    var completedSetChangedDate = json.completed.shift();
+                    console.log(completedSetName, completedSetChangedDate);
+
                     d3.select(mapContainer.node().childNodes).remove();
 
 		    scope.$parent[datasetVarName] = json;
@@ -505,7 +516,7 @@ function Controller($scope, $modal) {
 
     $scope.mapOptions = {
         image: "basemap.jpg",
-        taxonObservationData: "cheshire-dataset.json",
+        taxonObservationData: "bulk/latest/cheshire",
 	datasetVar: "dataset",
         dateThresholds: {p1: new Date(2000,0,1),
                          p2: new Date(1950,0,1)},

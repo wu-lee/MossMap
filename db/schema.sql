@@ -1,0 +1,60 @@
+
+CREATE TABLE data_set (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    created_on TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE taxa (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT
+);
+
+CREATE TABLE records (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    data_set_id INTEGER NOT NULL REFERENCES data_set(id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    grid_ref TEXT NOT NULL,
+    taxon INTEGER NOT NULL REFERENCES taxa(id)
+    ON DELETE RESTRICT ON UPDATE CASCADE,
+    recorded_on TEXT NOT NULL
+);
+
+CREATE TABLE recorder_records (
+    record_id INTEGER NOT NULL REFERENCES records(id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    recorder_id INTEGER NOT NULL REFERENCES recorders(id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY(record_id, recorder_id)
+);
+
+CREATE TABLE completion_set (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    created_on TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE completed_tetrads (
+    completion_set_id INTEGER NOT NULL REFERENCES completion_set(id) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    grid_ref TEXT NOT NULL,
+    PRIMARY KEY(completion_set_id, grid_ref)
+);
+
+CREATE TABLE recorders (
+   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   name TEXT
+);
+
+CREATE TABLE users (
+   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   name TEXT NOT NULL,
+   email TEXT NOT NULL,
+   password TEXT NOT NULL
+);
+
+CREATE TABLE meta (
+   version INTEGER PRIMARY KEY
+);
+
+-- config?

@@ -1,0 +1,24 @@
+<div class="modal-header">
+   <h3>{{ message }}<h3>
+</div>
+<div class="modal-body" ng-show="details">
+  <form ng-submit class="form-horizontal" name="uploadForm">
+    <div class="control-group">
+      <span class="help-block">
+	{{ details }}
+      </span>
+    </div>
+    <div class="control-group">
+      <div class="controls">
+	<input type="submit" class="btn btn-primary"
+	       value="Dismiss" ng-click="$dismiss()" />
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer progress-bar">
+      <div class="progress progress-striped active">
+	<div class="bar" style="width: 100%;"></div>
+      </div>
+</div>
+
