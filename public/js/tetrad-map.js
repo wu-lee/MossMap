@@ -345,11 +345,13 @@ angular.module('TetradMapModule')
 
                     .text(function(d) { return d[1]; });
 
-                var legendBBox = legend.node().getBBox();
-                legendBBox.x -= 5;
-                legendBBox.y -= 5;
-                legendBBox.width += 10;
-                legendBBox.height += 10;
+                var bb =  legend.node().getBBox(); // BBox object cannot be modified in IE
+                var legendBBox = {
+                    x: bb.x-5,
+                    y: bb.y-5,
+                    width: bb.width+10,
+                    height: bb.height+10
+                };
 
                 legend
                     .insert("rect", ":first-child")
