@@ -1,0 +1,11 @@
+{
+  "name": "couchdb-gulp",
+  "version": "0.0.1",
+  "description": "Shim between couchdb-push and gulp/vinyl",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

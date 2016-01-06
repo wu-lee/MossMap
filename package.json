@@ -1,0 +1,23 @@
+{
+  "author": "Nick Stokoe <git.wu-lee@noodlefactory.co.uk>",
+  "name": "MossMap2",
+  "description": "a map of (bryological) observations",
+  "version": "0.0.1",
+  "repository": {
+    "url": ""
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "couchdb-push": "^2.3.0",
+    "gulp": "^3.9.0",
+    "gulp-util": "^3.0.7",
+    "gulp-watch": "^4.3.5",
+    "minimist": "^1.2.0",
+    "through2": "^2.0.0"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
