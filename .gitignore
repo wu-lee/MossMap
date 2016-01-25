@@ -3,3 +3,6 @@
 /node_modules/
 /npm-debug.log
 /config.json
+/couchapp/mossmap/_design/_attachments/3rdparty-*
+/couchapp/mossmap/_design/_attachments/vendor-*
+/bundle.result.json

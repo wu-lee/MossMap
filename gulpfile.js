@@ -1,58 +1,47 @@
-'use strict';
+// gulpfile.js 
+var gulp = require('gulp')
+var rimraf = require('gulp-rimraf')
+//var livereload = require('gulp-livereload')
+var path = require('path')
+var gbundle = require('gulp-bundle-assets')
 
-var gulp = require('gulp');
-var gutil = require('gulp-util');
-var push = require('couchdb-gulp');
-var minimist = require('minimist');
+gulp.task('default', ['bundle']);
 
-var options = minimist(
-    process.argv.slice(2),
-    {
-        string: 'url',
-        'default': {
-            url: 'mossmap',
+gulp.task('bundle', ['clean'], function () {
+    return gulp.src('./bundle.config.js')
+        .pipe(gbundle({
+            //bundleAllEnvironments: true,
+            //quietMode: true
+        }))
+        .pipe(gbundle.results({
+            dest: './',
+//            pathPrefix: '/couchapp/',
+//            fileName: 'manifest'
+        }))
+        .pipe(gulp.dest('./couchapp'));
+});
+
+
+
+/*
+gulp.task('watch', function () {
+    livereload.listen();
+    gulp.watch(['./public/*.*']).on('change', livereload);
+    gbundle.watch({
+        //bundleAllEnvironments: true,
+        //quietMode: true,
+        configPath: path.join(__dirname, 'bundle.config.js'),
+        results: {
+            dest: __dirname,
+            pathPrefix: '/public/',
+            fileName: 'manifest'
         },
+        dest: path.join(__dirname, 'public')
     });
-
-var config;
-var couch_url = options['url'];
-try {
-    config = require('./config.json');
-    couch_url = config.db;
-} catch(e) {}
-gutil.log("url is "+couch_url); // DEBUG
-
-if (!couch_url) {
-    gutil.log('You must supply the URL to your CouchDB instance (via the --url option or config.json');
-    process.exit(1);
-}
-
-
-// FIME hacky
-gulp.task('_design/import', function() {
-    gulp.src('node_modules/papaparse/papaparse.js')
-        .pipe(gulp.dest('_design/import/_attachments/js'));
-    gulp.src('node_modules/bootstrap/dist/css/bootstrap.css')
-        .pipe(gulp.dest('_design/import/_attachments/css'));
 });
-
-gulp.task('docs', function() {
-    gulp.src('_docs/*')
-        .pipe(push(couch_url))
-});
-
-
-gulp.task('apps', function() {
-    gulp.src('_design/*')
-        .pipe(push(couch_url))
-});
-
-gulp.task('watch', ['default'], function() {
-    gulp.watch('./_design/**/*', 
-               ['apps'])
-//        .on('change', function(x) { console.log(">>>", x) })
-    gulp.watch('./_docs/*', ['docs']);
-});
-
-gulp.task('default', ['_design/import', 'apps', 'docs'], function() {
+*/
+gulp.task('clean', function () {
+// FIXME disabled pending my decision how to build
+    return gulp.src('./couchapp/mossmap/_design/_attachments/3rdparty*', { read: false })
+        .pipe(rimraf());
 });
