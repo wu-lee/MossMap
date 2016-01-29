@@ -2,6 +2,7 @@
 
 var gulp = require('gulp');
 var gutil = require('gulp-util');
+var concat = require('gulp-concat');
 var push = require('couchdb-gulp');
 var minimist = require('minimist');
 
@@ -17,23 +18,36 @@ var options = minimist(
 var config;
 var couch_url = options['url'];
 try {
-    config = require('./config.json');
-    couch_url = config.db;
+    config = require('./config.js');
+    couch_url = config.db.url;
 } catch(e) {}
 gutil.log("url is "+couch_url); // DEBUG
 
 if (!couch_url) {
-    gutil.log('You must supply the URL to your CouchDB instance (via the --url option or config.json');
+    gutil.log('You must supply the URL to your CouchDB instance (via the --url option or config.js');
     process.exit(1);
 }
 
 
-// FIME hacky
-gulp.task('_design/import', function() {
-    gulp.src('node_modules/papaparse/papaparse.js')
-        .pipe(gulp.dest('_design/import/_attachments/js'));
-    gulp.src('node_modules/bootstrap/dist/css/bootstrap.css')
-        .pipe(gulp.dest('_design/import/_attachments/css'));
+var couchappDir = 'couchapp/mossmap/';
+var ddocs = config.db.ddocs;
+gulp.task('css', function() {
+    
+    for(var ddocName in ddocs.mossmap) {
+        var ddoc = ddocs.mossmap[ddocName]
+        gulp.src(ddoc.css)
+            .pipe(concat(ddoc.dest.css))
+            .pipe(gulp.dest(couchappDir))
+    }
+});
+
+gulp.task('js', function() {
+    for(var ddocName in ddocs.mossmap) {
+        var ddoc = config.db.mossmap[ddocName]
+        gulp.src(ddoc.js)
+            .pipe(concat(ddoc.dest.js))
+            .pipe(gulp.dest(couchappDir))
+    }
 });
 
 gulp.task('docs', function() {
@@ -42,17 +56,24 @@ gulp.task('docs', function() {
 });
 
 
-gulp.task('apps', function() {
+
+gulp.task('pushDDocs', function() {
     gulp.src('_design/*')
         .pipe(push(couch_url))
 });
 
+gulp.task('apps', ['css', 'js', 'pushDDocs']);
+
 gulp.task('watch', ['default'], function() {
-    gulp.watch('./_design/**/*', 
-               ['apps'])
-//        .on('change', function(x) { console.log(">>>", x) })
-    gulp.watch('./_docs/*', ['docs']);
+    for(var ddocName in ddocs) {
+        var ddoc = ddocs[ddocName];
+        for(var type in ddoc.dest) {
+            console.log("watch",type,ddoc[type])
+            gulp.watch(ddoc[type], [type, 'pushDDocs']);
+        }
+    }
+    gulp.watch('_docs/*', ['docs']);
 });
 
-gulp.task('default', ['_design/import', 'apps', 'docs'], function() {
+gulp.task('default', ['apps', 'docs'], function() {
 });

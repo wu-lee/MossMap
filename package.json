@@ -7,11 +7,15 @@
     "url": ""
   },
   "dependencies": {
-    "bootstrap": "^3.3.6"
+    "angular": "^1.4.8",
+    "angular-ui-bootstrap": "^1.1.0",
+    "bootstrap": "^3.3.6",
+    "d3": "^3.5.13"
   },
   "devDependencies": {
     "couchdb-push": "^2.3.0",
     "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
     "gulp-util": "^3.0.7",
     "gulp-watch": "^4.3.5",
     "minimist": "^1.2.0",
