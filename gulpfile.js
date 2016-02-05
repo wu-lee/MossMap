@@ -72,7 +72,6 @@ gulp.task('watch', ['default'], function() {
             gulp.watch(ddoc[type], [type, 'pushDDocs']);
         }
     }
-    gulp.watch('_docs/*', ['docs']);
 });
 
 gulp.task('default', ['apps', 'docs'], function() {
