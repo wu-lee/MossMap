@@ -12,6 +12,7 @@ module.exports = {
                     'node_modules/d3/d3.js',
                 ],
                 html: [
+                    'src/monads/index.html'
                 ],
                 dest: {
                     css: 'styles.css',

@@ -5,6 +5,7 @@ var gutil = require('gulp-util');
 var concat = require('gulp-concat');
 var push = require('couchdb-gulp');
 var minimist = require('minimist');
+var path = require('path');
 
 var options = minimist(
     process.argv.slice(2),
@@ -29,24 +30,52 @@ if (!couch_url) {
 }
 
 
-var couchappDir = 'couchapp/mossmap/';
+var couchappDir = 'couchapp/mossmap';
 var ddocs = config.db.ddocs;
 gulp.task('css', function() {
     
-    for(var ddocName in ddocs.mossmap) {
-        var ddoc = ddocs.mossmap[ddocName]
+    for(var ddocName in ddocs) {
+        var ddoc = ddocs[ddocName]
+        var dest = path.resolve(
+            couchappDir,
+            '_design',
+            ddocName,
+            '_attachments'
+        );
         gulp.src(ddoc.css)
             .pipe(concat(ddoc.dest.css))
-            .pipe(gulp.dest(couchappDir))
+            .pipe(gulp.dest(dest))
     }
 });
 
 gulp.task('js', function() {
-    for(var ddocName in ddocs.mossmap) {
-        var ddoc = config.db.mossmap[ddocName]
+    for(var ddocName in ddocs) {
+        var ddoc = ddocs[ddocName]
+        var dest = path.resolve(
+            couchappDir,
+            '_design',
+            ddocName,
+            '_attachments'
+        );
         gulp.src(ddoc.js)
             .pipe(concat(ddoc.dest.js))
-            .pipe(gulp.dest(couchappDir))
+            .pipe(gulp.dest(dest))
+    }
+});
+
+gulp.task('html', function() {
+    for(var ddocName in ddocs) {
+        var ddoc = ddocs[ddocName]
+        var dest = path.resolve(
+            couchappDir,
+            '_design',
+            ddocName,
+            '_attachments',
+            ddoc.dest.html
+        );
+        gulp.src(ddoc.html)
+        
+            .pipe(gulp.dest(dest))
     }
 });
 
@@ -58,11 +87,15 @@ gulp.task('docs', function() {
 
 
 gulp.task('pushDDocs', function() {
-    gulp.src('_design/*')
+    var src = path.resolve(
+        couchappDir,
+        '_design'
+    );
+    gulp.src(src+'/*')
         .pipe(push(couch_url))
 });
 
-gulp.task('apps', ['css', 'js', 'pushDDocs']);
+gulp.task('apps', ['css', 'js', 'html', 'pushDDocs']);
 
 gulp.task('watch', ['default'], function() {
     for(var ddocName in ddocs) {
