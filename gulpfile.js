@@ -6,6 +6,7 @@ var concat = require('gulp-concat');
 var push = require('couchdb-gulp');
 var minimist = require('minimist');
 var path = require('path');
+var rimraf = require('gulp-rimraf');
 
 var options = minimist(
     process.argv.slice(2),
@@ -126,5 +127,11 @@ gulp.task('watch', ['default'], function() {
     }
 });
 
+gulp.task('clean', function () {
+    return gulp.src('couchapp/', { read: false })
+        .pipe(rimraf());
+});
+
 gulp.task('default', ['apps', 'docs'], function() {
 });
+
