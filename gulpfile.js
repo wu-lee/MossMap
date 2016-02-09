@@ -79,6 +79,25 @@ gulp.task('html', function() {
     }
 });
 
+gulp.task('couchdbjs', function() {
+    for(var ddocName in ddocs) {
+        var ddoc = ddocs[ddocName]
+
+        var dest = path.resolve(
+            couchappDir,
+            '_design',
+            ddocName
+        );
+        var src = path.resolve(
+            'src',
+            ddocName
+        );
+            
+        gulp.src(src+'/*/*/*.js')
+            .pipe(gulp.dest(dest))
+    }
+});
+
 gulp.task('docs', function() {
     gulp.src('_docs/*')
         .pipe(push(couch_url))
@@ -95,7 +114,7 @@ gulp.task('pushDDocs', function() {
         .pipe(push(couch_url))
 });
 
-gulp.task('apps', ['css', 'js', 'html', 'pushDDocs']);
+gulp.task('apps', ['css', 'js', 'html', 'couchdbjs', 'pushDDocs']);
 
 gulp.task('watch', ['default'], function() {
     for(var ddocName in ddocs) {
