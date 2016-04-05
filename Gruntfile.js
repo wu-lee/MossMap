@@ -77,7 +77,7 @@ module.exports = function(grunt) {
             html: {
                 files: [
                     {
-                        src: 'src/monads/index.html',
+                        src: 'src/mossmap/index.html',
                         dest: 'couchdb/mossmap/_attachments/index.html'
                     }
                 ],
