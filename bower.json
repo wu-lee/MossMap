@@ -1,0 +1,21 @@
+{
+  "name": "MossMap2",
+  "description": "a map of (bryological) observations",
+  "main": "src/browser/tetrad-map.js",
+  "authors": [
+    "Nick Stokoe <git.wu-lee@noodlefactory.co.uk>"
+  ],
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "CornerCouch": "*"
+  }
+}
