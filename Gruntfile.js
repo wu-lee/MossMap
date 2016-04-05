@@ -11,13 +11,17 @@ module.exports = function(grunt) {
             }
             return Object.keys(_.transform(obj, transform));
         },
-        jshint: {
-            files: ['Gruntfile.js', 'lib/**/*.js'],
-            options: {
-                globals: {
-                    jQuery: true
-                }
-            }
+        jshint: {            
+            nodejs: {
+                src: ['Gruntfile.js'],
+            },
+            browser: {
+                src: ['lib/**/*.js'],
+                options: {
+                    browser: true,
+                    jquery: true,
+                },
+            },
         },
         copy: {
             js: {
