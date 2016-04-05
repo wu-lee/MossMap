@@ -55,6 +55,10 @@ module.exports = function(grunt) {
                         dest: 'couchdb/mossmap/_attachments/3p/dinty.js' 
                     },
                     {
+                        src: 'node_modules/webshim/js-webshim/dev/polyfiller.js',
+                        dest: 'couchdb/mossmap/_attachments/3p/polyfiller.js' 
+                    },
+                    {
                         expand: true,
                         cwd: 'src/browser/',
                         src: '*.js',
