@@ -12,6 +12,7 @@
     "bootstrap": "^3.3.6",
     "d3": "^3.5.13",
     "dinty": "^0.1.1",
+    "jquery": "^1.12.3",
     "webshim": "^1.15.10"
   },
   "devDependencies": {
