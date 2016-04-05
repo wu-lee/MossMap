@@ -51,6 +51,10 @@ module.exports = function(grunt) {
                         dest: 'couchdb/mossmap/_attachments/3p/d3.js' 
                     },
                     {
+                        src: 'node_modules/dinty/dinty.js',
+                        dest: 'couchdb/mossmap/_attachments/3p/dinty.js' 
+                    },
+                    {
                         expand: true,
                         cwd: 'src/browser/',
                         src: '*.js',

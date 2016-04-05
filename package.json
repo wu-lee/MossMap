@@ -10,7 +10,8 @@
     "angular": "^1.4.8",
     "angular-ui-bootstrap": "^1.1.0",
     "bootstrap": "^3.3.6",
-    "d3": "^3.5.13"
+    "d3": "^3.5.13",
+    "dinty": "^0.1.1"
   },
   "devDependencies": {
     "grunt": "^1.0.1",
