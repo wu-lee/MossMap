@@ -16,7 +16,7 @@ module.exports = function(grunt) {
                 src: ['Gruntfile.js'],
             },
             browser: {
-                src: ['lib/**/*.js'],
+                src: ['src/browser/**/*.js'],
                 options: {
                     browser: true,
                     jquery: true,
@@ -26,14 +26,6 @@ module.exports = function(grunt) {
         copy: {
             js: {
                 files: [
-                    { 
-                        src: 'node_modules/bootstrap/dist/css/bootstrap.css', 
-                        dest: 'couchdb/mossmap/_attachments/3p/bootstrap.css' 
-                    },
-                    { 
-                        src: 'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2', 
-                        dest: 'couchdb/mossmap/_attachments/fonts/glyphicons-halflings-regular.woff2' 
-                    },
                     { 
                         src: 'node_modules/jquery/dist/jquery.js', 
                         dest: 'couchdb/mossmap/_attachments/3p/jquery.js' 
@@ -58,6 +50,32 @@ module.exports = function(grunt) {
                         src: 'node_modules/d3/d3.js',
                         dest: 'couchdb/mossmap/_attachments/3p/d3.js' 
                     },
+                    {
+                        expand: true,
+                        cwd: 'src/browser/',
+                        src: '*.js',
+                        dest: 'couchdb/mossmap/_attachments/js/',
+                    }
+                ],
+            },
+            css: {
+                files: [
+                    { 
+                        src: 'node_modules/bootstrap/dist/css/bootstrap.css', 
+                        dest: 'couchdb/mossmap/_attachments/3p/bootstrap.css' 
+                    },
+                ],
+            },
+            fonts: {
+                files: [
+                    { 
+                        src: 'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2', 
+                        dest: 'couchdb/mossmap/_attachments/fonts/glyphicons-halflings-regular.woff2' 
+                    },
+                ],
+            },
+            html: {
+                files: [
                     {
                         src: 'src/monads/index.html',
                         dest: 'couchdb/mossmap/_attachments/index.html'
