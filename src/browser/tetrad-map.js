@@ -111,6 +111,7 @@ angular.module('TetradMapModule')
         return {
             scope: true, //{ val: '=' },
             link: function(scope, element, attrs) {
+                var dinty = require('dinty');
 
                 var options = scope.$eval(attrs.tetradMap);
 
@@ -229,7 +230,7 @@ angular.module('TetradMapModule')
 			x: 1*match[2],
 			y: 1*match[3],
 		    },
-		    map: gridrefToFalseOriginCoord(match[1])
+		    map: dinty.gridrefToFalseOriginCoord(match[1])
 		};
 
 		match = aliasRx.exec(gridrefAlias2);
@@ -239,7 +240,7 @@ angular.module('TetradMapModule')
 			x: 1*match[2],
 			y: 1*match[3],
 		    },
-		    map: gridrefToFalseOriginCoord(match[1])
+		    map: dinty.gridrefToFalseOriginCoord(match[1])
 		};
 
 		var dims = {
@@ -460,7 +461,7 @@ angular.module('TetradMapModule')
 
 			    return {
 				gridref: gridref,
-				coord: map2img.transform(gridrefToFalseOriginCoord(gridref)),
+				coord: map2img.transform(dinty.gridrefToFalseOriginCoord(gridref)),
 				text: text,
                                 latestRecord: latestRecord,
 			    };
@@ -492,7 +493,7 @@ angular.module('TetradMapModule')
 			.enter()
 			.append("circle")
 			.datum(function(gridref) {
-                            return map2img.transform(gridrefToFalseOriginCoord(gridref));
+                            return map2img.transform(dinty.gridrefToFalseOriginCoord(gridref));
 			})
 			.attr("cx", function(coord) { return coord.x + coord.precision*0.5; })
 			.attr("cy", function(coord) { return coord.y - coord.precision*0.5; })
@@ -503,46 +504,47 @@ angular.module('TetradMapModule')
     });
 
 
+angular.module('TetradMapModule')
+    .controller('Controller', function($scope, $uibModal) {
+        $scope.taxon = '';
+        $scope.zoom = 0;
 
-function Controller($scope, $modal) {
-    $scope.taxon = '';
-    $scope.zoom = 0;
+        $scope.$watch('taxon', function(newValue, oldValue) {
+	    if (oldValue === newValue)
+	        return;
+	    if (oldValue)
+                d3.selectAll('g[taxon="'+oldValue[0]+'"]').style("display", "none");
+	    if (newValue)
+                d3.selectAll('g[taxon="'+newValue[0]+'"]').style("display", "inherit");
+        });
 
-    $scope.$watch('taxon', function(newValue, oldValue) {
-	if (oldValue === newValue)
-	    return;
-	if (oldValue)
-            d3.selectAll('g[taxon="'+oldValue[0]+'"]').style("display", "none");
-	if (newValue)
-            d3.selectAll('g[taxon="'+newValue[0]+'"]').style("display", "inherit");
+
+        $scope.mapOptions = {
+            image: "basemap.jpg",
+            taxonObservationData: "bulk/latest/cheshire",
+	    datasetVar: "dataset",
+            dateThresholds: {p1: new Date(2000,0,1),
+                             p2: new Date(1950,0,1)},
+            zoomExpr: "zoom",
+	    gridref1: "SD20:29.5,75.5",
+            gridref2: "SK14:1092.5,784",
+        };
+
+
+        $scope.about = function() {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'p/about.html',
+                controller: 'AboutController',
+            });        
+        };
     });
 
 
-    $scope.mapOptions = {
-        image: "basemap.jpg",
-        taxonObservationData: "bulk/latest/cheshire",
-	datasetVar: "dataset",
-        dateThresholds: {p1: new Date(2000,0,1),
-                         p2: new Date(1950,0,1)},
-        zoomExpr: "zoom",
-	gridref1: "SD20:29.5,75.5",
-        gridref2: "SK14:1092.5,784",
-    };
-
-
-    $scope.about = function() {
-        var modalInstance = $modal.open({
-            templateUrl: '_about.html',
-            controller: AboutController,
-        });        
-    };
-}
-
-
-function AboutController($scope, $modalInstance) {
-    $scope.ok = function() {
-        $modalInstance.close();
-    };
-}
+angular.module('TetradMapModule')
+    .controller('AboutController', function ($scope, $uibModalInstance) {
+        $scope.ok = function() {
+            $uibModalInstance.close();
+        };
+    });
 
 }());

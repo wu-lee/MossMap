@@ -104,21 +104,21 @@ angular.module('DataBrowserModule')
         
         $scope.loginDialog = function() {
             var modalInstance = $modal.open({
-                templateUrl: '_login.html',
+                templateUrl: 'p/login.html',
                 controller: 'LoginController',
             });
         };
         
         $scope.logoutDialog = function() {
             var modalInstance = $modal.open({
-                templateUrl: '_logout.html',
+                templateUrl: 'p/logout.html',
                 controller: 'LogoutController',
             });
         };
 
         $scope.uploadDialog = function() {
             var modalInstance = $modal.open({
-                templateUrl: '_upload.html',
+                templateUrl: 'p/upload.html',
                 controller: 'UploadController',
                 scope: this,
             });
@@ -133,7 +133,7 @@ angular.module('DataBrowserModule')
 
             myScope.message = "Loading data, please wait..."; 
             var loadingDialog = $modal.open({
-                templateUrl: '_loading.html',
+                templateUrl: 'p/loading.html',
                 scope: myScope,
             });
 
@@ -171,7 +171,7 @@ angular.module('DataBrowserModule')
         $scope.dataType = 'Observations';
         $scope.uploadUrl = '/bulk/sets.csv';
 
-        $scope.uploadHelp = '_observationUploadHelp.html';
+        $scope.uploadHelp = 'p/observationUploadHelp.html';
 
         $scope.resource = $resource(
             '/data/sets/:setId',
