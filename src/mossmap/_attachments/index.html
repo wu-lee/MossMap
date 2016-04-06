@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html ng-app="TetradMapModule">
+<head>
+  <title>The Mosses and Liverworts of Cheshire</title>
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <script src="3p/jquery.js"></script>
+  <script src="3p/angular.js"></script>
+  <script src="3p/angular-animate.js"></script>
+  <script src="3p/ui-bootstrap.js"></script>
+  <script src="3p/angular-cornercouch.js"></script>
+  <!--script src="3p/polyfiller.js"></script--> 
+  <script src="3p/dinty.js"></script>
+  <script src="3p/d3.js"></script>
+  <script src="js/tetrad-map.js"></script>
+  <link rel="stylesheet" href="3p/bootstrap.css"></link>
+<script> 
+    //$.webshims.polyfill();
+</script>
+
+<style>
+html, body, #top, div[tetrad-map] {
+    width: 100%;
+    height: 100%;
+}
+div.overlay  {
+    position: fixed;
+}
+div.container-fluid > div:not(.dropdown) {
+    font-size: large;
+    color: white;
+    text-shadow: 0 0 0.2em black;
+}
+#top { background: #eee; }
+#controls > *, #map-container > * { background: white; }
+g.taxon {
+    display: none;
+}
+circle {
+    opacity: 0.8;
+    fill: black;
+}
+g.completed circle {
+    fill: red;
+}
+g.legend circle.completed {
+    fill: red;
+    radius: 2px;
+}
+circle.p0 {
+    stroke: black;
+}
+circle.p1 {
+    fill: grey;
+    stroke: black;
+}
+circle.p2 {
+    fill: white;
+    stroke: black;
+}
+#controls {
+    height: 100%;
+    width: 30%;
+    position: relative;
+    float: left;
+}
+#map-container {
+    width: 70%;
+    height: 100%;
+    float: right;
+    padding: 5px;
+}
+#map-container > div {
+    border: 1px solid green;
+    border-radius: 5px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+#controls, #map-container, #controls > * {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+#taxa {
+    position: absolute;
+    top: 0;
+    bottom: 48px;
+    left: 0;
+    right: 0;
+    border: 1px solid green;
+    border-radius: 5px;
+    margin: 5px;
+}
+#taxa > * {
+    margin: 5px;
+}
+#taxa select {
+    position: absolute;
+    width: calc(100% - 10px);
+    bottom: 0px;
+    top: 20px;
+}
+#messages {
+    background-image: url(spinner.gif);
+    background-repeat: no-repeat;
+    padding-left: 38px;
+    line-height: 38px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 38px;
+    border: 1px solid green;
+    border-radius: 5px;
+    margin: 5px;
+}
+#zoom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 38px;
+    border: 1px solid green;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 5px;
+}
+#zoom > span {
+    height: 23px;
+    overflow: hidden;
+    display: block;
+}
+#zoom > span > * {
+    width: 100%;
+}
+#zoom label {
+    float: left;
+    margin: 0 0.5em 0 0;
+}
+#zoom button {
+    float: right;
+}
+</style>
+</head>
+<body>
+<div id="top" ng-controller="Controller">
+  
+  <div id="controls">
+    <div id="taxa">
+      <div>Taxon:</div>
+      <select ng-model="taxon" ng-options="t[0] for t in dataset.taxa" size="10"></select>
+    </div>
+    
+    <div id="messages" ng-hide="dataset.taxa">Loading data...</div>
+
+    <div id="zoom" ng-show="dataset.taxa">
+      <button class="btn btn-small" ng-click="about()">About...</button>
+      <label>Zoom:</label>
+      <span><input type="range" name="zoom" min="0" max="20" ng-model="zoom"> </input></span>
+
+    </div>
+  </div>
+
+  <div id="map-container">
+    <div tetrad-map="mapOptions"></div>
+  </div>
+
+</div>
+</body>
+</html>

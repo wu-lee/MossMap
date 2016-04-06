@@ -78,11 +78,13 @@ module.exports = function(grunt) {
                     },
                 ],
             },
-            html: {
+            mossmap: {
                 files: [
                     {
-                        src: 'src/mossmap/index.html',
-                        dest: 'couchdb/mossmap/_attachments/index.html'
+                        expand: true,
+                        cwd: 'src/mossmap/',
+                        src: ['**', '!**~'],
+                        dest: 'couchdb/mossmap/'
                     }
                 ],
             },
