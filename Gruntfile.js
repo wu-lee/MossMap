@@ -51,10 +51,6 @@ module.exports = function(grunt) {
                         dest: 'couchdb/mossmap/_attachments/3p/d3.js' 
                     },
                     {
-                        src: 'node_modules/dinty/dinty.js',
-                        dest: 'couchdb/mossmap/_attachments/3p/dinty.js' 
-                    },
-                    {
                         src: 'node_modules/webshim/js-webshim/dev/polyfiller.js',
                         dest: 'couchdb/mossmap/_attachments/3p/polyfiller.js' 
                     },
@@ -89,6 +85,15 @@ module.exports = function(grunt) {
                         dest: 'couchdb/mossmap/_attachments/index.html'
                     }
                 ],
+            },
+        },
+        browserify: {
+            dinty: {
+                src: 'dinty/dinty.js',
+                dest: 'couchdb/mossmap/_attachments/3p/dinty.js',
+                options: {
+                    alias: ['dinty:'],
+                },
             },
         },
         'couch-compile': {
@@ -132,6 +137,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-couch');
-    grunt.registerTask('push', ['copy', 'couch-compile', 'couch-push']);
+    grunt.loadNpmTasks('grunt-browserify');
+    grunt.registerTask('push', ['copy', 'browserify', 'couch-compile', 'couch-push']);
     grunt.registerTask('default', ['jshint', 'push']);
 };
