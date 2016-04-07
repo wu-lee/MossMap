@@ -140,6 +140,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-couch');
     grunt.loadNpmTasks('grunt-browserify');
-    grunt.registerTask('push', ['copy', 'browserify', 'couch-compile', 'couch-push']);
+    grunt.registerTask('push', ['copy', 'browserify', 'couch-compile', 'couch-push:localhost']);
     grunt.registerTask('default', ['jshint', 'push']);
 };
