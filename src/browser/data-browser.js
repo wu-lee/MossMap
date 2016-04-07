@@ -40,7 +40,7 @@ angular.module('DataBrowserModule')
                 };
 
                 // On a change of files, update the model
-                element.bind('change', function(event){
+                element.bind('change', function(){
                     var files = rawElement.files;
                     var fileName = files.length > 0? files[0].name : '';
                     ngModel.$setViewValue(fileName);
@@ -103,21 +103,21 @@ angular.module('DataBrowserModule')
         };
         
         $scope.loginDialog = function() {
-            var modalInstance = $modal.open({
+            $modal.open({
                 templateUrl: 'p/login.html',
                 controller: 'LoginController',
             });
         };
         
         $scope.logoutDialog = function() {
-            var modalInstance = $modal.open({
+            $modal.open({
                 templateUrl: 'p/logout.html',
                 controller: 'LogoutController',
             });
         };
 
         $scope.uploadDialog = function() {
-            var modalInstance = $modal.open({
+            $modal.open({
                 templateUrl: 'p/upload.html',
                 controller: 'UploadController',
                 scope: this,
@@ -304,7 +304,6 @@ angular.module('DataBrowserModule')
         // Tell user to wait...
 
         $scope.uploadFile = function(inputSelector) {
-            var formScope = this; 
             // (Assumes we're invoked by form's ng-submit/click)
 
             var fileInput = angular.element(inputSelector);
@@ -315,12 +314,12 @@ angular.module('DataBrowserModule')
 
             var file = node.files[0];
             
-            console.log("upload");
+            // console.log("upload"); // DEBUG
             var reader = new FileReader();
             
             // Set the handler
             reader.onload = function() {
-                console.log("onload ");
+                // console.log("onload "); // DEBUG
                 var fd = new FormData();
                 fd.append("upload", file);
                 fd.append("name", $scope.regionName);

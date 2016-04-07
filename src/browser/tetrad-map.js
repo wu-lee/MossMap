@@ -1,5 +1,5 @@
 (function() {
-//'use strict';
+'use strict';
 
 angular.module('TetradMapModule', ['ui.bootstrap']);
 
@@ -134,7 +134,7 @@ angular.module('TetradMapModule')
                 // Hand-roll some tooltip functionality using d3 since
                 // angular $compiling a tooltip into all the elements
                 // we're about to add is hopelessly slow.
-                function showTooltip(d, i) {
+                var showTooltip = function (d, i) {
                     var bbox = this.getBoundingClientRect();
                     var inner;
                     var tooltip = body
@@ -178,16 +178,16 @@ angular.module('TetradMapModule')
                     tooltip
                         .transition()
                         .style('opacity', 100);
-                 }
+                };
 
-                function hideTooltip() {
+                var hideTooltip = function() {
                     body.selectAll('.tooltip')
                         .transition()
                         .style('opacity', 0)
                         .remove();
-                }
+                };
 
-                function move(pos) {
+                var move = function(pos) {
                     return function(d, i) {
                         d3.event.preventDefault();
 
@@ -198,14 +198,14 @@ angular.module('TetradMapModule')
                         d3.select(this)
                             .attr('transform', 'translate('+x+','+y+')');
                     };
-                }
+                };
 
-                function drop() {
+                var drop = function() {
                     var map = d3.select(this);
                     map.on('mousemove', null);
-                }
+                };
 
-                function grab(d, i) {
+                var grab = function(d, i) {
                     d3.event.preventDefault();
                     var map = d3.select(this);
                     var pos = d3.mouse(this.parentNode);
@@ -220,7 +220,7 @@ angular.module('TetradMapModule')
                         .on('mousemove', move(pos))
                         .on('mouseout', drop)
                         .on('mouseup', drop);
-                }
+                };
 
 
 		var match = aliasRx.exec(gridrefAlias1);
@@ -398,20 +398,18 @@ angular.module('TetradMapModule')
 		        .attr("transform", "scale("+(1+newVal*newVal/100)+")");
                 });
 
-		var timeNow = new Date().getTime();
-
 		d3.json(dataFile, function(err, json) {
 		    if (err)
 			throw new Error(err);
 
                     // Remove the leading name and created_on fields
-                    var datasetName = json.taxa.shift();
-                    var datasetChangedDate = json.taxa.shift();
-                    console.log(datasetName,datasetChangedDate);
+                    json.taxa.shift(); // datasetName
+                    json.taxa.shift(); // datasetChangedDate
+                    // console.log(datasetName,datasetChangedDate); // DEBUG
                     // Ditto for the completed set
-                    var completedSetName = json.completed.shift();
-                    var completedSetChangedDate = json.completed.shift();
-                    console.log(completedSetName, completedSetChangedDate);
+                    json.completed.shift(); // completedSetName
+                    json.completed.shift(); // completedSetChangedDate
+                    // console.log(completedSetName, completedSetChangedDate);// DEBUG
 
                     d3.select(mapContainer.node().childNodes).remove();
 
@@ -429,7 +427,7 @@ angular.module('TetradMapModule')
 			.attr("width", "100%")
 			.attr("height", "100%");
 
-		    var markers1 = taxa
+		    taxa
 			.selectAll("circle")
 			.data(function(d) { return d[1]; })
 
@@ -438,8 +436,6 @@ angular.module('TetradMapModule')
 			.datum(function(d) {
 			    var gridref = d[0];
 			    var dates = d[1];
-			    var largest;
-			    var largestDateString;
 
 			    // Find the most recent record, i.e. that whose last day
 			    // of the period within the precision of the date is latest.
@@ -486,7 +482,7 @@ angular.module('TetradMapModule')
 
 
                     var completedRadius = 3;
-		    var markers2 = completed
+		    completed
 			.selectAll("circle")
 			.data(function(d) { return d; })
 
@@ -521,7 +517,7 @@ angular.module('TetradMapModule')
 
         $scope.mapOptions = {
             image: "basemap.jpg",
-            taxonObservationData: "bulk/latest/cheshire",
+            taxonObservationData: "/set=0",
 	    datasetVar: "dataset",
             dateThresholds: {p1: new Date(2000,0,1),
                              p2: new Date(1950,0,1)},
@@ -532,7 +528,7 @@ angular.module('TetradMapModule')
 
 
         $scope.about = function() {
-            var modalInstance = $uibModal.open({
+            $uibModal.open({
                 templateUrl: 'p/about.html',
                 controller: 'AboutController',
             });        
