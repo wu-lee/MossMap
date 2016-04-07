@@ -11,8 +11,15 @@ module.exports = function(grunt) {
             }
             return Object.keys(_.transform(obj, transform));
         },
-        jshint: {            
+        jshint: {    
+            options: {
+                unused: 'vars',
+                undef: true,
+            },
             nodejs: {
+                options: {
+                    node: true,
+                },
                 src: ['Gruntfile.js'],
             },
             browser: {
@@ -20,6 +27,18 @@ module.exports = function(grunt) {
                 options: {
                     browser: true,
                     jquery: true,
+                    globals: {
+                        angular: false,
+                        d3: false,
+                        require: false,
+                    },
+                },
+            },
+            couchdb: {
+                src: ['src/mossmap/{shows,views,updates,lists,js}/**/*.js'],
+                options: {
+                    couch: true,
+                    expr: true,
                 },
             },
         },
