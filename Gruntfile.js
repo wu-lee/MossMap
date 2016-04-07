@@ -103,7 +103,12 @@ module.exports = function(grunt) {
                 files: {
                     'tmp/mossmap.json': 'couchdb/*'
                 }
-            }
+            },
+            set0: {
+                files: {
+                    'tmp/set0.json': 'example-data/cheshire-dataset-doc.json'
+                },
+            },
         },
         'couch-push': {
             options: {
@@ -114,7 +119,17 @@ module.exports = function(grunt) {
                 files: {
                     'http://localhost:5984/mossmap': ['tmp/mossmap.json' ],
                 }
-            }
+            },
+            set0: {
+                files: {
+                    'http://localhost:5984/mossmap': ['tmp/set0.json'],
+                },
+            },
+            records: {
+                files: {
+                    'http://localhost:5984/mossmap': ['example-data/cheshire-dataset-bulk.json'],
+                },
+            },
         },
         watch: {
             jshint: {
