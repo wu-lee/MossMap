@@ -102,7 +102,7 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         cwd: 'src/mossmap/',
-                        src: ['**', '!**~'],
+                        src: ['**', '!**/*~'],
                         dest: 'couchdb/mossmap/'
                     }
                 ],
