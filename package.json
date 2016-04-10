@@ -30,5 +30,8 @@
   "optionalDependencies": {},
   "engines": {
     "node": "*"
+  },
+  "scripts": {
+    "test": "NODE_PATH=.:src/mossmap/js qunit-cli test/test.js"
   }
 }
