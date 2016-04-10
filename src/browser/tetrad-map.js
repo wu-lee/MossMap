@@ -402,15 +402,6 @@ angular.module('TetradMapModule')
 		    if (err)
 			throw new Error(err);
 
-                    // Remove the leading name and created_on fields
-                    json.taxa.shift(); // datasetName
-                    json.taxa.shift(); // datasetChangedDate
-                    // console.log(datasetName,datasetChangedDate); // DEBUG
-                    // Ditto for the completed set
-                    json.completed.shift(); // completedSetName
-                    json.completed.shift(); // completedSetChangedDate
-                    // console.log(completedSetName, completedSetChangedDate);// DEBUG
-
                     d3.select(mapContainer.node().childNodes).remove();
 
 		    scope.$parent[datasetVarName] = json;
