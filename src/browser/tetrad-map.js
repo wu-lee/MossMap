@@ -508,7 +508,8 @@ angular.module('TetradMapModule')
 
         $scope.mapOptions = {
             image: "basemap.jpg",
-            taxonObservationData: "/mossmap/cheshire-dataset-orig",
+            taxonObservationData: //"/mossmap/cheshire-dataset-orig",
+            "/mossmap/_design/mossmap/_list/bulk-set/record-counts?group_level=4",
 	    datasetVar: "dataset",
             dateThresholds: {p1: new Date(2000,0,1),
                              p2: new Date(1950,0,1)},
