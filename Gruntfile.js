@@ -125,7 +125,7 @@ module.exports = function(grunt) {
             },
             set0: {
                 files: {
-                    'tmp/set0.json': 'example-data/cheshire-dataset-doc.json'
+                    'tmp/set0.json': 'example-data/cheshire-dataset-orig.json'
                 },
             },
         },
