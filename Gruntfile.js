@@ -58,6 +58,10 @@ module.exports = function(grunt) {
                         dest: 'couchdb/mossmap/_attachments/3p/angular-animate.js' 
                     },
                     { 
+                        src: 'node_modules/angular-resource/angular-resource.js', 
+                        dest: 'couchdb/mossmap/_attachments/3p/angular-resource.js' 
+                    },
+                    { 
                         src: 'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js', 
                         dest: 'couchdb/mossmap/_attachments/3p/ui-bootstrap.js' 
                     },
@@ -152,6 +156,11 @@ module.exports = function(grunt) {
                     'http://localhost:5984/mossmap': ['tmp/set0.json'],
                 },
             },
+            set1: {
+                files: {
+                    'http://localhost:5984/mossmap': ['example-data/cheshire-dataset-doc-2.json'],
+                },
+            },
             records: {
                 files: {
                     'http://localhost:5984/mossmap': ['example-data/cheshire-dataset-bulk.json'],
@@ -160,7 +169,7 @@ module.exports = function(grunt) {
         },
         watch: {
             jshint: {
-                files: ['<%= jshint.files %>'],
+                files: ["<%= flatValues(jshint, 'src') %>"],
                 tasks: ['jshint']
             },
             grunt: {
@@ -184,4 +193,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-browserify');
     grunt.registerTask('push', ['copy', 'browserify', 'couch-compile', 'couch-push:localhost']);
     grunt.registerTask('default', ['jshint', 'push']);
+//    console.log(grunt.config.get('flatValues')(grunt.config.get('jshint'), 'src'));
+//    console.log(JSON.stringify(grunt.config.get('copy'), null, 2));
+//    process.exit(0);
 };
