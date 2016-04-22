@@ -62,6 +62,10 @@ module.exports = function(grunt) {
                         dest: 'couchdb/mossmap/_attachments/3p/angular-resource.js' 
                     },
                     { 
+                        src: 'node_modules/angular-route/angular-route.js', 
+                        dest: 'couchdb/mossmap/_attachments/3p/angular-route.js' 
+                    },
+                    { 
                         src: 'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js', 
                         dest: 'couchdb/mossmap/_attachments/3p/ui-bootstrap.js' 
                     },
