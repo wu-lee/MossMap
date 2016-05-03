@@ -14,7 +14,7 @@
     "angular-ui-bootstrap": "^1.1.0",
     "bootstrap": "^3.3.6",
     "d3": "^3.5.13",
-    "dinty": "^0.1.1",
+    "dinty": "^0.2.0",
     "jquery": "^1.12.3",
     "ng-grid": "^2.0.1",
     "webshim": "^1.15.10"
