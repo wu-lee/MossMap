@@ -428,6 +428,9 @@ angular.module('TetradMapModule')
 			    var gridref = d[0];
 			    var dates = d[1];
 
+                            // Convert the gridref into a tetrad.
+                            gridref = dinty.gridrefToTetrad(gridref);
+
 			    // Find the most recent record, i.e. that whose last day
 			    // of the period within the precision of the date is latest.
 			    var latest, latestRecord, count = 0;

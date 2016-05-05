@@ -2,17 +2,16 @@
 
 //'use strict';
 
-angular.module('DataBrowserModule', ['ui.bootstrap', 'ngGrid', 'ngResource']);
-
+    angular.module('DataBrowserModule', ['ui.bootstrap', 'ngRoute', 'ngGrid', 'ngResource', 'CornerCouch']);
 angular.module('DataBrowserModule')
     .config(function($routeProvider) {
         $routeProvider
             .when('/observations', {
-                templateUrl: '_data-grid.html',
+                templateUrl: 'p/data-grid.html',
                 controller: 'ObservationsController'
             })
             .when('/completed-tetrads', {
-                templateUrl: '_data-grid.html',
+                templateUrl: 'p/data-grid.html',
                 controller: 'CompletedTetradsController'
             })
             .otherwise({
@@ -51,14 +50,15 @@ angular.module('DataBrowserModule')
     });
 
 angular.module('DataBrowserModule')
-    .factory('session', function($http) {
+    .factory('session', function(cornercouch) {
         var session = {};
         
         function checkSession() {
-            $http.get('/session')
-                .then(function(p) { 
-                    if (p.data && p.data.username) {
-                        session.username = p.data.username;
+            var server = cornercouch();
+            server.session()
+                .then(function() {
+                    if (server.userCtx.name) {
+                        session.username = server.userCtx.name;
                         session.active = true;
                     }
                     else {
@@ -76,7 +76,7 @@ angular.module('DataBrowserModule')
     });
 
 angular.module('DataBrowserModule')
-    .controller('DataViewController', function($scope, $window, $modal, $location, session) {
+        .controller('DataViewController', function($scope, $window, $uibModal, $location, session, $log) {
 
         $scope.session = session;
 
@@ -103,21 +103,21 @@ angular.module('DataBrowserModule')
         };
         
         $scope.loginDialog = function() {
-            $modal.open({
+            $uibModal.open({
                 templateUrl: 'p/login.html',
                 controller: 'LoginController',
             });
         };
         
         $scope.logoutDialog = function() {
-            $modal.open({
+            $uibModal.open({
                 templateUrl: 'p/logout.html',
                 controller: 'LogoutController',
             });
         };
 
         $scope.uploadDialog = function() {
-            $modal.open({
+            $uibModal.open({
                 templateUrl: 'p/upload.html',
                 controller: 'UploadController',
                 scope: this,
@@ -128,11 +128,11 @@ angular.module('DataBrowserModule')
         function reloadData() {
             var myScope = this;
             var resource = myScope.resource;
-            var id = myScope.regionName;
+            var id = '0';// FIXME myScope.regionName;
             var transform = myScope.resourceTransform;
 
             myScope.message = "Loading data, please wait..."; 
-            var loadingDialog = $modal.open({
+            var loadingDialog = $uibModal.open({
                 templateUrl: 'p/loading.html',
                 scope: myScope,
             });
@@ -142,7 +142,7 @@ angular.module('DataBrowserModule')
                     {setId: id},
                     function() {
                         if (transform) {
-                            var d = myScope.data.records;
+                            var d = myScope.data.rows;
                             for(var ix = 0; ix < d.length; ++ix) {
                                 transform(d[ix]);
                             }
@@ -174,25 +174,23 @@ angular.module('DataBrowserModule')
         $scope.uploadHelp = 'p/observationUploadHelp.html';
 
         $scope.resource = $resource(
-            '/data/sets/:setId',
+            '/mossmap/_design/mossmap/_view/records?&startkey=["set=:setId"]&endkey=["set=:setId",{}]&include_docs=true',
             {setId: '@id'}
         );
 
         $scope.resourceTransform = function(item) {
-            var rr = item.recorder_records;
-            delete item.recorder_records;
-            var recorders = rr.map(function(it) {
-                return it.recorder.name;
-            });
-            
-            item.recorders = recorders.sort().join('; ');
+            var ymd = item.key[3];
+            var y = ymd.substr(0,4);
+            var m = ymd.substr(4,2);
+            var d = ymd.substr(6,2);
+            item.key[3] = new Date(y,m,d);
         };
 
         $scope.gridOptions = {
             showFooter: true,
             footerTemplate:  $templateCache.get('_footer.html'),
             footerRowHeight: 40,
-            data: 'data.records',
+            data: 'data.rows',
             columnDefs: 'columnDefs',
             showGroupPanel: true,
         };
@@ -200,9 +198,10 @@ angular.module('DataBrowserModule')
 
         $scope.columnDefs = [
             {field: 'id', width: 100},
-            {field: 'grid_ref', displayName: 'Grid Ref', width: 100},
-            {field: 'taxon.name', displayName: 'Taxon'},
-            {field: 'recorders', displayName: 'Recorder'},
+            {field: 'key[2]', displayName: 'Grid Ref', width: 100},
+            {field: 'key[1]', displayName: 'Taxon'},
+            {field: 'key[3]', displayName: 'Recorded On', cellFilter: 'date'},
+            {field: 'doc.name', displayName: 'Recorder'},
         ];
 
         $scope.reloadData();
@@ -213,9 +212,8 @@ angular.module('DataBrowserModule')
 
         $scope.dataType = 'Completed Tetrads';
         $scope.uploadUrl = '/bulk/completed.csv';
-
         $scope.resource = $resource(
-            '/data/completed/:setId',
+            '/mossmap/_design/mossmap/_list/bulk-set/record-counts?group_level=4&startkey=["set=:setId"]&endkey=["set=:setId",{}]',
             {setId: '@id'}
         );
         
@@ -238,7 +236,7 @@ angular.module('DataBrowserModule')
 
 
 angular.module('DataBrowserModule')
-    .controller('LoginController', function($scope, $http, $modalInstance, session) {
+    .controller('LoginController', function($scope, $http, $uibModalInstance, session) {
         // We use a reference to an object containing the credentials
         // since the login form's $scope will be a child of this one.
         var credentials = $scope.credentials = {
