@@ -49,21 +49,14 @@ html, body, #top {
     top: 0;
     left: 0;
     right: 0;
-    height: 52px;
+    height: 64px;
+    padding: 0 10px;
 }
-.navbar .navbar-inner {
+.navbar > div {
     padding: 0 10px;    
 }
-.nav-right {
-    float: right;
-    display: inline-block;
-    padding: 10px 15px;
-}
-.nav-right span {
-    margin-left: 1em;
-}
 #data {
-    top: 47px;
+    top: 58px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -114,35 +107,40 @@ div.progress-bar  {
 <body>
 <div id="top" ng-controller="DataViewController">
 
-  <div class="border-box navbar">
+  <div class="border-box navbar navbar-default" role="navigation">
 
-    <div class="navbar-inner">
-    <a class="brand" href="">Data:</a>
-    <ul class="nav">
-      <li ng-class="{active: path() == '/observations'}">
-	<a href="#/observations">Observations</a>
-      </li>
-      <li ng-class="{active: path() == '/completed-tetrads'}">
-	<a href="#/completed-tetrads">Completed Tetrads</a>
-      </li>
-    </ul>
-    <div class="nav-right">
-      <span ng-show="message">{{ message }}</span>
+    <div class="container-fluid">
+      <div class="navbar-header">
+	<a class="navbar-brand" href="">Data:</a>
+      </div>
 
-      <span ng-hide="session && session.active"
-	   tooltip="You need to log in to upload data..."
-	   tooltip-placement="left">      
-	{{ session.error }}
-	<a ng-click="loginDialog()">Log in</a>
-      </span>
-
-      <span ng-show="session && session.active">
-	You are logged in as {{ session.username }}.
-	<a ng-click="logoutDialog()" >Log out</a>
-      </span>
+      <div class="collapse navbar-collapse">
+	
+	<ul class="nav navbar-nav">
+	  <li ng-class="{active: path() == '/observations'}">
+	    <a href="#/observations">Observations</a>
+	  </li>
+	  <li ng-class="{active: path() == '/completed-tetrads'}">
+	    <a href="#/completed-tetrads">Completed Tetrads</a>
+	  </li>
+	</ul>
+	<ul class="nav navbar-nav navbar-right">
+	  <li ng-show="message">{{ message }}</li>
+	  
+	  <li ng-hide="session && session.active"
+	      tooltip="You need to log in to upload data..."
+		tooltip-placement="left">      
+	    {{ session.error }}
+	    <a ng-click="loginDialog()">Log in</a>
+	  </li>
+	  
+	  <li ng-show="session && session.active">
+	    You are logged in as {{ session.username }}.
+	    <a ng-click="logoutDialog()" >Log out</a>
+	  </li>
+	</ul>
+      </div>
     </div>
-    </div>
-
   </div>
 
 
