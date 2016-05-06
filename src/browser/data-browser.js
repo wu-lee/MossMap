@@ -174,11 +174,13 @@ angular.module('DataBrowserModule')
         $scope.uploadHelp = 'p/observationUploadHelp.html';
 
         $scope.resource = $resource(
-            '/mossmap/_design/mossmap/_view/records?&startkey=["set=:setId"]&endkey=["set=:setId",{}]&include_docs=true',
+            '/mossmap/_design/mossmap/_view/records?startkey=["set=:setId"]&endkey=["set=:setId",{}]&include_docs=true',
             {setId: '@id'}
         );
-
+        
+        // How to munge the data items from the view
         $scope.resourceTransform = function(item) {
+            // Convert the date field to a date object
             var ymd = item.key[3];
             var y = ymd.substr(0,4);
             var m = ymd.substr(4,2);
@@ -188,8 +190,8 @@ angular.module('DataBrowserModule')
 
         $scope.gridOptions = {
             showFooter: true,
-            footerTemplate:  $templateCache.get('_footer.html'),
-            footerRowHeight: 40,
+//            footerTemplate:  $templateCache.get('footer.html'),
+//            footerRowHeight: 40,
             data: 'data.rows',
             columnDefs: 'columnDefs',
             showGroupPanel: true,
@@ -213,22 +215,21 @@ angular.module('DataBrowserModule')
         $scope.dataType = 'Completed Tetrads';
         $scope.uploadUrl = '/bulk/completed.csv';
         $scope.resource = $resource(
-            '/mossmap/_design/mossmap/_list/bulk-set/record-counts?group_level=4&startkey=["set=:setId"]&endkey=["set=:setId",{}]',
+            '/mossmap/_design/mossmap/_view/completed-tetrads?startkey=["set=:setId"]&endkey=["set=:setId",{}]',
             {setId: '@id'}
         );
         
         $scope.gridOptions = {
             showFooter: true,
-            footerTemplate:  $templateCache.get('_footer.html'),
-            footerRowHeight: 40,
-            data: 'data.completed_tetrads',
+//            footerTemplate:  $templateCache.get('footer.html'),
+//            footerRowHeight: 40,
+            data: 'data.rows',
             columnDefs: 'columnDefs',
             showGroupPanel: false,
         };
 
-
         $scope.columnDefs = [
-            {field: 'grid_ref', displayName: 'Grid Ref', width: 100},
+            {field: 'key[1]', displayName: 'Grid Ref', width: 100},
         ];
  
         $scope.reloadData();
