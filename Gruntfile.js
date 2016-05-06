@@ -160,14 +160,19 @@ module.exports = function(grunt) {
                     'http://localhost:5984/mossmap': ['tmp/set0.json'],
                 },
             },
-            set1: {
+            bulk: {
                 files: {
-                    'http://localhost:5984/mossmap': ['example-data/cheshire-dataset-doc-2.json'],
+                    'http://localhost:5984/mossmap': ['example-data/cheshire-dataset-bulk.json'],
                 },
             },
             records: {
                 files: {
-                    'http://localhost:5984/mossmap': ['example-data/cheshire-dataset-bulk.json'],
+                    'http://localhost:5984/mossmap': ['example-data/cheshire-dataset-records.json'],
+                },
+            },
+            completed: {
+                files: {
+                    'http://localhost:5984/mossmap': ['example-data/cheshire-dataset-completed.json'],
                 },
             },
         },
