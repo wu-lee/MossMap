@@ -3,31 +3,33 @@
 </div>
 <div class="modal-body">
   <form ng-submit class="form-horizontal">
-    <div class="control-group">
-      <label class="control-label" for="login-username">User:</label>
-      <div class="controls">
-	<input type="text" id="login-username" name="username"
+    <div class="form-group">
+      <label class="control-label col-sm-3" for="login-username">User:</label>
+      <div class="col-sm-9">
+	<input type="text" class="form-control"
+	       id="login-username" name="username"
 	       ng-model="credentials.username"/>
       </div>
     </div>
-    <div class="control-group">
-      <label class="control-label" for="login-password">Password:</label>
-      <div class="controls">
-	<input type="password" id="login-password" name="password"
+    <div class="form-group">
+      <label class="control-label col-sm-3" for="login-password">Password:</label>
+      <div class="col-sm-9">
+	<input type="password" class="form-control"
+	       id="login-password" name="password"
 	       ng-model="credentials.password"/>
       </div>
     </div>
-    <div class="control-group">
-      <div class="alert" style="text-align: center;" ng-show="session.error">
+    <div class="form-group">
+      <div class="alert col-sm-12" style="text-align: center;" ng-show="session.error">
 	{{ session.error }}
       </div>
     </div>
-    <div class="control-group">
-      <div class="controls">
+    <div class="form-group">
+      <div class="col-sm-9 col-sm-offset-3">
 	<input type="submit" class="btn btn-primary" 
 	       name="ok" ng-click="ok()" value="Log in"/>
 	<input type="submit" class="btn"
-	       name="cancel" ng-click="$dismissl()" value="Cancel".>
+	       name="cancel" ng-click="$dismissl()" value="Cancel"/>
       </div>
     </div>
   </form>
