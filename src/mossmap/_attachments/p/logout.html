@@ -3,16 +3,18 @@
 </div>
 <div class="modal-body">
   <form ng-submit class="form-horizontal">
-    <div class="control-group">
-      <span class="help-block">
+    <div class="form-group">
+      <span class="help-block col-sm-12">
 	Confirm?
       </span>
     </div>
-    <div class="control-group">
-      <input type="submit" name="ok" class="btn btn-primary"
-	     ng-click="ok()" value="Log out"/>
-      <input type="submit" name="cancel" class="btn"
-	     ng-click="$dismiss()" value="Cancel"/>
+    <div class="form-group">
+      <div class="col-sm-9 col-sm-offset-3">
+	<input type="submit" name="ok" class="btn btn-primary"
+	       ng-click="ok()" value="Log out"/>
+	<input type="submit" name="cancel" class="btn"
+	       ng-click="$dismiss()" value="Cancel"/>
+      </div>
     </div>
   </form>
 </div>

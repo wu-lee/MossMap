@@ -137,16 +137,20 @@ div.progress-bar  {
 	<ul class="nav navbar-nav navbar-right">
 	  <li ng-show="message">{{ message }}</li>
 	  
-	  <li ng-hide="session && session.active"
+	  <li ng-hide="session && session.name"
 	      tooltip="You need to log in to upload data..."
 		tooltip-placement="left">      
-	    {{ session.error }}
-	    <a ng-click="loginDialog()">Log in</a>
+	    {{ session.error.reason }}
+	    <button class="btn btn-small" ng-click="loginDialog()">
+	      Log in
+	    </button>
 	  </li>
 	  
-	  <li ng-show="session && session.active">
-	    You are logged in as {{ session.username }}.
-	    <a ng-click="logoutDialog()" >Log out</a>
+	  <li ng-show="session && session.name">
+	    You are logged in as {{ session.name }}.
+	    <button class="btn btn-small" ng-click="logoutDialog()" >
+	      Log out
+	    </button>
 	  </li>
 	</ul>
       </div>

@@ -50,37 +50,83 @@ angular.module('DataBrowserModule')
     });
 
 angular.module('DataBrowserModule')
-    .factory('session', function(cornercouch) {
-        var session = {};
-        
-        function checkSession() {
-            var server = cornercouch();
-            server.session()
-                .then(function() {
-                    if (server.userCtx.name) {
-                        session.username = server.userCtx.name;
-                        session.active = true;
-                    }
-                    else {
-                        session.active = false;
-                        session.username = '';
-                    }
-                    delete session.error;
-                    // FIXME check status
-                });
+    .factory('session', function(cornercouch, $rootScope, $log) {
+        function logIn(user, pass) {
+            session.promise = server.login(user, pass)
+                .then(onSuccess, onFailure("failed to log in"));
+            return session.promise;
+        }
+
+        function logOut() {
+            session.promise = server.logout()
+                .then(onSuccess, onFailure("failed to log out"));
+            return session.promise;
         }
         
-        session.check = checkSession;
+        function onSuccess(response) {
+            session.name = server.userCtx.name;
+            session.promise = null;
+            session.roles = server.userCtx.roles;
+
+            // Determine if we were logged in or not - the name must be set.
+            if (session.name) {
+                $log.info("session.loggedIn",session.name);
+                $rootScope.$broadcast('session.loggedIn');
+            }
+            else {
+                $log.info("session.loggedOut",session.name);
+                $rootScope.$broadcast('session.loggedOut');
+            }
+            return response;
+        }
+
+        function onFailure(message) {
+
+            return function(response) {
+                // This means something broke
+                
+                session.name = null;
+                session.promise = null;
+                session.roles = [];
+                session.error = {
+                    reason: message,
+                    response: response,
+                };
+                
+                $rootScope.$broadcast('session.loggedOut');
+                return response;
+            };
+        }
+
+        function refresh() {
+            return server.session()
+                .then(onSuccess, onFailure);
+        }
+
+        function hasRole(role) {
+            return session.roles && session.roles.indexOf(role) >= 0;
+        }
+
+        var server = cornercouch();
+
+        var session = {
+            name: null,
+            refresh: refresh,
+            promise: refresh(),
+            logIn: logIn,
+            logOut: logOut,
+            roles: [],
+            hasRole: hasRole,
+        };
 
         return session;
     });
+
 
 angular.module('DataBrowserModule')
         .controller('DataViewController', function($scope, $window, $uibModal, $location, session, $log) {
 
         $scope.session = session;
-
-        session.check();
 
         // Check for the various File API support.
         if (!$window.File ||
@@ -103,12 +149,26 @@ angular.module('DataBrowserModule')
         };
         
         $scope.loginDialog = function() {
-            $uibModal.open({
+            var dialog;
+
+            function dialogOk(data) {
+                dialog = null; // clear this
+                // session should update automatically due to actions in LoginCtrl
+            }
+
+            function dialogDismiss() {
+                dialog = null; // clear this
+            }
+            
+            dialog = $uibModal.open({
                 templateUrl: 'p/login.html',
                 controller: 'LoginController',
+                size: 'sm',
             });
+            
+            dialog.result.then(dialogOk, dialogDismiss);
         };
-        
+
         $scope.logoutDialog = function() {
             $uibModal.open({
                 templateUrl: 'p/logout.html',
@@ -237,52 +297,39 @@ angular.module('DataBrowserModule')
 
 
 angular.module('DataBrowserModule')
-    .controller('LoginController', function($scope, $http, $uibModalInstance, session) {
-        // We use a reference to an object containing the credentials
-        // since the login form's $scope will be a child of this one.
-        var credentials = $scope.credentials = {
-            username: session.username,
-            password: '',
-        };
+    .controller('LoginController', function($scope, $uibModalInstance, session) {
         $scope.session = session;
-        $scope.ok = function() {
-            $http.post('/session/login',
-                       { username: credentials.username, 
-                         password: credentials.password })
-                .then(function(p) { 
-                    if (p.data && p.data.username) {
-                        session.username = p.data.username;
-                        session.active = true;
-                        delete session.error;
-                    }
-                    else {
-                        session.active = false;
-                        session.error = p.data.error;
-                    }
-                    credentials.password = '';
-                    // FIXME check status
-                    $scope.$close("Logged in successfully");
-                },
-                      function(p){ 
-                          session.error = 
-                              p? p.data? p.data.error : 'failed' : 'failed';
-                      });
+        
+        $scope.ok = function ok() {
+
+            function onSuccess(response) {
+                if (response.status == 200)
+                    $uibModalInstance.close();
+            }
+
+            function onFailure(response) {
+                // Login failed for abnormal reasons
+                $scope.error = {
+                    response: response,
+                    reason: "unable to login",
+                };
+            }
+
+            session.logIn($scope.name, $scope.password)
+                .then(onSuccess, onFailure);
         };
+
+        $scope.cancel = function cancel() {
+            $uibModalInstance.dismiss();
+        };
+
     });
 
 angular.module('DataBrowserModule')
-    .controller('LogoutController', function($scope, $http, session) {
+    .controller('LogoutController', function($scope, $http, $uibModalInstance, session) {
         $scope.ok = function() {
-            $http.post('/session/logout', {})
-                .then(function() {
-                    session.password = '';
-                    session.check();
-                    $scope.$close("Logged out");
-                },
-                      function(err) {
-                          $scope.$close("Log out failed: "+err.data);
-                      });
-
+            session.logOut();
+            $uibModalInstance.dismiss();
         };
     });
 

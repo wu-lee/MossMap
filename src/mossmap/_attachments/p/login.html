@@ -8,7 +8,7 @@
       <div class="col-sm-9">
 	<input type="text" class="form-control"
 	       id="login-username" name="username"
-	       ng-model="credentials.username"/>
+	       ng-model="name"/>
       </div>
     </div>
     <div class="form-group">
@@ -16,12 +16,12 @@
       <div class="col-sm-9">
 	<input type="password" class="form-control"
 	       id="login-password" name="password"
-	       ng-model="credentials.password"/>
+	       ng-model="password"/>
       </div>
     </div>
     <div class="form-group">
       <div class="alert col-sm-12" style="text-align: center;" ng-show="session.error">
-	{{ session.error }}
+	{{ session.error.reason }}
       </div>
     </div>
     <div class="form-group">
