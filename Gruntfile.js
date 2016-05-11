@@ -1,6 +1,8 @@
 module.exports = function(grunt) {
     
     var _ = require('lodash');
+    var config = require('./config.js');
+
     grunt.initConfig({
         flatValues: function(obj, key) {
             function transform(m,v,k) { 
@@ -13,6 +15,7 @@ module.exports = function(grunt) {
         },
         jshint: {    
             options: {
+                nonbsp: true,
                 unused: 'vars',
                 undef: true,
             },
@@ -20,7 +23,7 @@ module.exports = function(grunt) {
                 options: {
                     node: true,
                 },
-                src: ['Gruntfile.js'],
+                files: { src: ['Gruntfile.js'] },
             },
             browser: {
                 src: ['src/browser/**/*.js'],
@@ -133,6 +136,21 @@ module.exports = function(grunt) {
                 },
             },
         },
+        'couch-security': {
+            localhost: {
+                options: config.pushOptions,
+                files: [
+                    {
+                        src: 'security.json',
+                        dest: config.url.db,
+                    },/*
+                    { // Access to the data is variable
+                        src: config.security,
+                        dest: config.url.data,
+                    },*/
+                ],
+            }
+        },
         'couch-compile': {
             mossmap: {
                 files: {
@@ -146,34 +164,46 @@ module.exports = function(grunt) {
             },
         },
         'couch-push': {
-            options: {
-//                user: 'karin',
-//                pass: 'secure'
-            },
+            options: config.pushOptions,
             localhost: {
-                files: {
-                    'http://localhost:5984/mossmap': ['tmp/mossmap.json' ],
-                }
+                files: [
+                    {
+                        src: ['tmp/mossmap.json' ],
+                        dest: config.url.db,
+                    }
+                ],
             },
             set0: {
-                files: {
-                    'http://localhost:5984/mossmap': ['tmp/set0.json'],
-                },
+                files: [
+                    {
+                        src: ['tmp/set0.json'],
+                        dest: config.url.db,
+                    },
+                ]
             },
             bulk: {
-                files: {
-                    'http://localhost:5984/mossmap': ['example-data/cheshire-dataset-bulk.json'],
-                },
+                files: [
+                    {
+                        src: ['example-data/cheshire-dataset-bulk.json'],
+                        dest: config.url.db,
+                    },
+                ],
             },
             records: {
-                files: {
-                    'http://localhost:5984/mossmap': ['example-data/cheshire-dataset-records.json'],
-                },
+                files: [
+                    {
+                        src: ['example-data/cheshire-dataset-records.json'],
+                        dest: config.url.db,
+                    },
+                ],
             },
             completed: {
-                files: {
-                    'http://localhost:5984/mossmap': ['example-data/cheshire-dataset-completed.json'],
-                },
+                files: [
+                    {
+                        src: ['example-data/cheshire-dataset-completed.json'],
+                        dest: config.url.db,
+                    },
+                ],
             },
         },
         watch: {
@@ -182,7 +212,10 @@ module.exports = function(grunt) {
                 tasks: ['jshint']
             },
             grunt: {
-                files: ['Gruntfile.js'],
+                files: [
+                    'Gruntfile.js', 'default-config.js', 'local-config.js',
+                    config.security,
+                ],
             },
             push: {
                 files: [
