@@ -10,12 +10,12 @@
   <script src="3p/ui-bootstrap.js"></script>
   <script src="3p/angular-cornercouch.js"></script>
   <!--script src="3p/polyfiller.js"></script--> 
-  <script src="3p/ng-grid.js"></script>
+  <script src="3p/ui-grid.js"></script>
   <script src="js/data-browser.js"></script>
   <script src="3p/dinty.js"></script>
   <script src="js/tetrad-map.js"></script>
   <link rel="stylesheet" href="3p/bootstrap.css"></link>
-  <link rel="stylesheet" href="3p/ng-grid.css"></link>
+  <link rel="stylesheet" href="3p/ui-grid.css"></link>
 
 <script> 
     //$.webshims.polyfill('filereader');
@@ -71,14 +71,6 @@ html, body, #top {
     width: 100%;
     height: 100%;
 }
-div[ng-grid-footer] {
-  padding: 10px;
-  background: #eee;
-  border: solid 1px green;
-  border-radius: 3px;
-  line-height: 40px;
-  padding: 0 10px;
-}
 dd, dt {
     display: inline;
 }
@@ -109,7 +101,7 @@ div.progress-bar  {
 </script>
 
 <script ng-script type="text/ng-template" id="p/data-grid.html">
-  <div class="fill" ng-grid="gridOptions">
+  <div class="fill" ui-grid="gridOptions">
   </div>
 </script>
 

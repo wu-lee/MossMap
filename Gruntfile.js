@@ -77,8 +77,8 @@ module.exports = function(grunt) {
                         dest: 'couchdb/mossmap/_attachments/3p/angular-cornercouch.js' 
                     },
                     {
-                        src: 'node_modules/ng-grid/build/ng-grid.js',
-                        dest: 'couchdb/mossmap/_attachments/3p/ng-grid.js' 
+                        src: 'node_modules/angular-ui-grid/ui-grid.js',
+                        dest: 'couchdb/mossmap/_attachments/3p/ui-grid.js' 
                     },
                     {
                         src: 'node_modules/d3/d3.js',
@@ -103,8 +103,8 @@ module.exports = function(grunt) {
                         dest: 'couchdb/mossmap/_attachments/3p/bootstrap.css' 
                     },
                     {
-                        src: 'node_modules/ng-grid/ng-grid.css',
-                        dest: 'couchdb/mossmap/_attachments/3p/ng-grid.css' 
+                        src: 'node_modules/angular-ui-grid/ui-grid.css',
+                        dest: 'couchdb/mossmap/_attachments/3p/ui-grid.css' 
                     },
                 ],
             },
@@ -113,6 +113,10 @@ module.exports = function(grunt) {
                     { 
                         src: 'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2', 
                         dest: 'couchdb/mossmap/_attachments/fonts/glyphicons-halflings-regular.woff2' 
+                    },
+                    { 
+                        src: 'node_modules/angular-ui-grid/ui-grid.woff',
+                        dest: 'couchdb/mossmap/_attachments/3p/ui-grid.woff' 
                     },
                 ],
             },

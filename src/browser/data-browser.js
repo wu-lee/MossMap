@@ -2,7 +2,7 @@
 
 //'use strict';
 
-    angular.module('DataBrowserModule', ['ui.bootstrap', 'ngRoute', 'ngGrid', 'ngResource', 'CornerCouch']);
+    angular.module('DataBrowserModule', ['ui.bootstrap', 'ngRoute', 'ui.grid', 'ngResource', 'CornerCouch']);
 angular.module('DataBrowserModule')
     .config(function($routeProvider) {
         $routeProvider
@@ -253,18 +253,15 @@ angular.module('DataBrowserModule')
 //            footerTemplate:  $templateCache.get('footer.html'),
 //            footerRowHeight: 40,
             data: 'data.rows',
-            columnDefs: 'columnDefs',
+            columnDefs: [
+                {field: 'id', width: 100},
+                {field: 'key[2]', displayName: 'Grid Ref', width: 100},
+                {field: 'key[1]', displayName: 'Taxon'},
+                {field: 'key[3]', displayName: 'Recorded On', cellFilter: 'date'},
+                {field: 'doc.name', displayName: 'Recorder'},
+            ],
             showGroupPanel: true,
         };
-
-
-        $scope.columnDefs = [
-            {field: 'id', width: 100},
-            {field: 'key[2]', displayName: 'Grid Ref', width: 100},
-            {field: 'key[1]', displayName: 'Taxon'},
-            {field: 'key[3]', displayName: 'Recorded On', cellFilter: 'date'},
-            {field: 'doc.name', displayName: 'Recorder'},
-        ];
 
         $scope.reloadData();
     });
@@ -284,13 +281,11 @@ angular.module('DataBrowserModule')
 //            footerTemplate:  $templateCache.get('footer.html'),
 //            footerRowHeight: 40,
             data: 'data.rows',
-            columnDefs: 'columnDefs',
+            columnDefs: [
+                {field: 'key[1]', displayName: 'Grid Ref', width: 100},
+            ],
             showGroupPanel: false,
         };
-
-        $scope.columnDefs = [
-            {field: 'key[1]', displayName: 'Grid Ref', width: 100},
-        ];
  
         $scope.reloadData();
     });
