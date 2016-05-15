@@ -5,7 +5,7 @@
   <form ng-submit class="form-horizontal" name="uploadForm"
 	enctype="multipart/form-data" novalidate>
 
-    <div class="control-group">
+    <div class="form-group">
       <span class="help-block">
 	Use this to a upload CSV file containing {{ dataType | lowercase }}
 	records.
@@ -14,11 +14,11 @@
 
     <div ng-include="uploadHelp" />
 
-    <div class="control-group" >
-      <label class="control-label" for="upload-file-input">
+    <div class="form-group" >
+      <label class="control-label col-sm-3" for="upload-file-input">
 	CSV file:
       </label>
-      <div class="controls">
+      <div class="col-sm-9">
 	<input id="upload-file-input" type="file"
 	       required
 	       ng-disabled="uploading"
@@ -29,8 +29,8 @@
       
     </div>
 
-    <div class="control-group">
-      <div class="controls">
+    <div class="form-group">
+      <div class="col-sm-9 col-sm-offset-3">
 	<input type="submit" class="btn btn-primary"
 	       value="Upload"
 	       ng-disabled="uploadForm.$pristine || uploadForm.$invalid || uploading"
@@ -40,20 +40,16 @@
       </div>
   </form>
 </div>
-<div class="modal-footer progress-bar">
-    <div class="control-group">
-      <div>{{ uploadMessage }}</div>
+<div class="modal-footer">
+  <div class="form-group">
+    <div>{{ uploadMessage }}</div>
+  </div>
+  <div class="progress">
+    <div class="progress-bar progress-bar-striped"
+	 role="progressbar"
+	 ng-class="{active: uploading}"
+	 ng-style="{width: uploadPercent+'%'}">
+      <div class="sr-only">Uploading...</div>
     </div>
-    <div class="control-group">
-      <div class="progress progress-striped"
-	   ng-class="{active: uploading}">
-	<div class="bar" ng-style="{width: uploadPercent+'%'}"></div>
-      </div>
-      <!--The following was replaced with the above, since ng-class
-	  and angular-ui's progress directive seem not to play together.
-	  progress percent="uploadPercent" 
-		ng-class="{'progress-striped': true, active: uploading}"
-		animate="false"
-		></progress-->
-    </div>
+  </div>
 </div>
