@@ -91,13 +91,14 @@ div.progress-bar  {
 </style>
 
 <script ng-script type="text/ng-template" id="footer.html">
-<span><dt>Set name</dt><dd>{{ data.name }}</dd></span>
-<span><dt>Id</dt><dd>{{ data.id }}</dd></span>
-<span><dt>Created on</dt><dd>{{ data.created_on }}</dd></span>
-<span><dt>Number of items</dt><dd>{{ data.$resolved? maxRows() : '...' }}</dd></span>
-<span class="pull-right" ng-show="session && session.active">
-<button class="btn btn-primary" ng-click="uploadDialog()">Upload {{ dataType }}</button>
-</span>
+<div class="ui-grid-footer-info ui-grid-grid-footer">
+  <span><dt>Set Id</dt><dd>{{ grid.appScope.setId }}</dd></span>
+  <!--span><dt>Created on</dt><dd>{{ data.created_on }}</dd></span-->
+  <span><dt>Number of items</dt><dd>{{ grid.appScope.data.total_rows != null && grid.appScope.data.total_rows || '...' }}</dd></span>
+  <span class="pull-right" ng-show="grid.appScope.session && grid.appScope.session.name">
+    <button class="btn btn-xs btn-primary" ng-click="grid.appScope.uploadDialog()">Upload {{ grid.appScope.dataType }}</button>
+  </span>
+</div>
 </script>
 
 <script ng-script type="text/ng-template" id="p/data-grid.html">
@@ -128,21 +129,16 @@ div.progress-bar  {
 	</ul>
 	<ul class="nav navbar-nav navbar-right">
 	  <li ng-show="message">{{ message }}</li>
-	  
+	  <li ng-show="session.error.reason">{{ session.error.reason }}</li>
 	  <li ng-hide="session && session.name"
-	      tooltip="You need to log in to upload data..."
-		tooltip-placement="left">      
-	    {{ session.error.reason }}
-	    <button class="btn btn-small" ng-click="loginDialog()">
-	      Log in
-	    </button>
+	      uib-tooltip="You need to log in to upload data..."
+	      tooltip-placement="left">
+	    <a ng-click="loginDialog()">Log in</a>
 	  </li>
-	  
-	  <li ng-show="session && session.name">
-	    You are logged in as {{ session.name }}.
-	    <button class="btn btn-small" ng-click="logoutDialog()" >
-	      Log out
-	    </button>
+	  <li ng-show="session && session.name"
+	      uib-tooltip="You are logged in as {{ session.name }}"
+	      tooltip-placement="left">
+	    <a ng-click="logoutDialog()">Log out</a>
 	  </li>
 	</ul>
       </div>

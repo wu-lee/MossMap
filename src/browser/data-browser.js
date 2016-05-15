@@ -192,6 +192,7 @@ angular.module('DataBrowserModule')
             var transform = myScope.resourceTransform;
 
             myScope.message = "Loading data, please wait..."; 
+            myScope.setId = id;
             var loadingDialog = $uibModal.open({
                 templateUrl: 'p/loading.html',
                 scope: myScope,
@@ -249,16 +250,19 @@ angular.module('DataBrowserModule')
         };
 
         $scope.gridOptions = {
-            showFooter: true,
-//            footerTemplate:  $templateCache.get('footer.html'),
+            showGridFooter: true,
+            enableHorizontalScrollbar: 0,
+            enableFiltering: true,
+
+            gridFooterTemplate:  $templateCache.get('footer.html'),
 //            footerRowHeight: 40,
             data: 'data.rows',
             columnDefs: [
                 {field: 'id', width: 100},
-                {field: 'key[2]', displayName: 'Grid Ref', width: 100},
-                {field: 'key[1]', displayName: 'Taxon'},
-                {field: 'key[3]', displayName: 'Recorded On', cellFilter: 'date'},
-                {field: 'doc.name', displayName: 'Recorder'},
+                {field: 'key[2]', name: 'Grid Ref', width: 100},
+                {field: 'key[1]', name: 'Taxon'},
+                {field: 'key[3]', name: 'Recorded On', cellFilter: 'date:"short"'},
+                {field: 'doc.name', name: 'Recorder'},
             ],
             showGroupPanel: true,
         };
@@ -277,12 +281,14 @@ angular.module('DataBrowserModule')
         );
         
         $scope.gridOptions = {
-            showFooter: true,
-//            footerTemplate:  $templateCache.get('footer.html'),
+            enableHorizontalScrollbar: 0,
+            enableFiltering: true,
+            showGridFooter: true,
+            gridFooterTemplate:  $templateCache.get('footer.html'),
 //            footerRowHeight: 40,
             data: 'data.rows',
             columnDefs: [
-                {field: 'key[1]', displayName: 'Grid Ref', width: 100},
+                {field: 'key[1]', name: 'Grid Ref', width: 100},
             ],
             showGroupPanel: false,
         };
@@ -385,10 +391,7 @@ angular.module('DataBrowserModule')
                         },
                         function(resp) {
                             $log.debug("Upload error: ", resp);
-                            var data = resp.data;
-                            var message = 'message' in data?
-                                data.message : data;
-                            $scope.uploadMessage = "Error: "+message;
+                            $scope.uploadMessage = "Error: "+resp.statusText;
                             $scope.uploading = false;
                         }
                     )
