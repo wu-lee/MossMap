@@ -85,6 +85,10 @@ module.exports = function(grunt) {
                         dest: 'couchdb/mossmap/_attachments/3p/d3.js' 
                     },
                     {
+                        src: 'node_modules/papaparse/papaparse.js',
+                        dest: 'couchdb/mossmap/_attachments/3p/papaparse.js' 
+                    },
+                    {
                         src: 'node_modules/webshim/js-webshim/dev/polyfiller.js',
                         dest: 'couchdb/mossmap/_attachments/3p/polyfiller.js' 
                     },

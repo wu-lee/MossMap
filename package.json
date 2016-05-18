@@ -17,6 +17,7 @@
     "d3": "^3.5.13",
     "dinty": "^0.2.0",
     "jquery": "^1.12.3",
+    "papaparse": "^4.1.2",
     "webshim": "^1.15.10"
   },
   "devDependencies": {
