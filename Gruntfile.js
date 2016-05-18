@@ -143,6 +143,14 @@ module.exports = function(grunt) {
                     alias: ['dinty:'],
                 },
             },
+            unbrowserified: {
+                // code from this module which needs browserification
+                src: './src/unbrowserified/*.js',
+                dest: 'couchdb/mossmap/_attachments/js/mossmap.js',
+                options: {
+                    alias: ['mossmap:'],
+                },
+            },
         },
         'couch-security': {
             localhost: {

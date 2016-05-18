@@ -36,6 +36,6 @@
     "node": "*"
   },
   "scripts": {
-    "test": "NODE_PATH=.:src/mossmap/js qunit-cli test/test-*.js"
+    "test": "NODE_PATH=.:src/mossmap/js:src/unbrowserified qunit-cli test/test-*.js"
   }
 }
