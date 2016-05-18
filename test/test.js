@@ -44,8 +44,6 @@ function testCases(config) {
     });
 }
 
-console.log(utils);
-
 testCases({
     title: "mkCursor",
     function: mkCursor(1,2,3,4),
