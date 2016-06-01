@@ -73,7 +73,7 @@ module.exports = function(grunt) {
                         dest: 'couchdb/mossmap/_attachments/3p/ui-bootstrap.js' 
                     },
                     { 
-                        src: 'bower_components/CornerCouch/angular-cornercouch.js', 
+                        src: 'node_modules/CornerCouch/angular-cornercouch.js', 
                         dest: 'couchdb/mossmap/_attachments/3p/angular-cornercouch.js' 
                     },
                     {

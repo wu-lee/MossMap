@@ -29,6 +29,7 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-couch": "git://github.com/wu-lee/grunt-couch#fixes",
     "lodash": "^4.8.2",
+    "napa": "^2.3.0",
     "qunit-cli": "^0.2.0"
   },
   "optionalDependencies": {},
@@ -36,6 +37,7 @@
     "node": "*"
   },
   "scripts": {
+    "install": "napa eddelplus/CornerCouch",
     "test": "NODE_PATH=.:src/mossmap/js:src/unbrowserified qunit-cli test/test-*.js"
   }
 }
