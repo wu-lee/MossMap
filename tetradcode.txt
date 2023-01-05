@@ -1,0 +1,55 @@
+procedure Tmainform.plot(s:string);
+{accepts s= tetrad gridref SDXnn or SJxnn)}
+var
+w,n,dx,dy,x,y,err:integer;
+s1,s0:string;
+tet:char;
+begin
+s1:=copy(s,1,2);
+s0:=copy(s,3,1); val(s0,x,err);x:=x0+scale*(x-2);     {origin of x is 2}
+s0:=copy(s,4,1); val(s0,y,err);
+if s1='SD' then y:=y0+scale*(10-y) else y:=y0-scale*y;
+tet:=s[5];
+if tet>'N' then dec(tet);     {O is omitted}
+n:=ord(tet)-ord('A');
+dx:=n div 5;
+dy:=n-5*dx;
+w:=scale div 5;  {HALF TETRAD WIDTH IN PIXELS}
+x:=x+w*dx;
+y:=y-w*dy;
+map.Canvas.Ellipse(x,y,x+w,y-w);
+end;
+
+
+var x0, scale;
+function plot() {
+    var w, n, dx, dy, x, y, err, s1, s0, tet;
+
+    gridref = gridref.toUpper();
+
+    var s1 = gridref.slice(0,3);
+    var x = parseInt(gridref.slice(3,4), 10);
+    var x = x0 + scale*(x-2);     // {origin of x is 2}
+
+    var y = parseInt(gridref.slice(4,5), 10);
+
+    if (s1 === 'SD') {
+	y = y0 + scale*(10-y);
+    }
+    else {
+	y = y0 - scale*y;
+    }
+
+    var n = gridref.charCodeAt(4) - "A".charCodeAt(0);
+    if (n > 13) {
+	n -= 1; //    {O is omitted}
+    }
+    var dx = Math.floor(n / 5);
+    var dy = n - 5*dx;
+
+    var width = Math.floor(scale / 5);  // {HALF TETRAD WIDTH IN PIXELS}
+
+    x = x + width*dx;
+    y = y - width*dy;
+//    map.Canvas.Ellipse(x,y,x+w,y-w);
+}

@@ -1,0 +1,842 @@
+* plan
+
+** model
+
+DBIC based.
+
+*** Domain model
+
+ - recordings 
+   - species
+   - date
+   - location
+   - recorder
+   - data-set-id
+
+ - data-sets (identifies what was imported when)
+   - id
+   - date imported
+   - notes
+
+later add:
+
+ - species
+   - name
+   - id
+   - description
+
+ - species history?   
+
+ - recorders
+   - name
+   - id
+   - notes
+
+ - determiner
+   - name
+   - id
+
+** view
+
+TT based for HTML, JSON for data
+
+** controller
+
+Pages:
+
+Public
+
+ - map, with selectors/filters.
+
+
+Authenticated
+
+ - editable data sheet
+ - upload page
+
+** use-cases
+
+*** upload
+- go to map
+- authenticate
+- click upload
+- browse to excel or csv or access sheet, submit (csv first step)
+- data is imported to database as a single set
+
+*** edit
+- go to map 
+- authenticate 
+- select data set from (filterable?) list
+- get JS grid
+- edit, etc.
+- save
+
+also?
+- delete data set
+- copy data set
+- merge data set a into b
+- split data set a into parts
+
+
+*** view
+
+- go to map
+- displays newest data set
+- select other data set(s)
+- filter by species, period, etc.
+- can hover over map and get more information
+ - tetrad name?
+
+- more info available with authentication?
+
+- choice of layouts (suit mobile, letterbox)?
+
+- click and get visualisation of slices?
+  - perhaps in optional side boxes
+- print and export
+
+*** URL map
+
+: /map
+: /map/
+
+** steps
+
+* emails
+
+** John Lowell, "Bryophyte records", 2012-01-06
+
+From: j lowell <senecio@virginmedia.com>
+Date: Fri, 06 Jan 2012 08:16:30 +0000
+User-Agent: Mozilla/5.0 (Windows NT 5.1; rv:8.0) Gecko/20111105 Thunderbird/8.0
+MIME-Version: 1.0
+To: "Woolley, Nick" <nick@noodlefactory.co.uk>
+Subject: Bryophyte records
+
+dear nick
+
+The attached "dotmap.jpg" shows the general idea but a google based
+map wold be as good or better.
+
+A grid (2kmx2km) as in the example is useful but not essential if a
+dot location can be read out, e.g. by clicking on the dot. A map for a
+given species is shown by scrolling the list on the right and clicking
+on a name.
+
+Data could be in various formats eg the $-delimited textfile
+attached. This would be created from ACCESS or EXCEl and could be
+sorted in order of species and grid. Also a list of species for the
+scrolling list, a simple textfile.
+
+The grid references like SD35A refer to a 2km square I can provide the
+protocol for turning these into a standard reference like SD1234. If
+google maps are used i suppose these would need to be converted to
+latitude and longitude but there should be means available somewhere.
+
+I am emailing the current recorder who now has charge of the data. If
+he thinks it a good idea he may have suggestions about presentation,
+or he may veto the scheme as a public facility. I will get back asap
+
+john
+
+
+----
+
+[[file:dotmap.jpg]]
+
+----
+
+Species$Grid$Date$Recorder
+Ceratodon purpureus$SD21V$24/05/2006$Callaghan, D.
+Bryum algovicum var. rutheanum$SD21V$24/05/2006$Callaghan, D.
+Ceratodon purpureus$SD21W$24/05/2006$Callaghan, D.
+Bryum algovicum var. rutheanum$SD21W$24/05/2006$Callaghan, D.
+Brachythecium albicans$SD21W$24/05/2006$Callaghan, D.
+Syntrichia ruraliformis$SD21W$28/05/2006$Callaghan, D.
+Brachythecium albicans$SD21W$28/05/2006$Callaghan, D.
+Brachythecium albicans$SD21W$28/05/2006$Callaghan, D.
+Syntrichia ruraliformis$SD21W$28/05/2006$Callaghan, D.
+Hypnum lacunosum var. lacunosum$SD21W$28/05/2006$Callaghan, D.
+Syntrichia ruraliformis$SD21W$28/05/2006$Callaghan, D.
+Hypnum lacunosum var. lacunosum$SD21W$28/05/2006$Callaghan, D.
+Hypnum lacunosum var. lacunosum$SD21W$28/05/2006$Callaghan, D.
+Brachythecium albicans$SD21W$28/05/2006$Callaghan, D.
+Hypnum lacunosum var. lacunosum$SD21W$28/05/2006$Callaghan, D.
+Syntrichia ruraliformis$SD21W$08/06/2006$Callaghan, D.
+Brachythecium albicans$SD21W$08/06/2006$Callaghan, D.
+Ceratodon purpureus$SD21W$08/06/2006$Callaghan, D.
+Bryum algovicum var. rutheanum$SD21W$08/06/2006$Callaghan, D.
+Riccia sorocarpa$SJ58Z$22/07/2007$Callaghan, D.
+Barbula unguiculata$SJ58Z$22/07/2007$Callaghan, D.
+Dicranella staphylina$SJ58Z$22/07/2007$Callaghan, D.
+Didymodon fallax$SJ58Z$22/07/2007$Callaghan, D.
+Brachythecium rutabulum$SJ59V$02/04/2007$Hanson, P.
+Didymodon fallax$SJ59V$02/04/2007$Hanson, P.
+Tortula muralis var. muralis$SJ59V$02/04/2007$Hanson, P.
+Rhytidiadelphus squarrosus$SJ59V$02/04/2007$Hanson, P.
+Lunularia cruciata$SJ59V$02/04/2007$Hanson, P.
+Bryum argenteum$SJ59V$02/04/2007$Hanson, P.
+Bryum dichotomum$SJ59V$02/04/2007$Hanson, P.
+Bryum capillare var. capillare$SJ59V$02/04/2007$Hanson, P.
+Polytrichum piliferum$SJ59V$02/04/2007$Hanson, P.
+Grimmia pulvinata$SJ59V$02/04/2007$Hanson, P.
+Schistidium crassipilum$SJ59V$02/04/2007$Hanson, P.
+Eurhynchium praelongum$SJ59V$02/04/2007$Hanson, P.
+Calliergonella cuspidata$SJ59V$02/04/2007$Hanson, P.
+Campylopus introflexus$SJ59V$02/04/2007$Hanson, P.
+Orthotrichum affine$SJ59V$02/04/2007$Hanson, P.
+Orthotrichum diaphanum$SJ59V$02/04/2007$Hanson, P.
+Dicranoweisia cirrata$SJ59V$02/04/2007$Hanson, P.
+Lophocolea bidentata$SJ59V$02/04/2007$Hanson, P.
+Hypnum cupressiforme$SJ59V$02/04/2007$Hanson, P.
+Dicranella staphylina$SJ49V$19/05/2007$Callaghan, D.
+Grimmia pulvinata$SJ49V$19/05/2007$Callaghan, D.
+Brachythecium albicans$SJ79T$07/08/2007$Locksley, A.R.
+Brachythecium rutabulum$SJ79T$07/08/2007$Locksley, A.R.
+Bryum bicolor$SJ79T$07/08/2007$Locksley, A.R.
+Bryum capillare var. capillare$SJ79T$07/08/2007$Locksley, A.R.
+Calliergonella cuspidata$SJ79T$07/08/2007$Locksley, A.R.
+Ceratodon purpureus$SJ79T$07/08/2007$Locksley, A.R.
+Didymodon insulanus$SJ79T$07/08/2007$Locksley, A.R.
+Eurhynchium praelongum$SJ79T$07/08/2007$Locksley, A.R.
+Grimmia pulvinata$SJ79T$07/08/2007$Locksley, A.R.
+Lunularia cruciata$SJ79T$07/08/2007$Locksley, A.R.
+Orthotrichum affine$SJ79T$07/08/2007$Locksley, A.R.
+Orthotrichum anomalum$SJ79T$07/08/2007$Locksley, A.R.
+Orthotrichum diaphanum$SJ79T$07/08/2007$Locksley, A.R.
+Pellia endiviifolia$SJ79T$07/08/2007$Locksley, A.R.
+Plagiomnium undulatum$SJ79T$07/08/2007$Locksley, A.R.
+Rhynchostegium confertum$SJ79T$07/08/2007$Locksley, A.R.
+Schistidium apocarpum s.l.$SJ79T$07/08/2007$Locksley, A.R.
+Tortula freibergii$SJ79T$07/08/2007$Locksley, A.R.
+Tortula muralis var. muralis$SJ79T$07/08/2007$Locksley, A.R.
+Tortula freibergii$SD70K$31/03/2003$Locksley, A.R.
+Tortula freibergii$SD70K$23/03/2007$Locksley, A.R.
+Tortula freibergii$SJ79U$31/03/2003$Locksley, A.R.
+Tortula freibergii$SJ79U$31/03/2003$Locksley, A.R.
+Tortula freibergii$SJ79U$21/03/2003$Locksley, A.R.
+Tortula freibergii$SJ79T$15/03/2003$Locksley, A.R.
+Tortula freibergii$SJ79Y$01/12/2004$Lowell, J.
+Tortula freibergii$SJ79Y$01/12/2004$Lowell, J.
+Tortula freibergii$SJ79W$24/03/2003$Locksley, A.R.
+Tortula freibergii$SJ79X$24/03/2003$Locksley, A.R.
+Tortula freibergii$SJ79W$24/03/2003$Locksley, A.R.
+Tortula freibergii$SJ79X$13/01/2005$Locksley, A.R.
+Tortula freibergii$SJ89C$24/03/2003$Locksley, A.R.
+Tortula freibergii$SJ89D$12/03/2003$Locksley, A.R.
+Bryum dunense$SD20U$17/09/2005$Newton, M.E.
+Bryum dunense$SD70F$1/11/1977$Newton, M.E.
+Cryphaea heteromalla$SD70W$30/01/2006$Walton, M.
+Campylopus introflexus$SJ89I$25/02/2006$North West Naturalists Union
+Calypogeia arguta$SJ89I$25/02/2006$North West Naturalists Union
+Amblystegium serpens var. serpens$SJ89I$25/02/2006$North West Naturalists Union
+Conocephalum salebrosum$SJ89I$25/02/2006$North West Naturalists Union
+Didymodon insulanus$SD90F$25/02/2006$Manchester Field Club
+Fontinalis antipyretica var. antipyretica$SD90F$25/02/2006$Manchester Field Club
+Aulacomnium androgynum$SD72Q$15/04/2006$North West Naturalists Union
+Cratoneuron filicinum$SD72Q$15/04/2006$North West Naturalists Union
+Metzgeria furcata$SD72Q$15/04/2006$North West Naturalists Union
+Frullania dilatata$SD72Q$15/04/2006$North West Naturalists Union
+Metzgeria fruticulosa$SD72Q$15/04/2006$North West Naturalists Union
+Scapania irrigua$SD72Q$15/04/2006$North West Naturalists Union
+Racomitrium fasciculare$SD72Q$15/04/2006$North West Naturalists Union
+Ptilidium ciliare$SD72Q$15/04/2006$North West Naturalists Union
+Ulota crispa s.l.$SD72Q$15/04/2006$North West Naturalists Union
+Ulota phyllantha$SD72Q$15/04/2006$North West Naturalists Union
+Eurhynchium hians$SD72Q$15/04/2006$North West Naturalists Union
+Orthotrichum pulchellum$SD72Q$15/04/2006$North West Naturalists Union
+Pleurozium schreberi$SD72Q$15/04/2006$North West Naturalists Union
+Plagiomnium ellipticum$SD72Q$15/04/2006$North West Naturalists Union
+
+
+
+** Nick Stokoe, "Re: Fwd: RE: Possible VC59 Records Website", 2012-01-06
+
+Date: Fri, 06 Jan 2012 10:31:22 +0000
+From: Nick Stokoe <nick@noodlefactory.co.uk>
+To: j lowell <senecio@virginmedia.com>
+Subject: Re: Fwd: RE: Possible VC59 Records Website
+
+On 06/01/12 09:52, j lowell wrote:
+> Scheme is ok with the current recorder. I think suggestion (1), showing number
+> of different species in a tetrad would be very useful, also the date of the last
+> record for the species but maybe the other suggestions are a bit over the top
+
+Ok.  What's a "tetrad"?  One of the squares on the map?
+
+As you say, seems sensible to proceed in steps - with simplest thing that will
+work first.  If we're careful, new features should be able to be added later.
+
+I was going to suggest two tables initially:
+
+ - recordings (basically your data table with one extra column)
+   - species
+   - date
+   - location
+   - recorder
+   - data-set-id
+
+ - data-sets (identifies what was imported when)
+   - id
+   - date imported
+   - notes
+
+
+This way, when we update the data, we don't have to obliterate the old data set
+(which would be burning our bridges and leave us unable to roll back if anything
+was wrong with the latest import).  We can just use the most recent data-set,
+and delete older ones when we need to.  We can also compare and contrast
+data-sets later, if that's useful.
+
+We *may* want extra tables, as the orthodox way to avoid typos in names would be
+to split the species and recorder names into separate tables for "Species" and
+"Recorders" each keyed by an index field.  This could be an internal
+implementation detail, and your imports could still be pretty much exactly as
+given, but I'll need to think more about this.  Might be useful for some of the
+other items Des suggests (e.g. assigning extra attributes to species, such as
+"group")
+
+
+Cheers,
+
+N
+
+
+
+** John Lowell, "maps", 2012-01-06
+
+From: j lowell <senecio@virginmedia.com>
+Date: Fri, 06 Jan 2012 13:06:54 +0000
+To: "Woolley, Nick" <nick@noodlefactory.co.uk>
+Subject: maps
+
+Yes that looks sensible for data tables. Data would always be
+recoverable from source there is no danger of a complete loss but
+re-obtaining data might be a significant task so it would be useful as
+you suggest to keep a backup of the old data when updating, so that it
+could be restored at once. I am all for keeping it fairly simple at
+least at first - the people who are likely to use it might be deterred
+by a lot of features.
+
+You may like to have a look at the national biodiversity site
+http://data.nbn.org.uk/
+this is a bit of a pain to use, partly because it is comprehensive 
+covering all areas and lots of kinds of species but also I think the 
+slection mechanisms are plonking- hence I think it would be useful to 
+have a dedicated Lancs/bryophytes site.
+also there is a site that concentrates on Staffordshire
+http://www.staffs-ecology.org.uk/atlas/atlas.php?atlasid=L&page=splist
+but again I think the way it operates leaves much to be desired
+
+
+Recording is mostly done in 2kmx2km squares, "tetrads" & this would be 
+the mapping unit. The attached jpg show the relation between tetrad 
+coding and grid references. There is a complication in that grid 
+refernces change from SJ too SJ as you go north thru Lancs this may be 
+clear from the bit of old code attached as .txt.
+
+I am thinking about exactly we want to display & will get back shortly
+
+[[file:tetrad.jpg]]
+
+[[file:tetradcode.txt]]
+
+** Nick Stokoe
+
+Date: Fri, 06 Jan 2012 13:47:16 +0000
+From: Nick Stokoe <nick@noodlefactory.co.uk>
+To: j lowell <senecio@virginmedia.com>
+Subject: Re: maps
+
+On 06/01/12 13:06, j lowell wrote:
+> Yes that looks sensible for data tables. Data would always be recoverable from
+> source there is no danger of a complete loss but reobtaining data might be a
+> significant task so it would be useful as you suggest to keep a backup of the
+> old data when updating, so that it could be restored at once. I am all for
+> keeping it fairly simple at least at first - the people who are likely to use it
+> might be deterred by a lot of features.
+> 
+> You may like to have a look at the national biodiversity site
+> http://data.nbn.org.uk/
+> this is a bit of a pain to use, partly because it is comprehensive covering all
+> areas and lots of kinds of species but also I think the slection mechanisms are
+> plonking- hence I think it would be useful to have a dedicated Lancs/bryophytes
+> site.
+
+I also find its selection dialog is too long to fit on my browser's display
+area, unless I go to full screen.  I have one of those new-fangled letter-box
+shaped laptop screens, and my vertical resolution is a bit limited. Screen sizes
+can be problematic for the developer, since they can vary so much.
+
+Otherwise seems fairly slick, but then I am not trying to extract any useful
+information from it.
+
+> also there is a site that concentrates on Staffordshire
+> http://www.staffs-ecology.org.uk/atlas/atlas.php?atlasid=L&page=splist
+> but again I think the way it operates leaves much to be desired
+
+Ok.  We'll try and do better, if we can define something that all parties are
+satisfied with.
+
+> Recording is mostly done in 2kmx2km squares, "tetrads" & this would be the
+> mapping unit. The attached jpg show the relation between tetrad coding and grid
+> references. There is a complication in that grid refernces change from SJ too SJ
+> as you go north thru Lancs this may be clear from the bit of old code attached
+> as .txt.
+> 
+> I am thinking about exactly we want to display & will get back shortly
+
+
+Okeydoke.
+
+Cheers,
+
+N
+
+** John Lowell, "Maps", 2012-01-07
+
+From: j lowell <senecio@virginmedia.com>
+Date: Sat, 07 Jan 2012 15:41:40 +0000
+To: "Woolley, Nick" <nick@noodlefactory.co.uk>
+Subject: Maps
+
+Map features
+
+1. Preferably scroll to the species to be displayed, with
+   scroll-window on same screen as map (which need not be anywhere
+   near as big as full screen.
+
+Other websides seem to avoid scrolling, making you select A-B, C-D etc
+and then the species from a short list, I cant see the advantage of
+this. Often the map or whatever is then displayed on a separate
+screen page so you have to go backward and forward. Typically the user
+will want to look as maps for several/many species, not always just
+one - sites like NBN are fine for looking at 1 species, not so good
+for a lot.
+
+I personally much prefer to have the same screen visible always, with
+any additional temporary windows popping up with the map still there
+in the background. This may be prejudice due to exposure to not-very-
+well-thought-out pages and you may have better ways than the above.
+
+2 FILTER user specifies year1,year2, map displays only records in or
+after year1 and in or before year 2 (defaults 0,infinity)
+
+2. Information about currently selected species for a given tetrad
+   (dot) that you click on.
+
+Good to have a list of records for the species & tetrad with dates and
+recorder but there are privacy issues so in the first instance perhaps
+date of earliest and latest record. Display also tetrad name (eg
+SD71A) as its not easy to see what tetrad a displayed dot is situated
+on. (Hover mouse over tetrad would be good as long as only this
+limited info is displayed but would not be suitable if we later
+deciuded to display much more information like all records for the
+tetrad/species with dates and recorder.
+
+3. Information about ALL species for a selected tetrad.
+
+I have in mind a list of all species recorded for the tetrad (NOT all
+records, some of which refer to the same species on different dates)
+Exportable to a textfile. I suggest just this initially but later
+(perhaps) choices might include some of Des's suggestions.
+
+4. Features 2 and 3 are separate issues and should be invoked
+   differently eg by different mouse clicks or perhaps by hovering in
+   the former case and clicking in the second.
+
+5. Some *brief* help/reminder about how to get info as in 2 and 3.
+
+6. Saving map as a bm,p or jpg amd/or printing would be useful but not
+   essential.
+
+
+In case the format of the input data (delimited text) had to change (I
+don't see why but maybe...) would it be advisable to convert the data
+to some internal format rather than using it directly to plot maps
+(perhaps you would do that anyway). If some of Des's suggestions were
+to be incorporated that would not come as part of the records but
+rather as a datafilebased on tetrads or species so I don't forsee any
+big changes in the _record_ data.
+
+I cant think of anything else. Is there anything likely to cause problems?
+
+
+** Nick Stokoe, "Re: Maps", 2012-01-11
+
+Date: Wed, 11 Jan 2012 01:04:52 +0000
+From: Nick Stokoe <nick@noodlefactory.co.uk>
+To: j lowell <senecio@virginmedia.com>
+Subject: Re: Maps
+
+Hi,
+
+Had a read through and done some research on graphing tools and so on.
+
+> In case the format of the input data (delimited text) had to change (I don’t see
+> why but maybe…) would it be advisable to convert the data to some internal
+> format  rather than using it directly to plot maps (perhaps you would do that
+> anyway).
+
+Not sure.  Depends what you mean?
+
+I expect the delimited text would be imported into an RDBMS running on the
+server.  This would then be written out as JSON (basically, Javascipt data
+structures) and plotted using some client-side Javascript graphics library.
+This seems feasible since most peoples' browsers can do javascript-driven
+graphics that these days, and beneficial since it means things can be more
+interactive.  Otherwise we'd have to render the graphs as images server-side,
+and they'd be static.
+
+The same data in different formats could be supported (e.g. CSV, XML, Excel,
+what have you).
+
+If the data *schema* changed (changes in columns, tables, or contents thereof),
+we could still adapt but it might require more thought.
+
+> If some of Des’s suggestions were to be incorporated that would not
+> come as part of the records but rather as a datafile  based on tetrads or
+> species so I don’t forsee any big changes in the _record_ data.
+
+Ok.  These things could be bolted on later, I think.
+
+> I cant think of anything else. Is there anything likely to cause problems?  
+
+I don't think so.  The usual problems are the unforseen ones, and typically
+involve fighting with browser bugs or incompatibilities.
+
+Cheers,
+
+N
+
+
+
+** John Lowell, "",
+
+Date: Wed, 11 Jan 2012 17:08:10 +0000
+From: j lowell <senecio@virginmedia.com>
+To: Nick Stokoe <nick@noodlefactory.co.uk>
+Subject: Re: Bryophytes of Lancashire?
+
+I think a title should include the keywords 'maps', 'bryophytes' and
+'lancashire'
+
+e.g. Distribution maps for  lancashire bryophytes.
+
+Perhaps there is a distinction bewtween the *project itself* which
+might be called somethging like 'dynamic mapping of biological
+records' (since the product could equally well map other things e.g.
+butterflies, and (?)  in other areas, with minimum tweaking) and the
+*specific application* to lancashire bryophytes which will appear as a
+website-which should have a title descriptive of the exact
+application. Only the latter is significant as far as I am concerned
+but if you were to cite this as a professional product would it be
+better to emphasise the wider applicability.
+
+
+
+On 11/01/2012 11:16, Nick Stokoe wrote:
+> One question: what do you think we should call this project?
+>
+> My working name is "Bryophytes of Lancashire" but that could be changed. I'm
+> wondering how inherently specific to Bryophytes and Lancashire it is, so I was
+> considering other names like "Tetrad Map" or something.
+>
+> Any ideas?
+>
+> I'll also need a short moniker for prefixes to modules and things.  Currently
+> using "BoL".
+>
+> Given a name I'll create a project page on "Github", which is a website which
+> provides free version control using a spiffy tool I like called "Git", with
+> added extras like a wiki and a basic issue tracker.
+
+Not familiar with any of this but no doubt I will pick up what I need!
+
+** John Lowell
+
+Date: Wed, 11 Jan 2012 17:29:23 +0000
+From: j lowell <senecio@virginmedia.com>
+To: Nick Stokoe <nick@noodlefactory.co.uk>
+Subject: Re: Maps
+
+On 11/01/2012 16:59, Nick Stokoe wrote:
+> On 11/01/12 16:48, j lowell wrote:
+>>> I expect the delimited text would be imported into an RDBMS running on the
+>>> server.
+>> NO PROBLEM THEN I THINK. WHAT I WAS THINKING WAS THAT IF YOUR PROGRAM READ DL
+>> TEXT DIRECTLY AND THE TEXT CHANGED IT MIGHT HAVE REPURCUSSIONS IN LOTS OF PLACES
+>> IN THE PROGRAM. bUT IF THE TEXT IS READ INTO SOME STRUCTURE  (RDBMS WHETEVER
+>> THAT IS?) WHICH THE PROGRAM THEN LOOKS AT THERE IS NO PROBLEM AS ONLY THE CODE
+>> FOR CREATING THE STRUCTURE WOULD NEED TO CHANGE.
+> I think there *may* be that sort of issue if for example on one import, the
+> species is spelt right, and the next spelt wrong.  They'd potentially show up as
+> two separate species.
+>
+> The way around that would be to have a table for species, and then require the
+> species to match a name in that.  Ditto other names.  There then will be a need
+> for some way to manage those names.
+
+Yes good point. Actually there is virtually no possibility of
+misspelling and consequent name duplication, that is checked at
+source [[Note 1][*]] along the lines you are proposing. However, there is a related
+problem in that names (of the same species) get changed from time to
+time (e.g. somebody discovers a species called 'a' is in fact
+identical to some other species 'b' so the 'a' records get renamed
+'b').  so as you say it is necessary to be careful with the name lists
+(avoiding both 'a' and 'b' appearing). It would be possible for updates
+to include a new list of names as well as a new set of records but a
+better way would be to generate the list of species names from the
+records themselves*** this should be absolutely foolproof,
+
+# <<Note 1>>
+ * Records would not come directly from the recorder but via the
+   biological records centre which has good quality control procedures
+   e.g. for detecting outdated names.
+
+# <<Note 2>>
+ ** In the past I have done this by sorting the names in the records
+    into ab order then reading thru them picking each new name and
+    ignoring the (many) following duplicates. There may be better
+    ways. 
+
+** John Lowell
+
+Date: Thu, 12 Jan 2012 07:56:40 +0000
+From: j lowell <senecio@virginmedia.com>
+To: Nick Stokoe <nick@noodlefactory.co.uk>
+Subject: Re: Maps
+
+I dont think there is a problem about "Bogus" species - all the
+records will have been sent to the Biologiocal Records Centre & they
+will send me a complete batch of Lancs records which they will have
+vetted, checking the validity of species names (also that the grid ref
+actually corresponds to Lancs, etc). The list of names they use for
+this checking in effect _defines_ what is a valid name. Names may
+change between one update and the next but an update will replace
+rather supplement a dataset so there is no name duplicastion problem.
+
+I have emailed the BRC for the current batch of records, partly so that 
+we have a sample and partly to check they do not have any issues about 
+the website (legally, records remain the intellectual property of the 
+person who made the record; my understanding is that records processed 
+through BRC dont have copyright-type issues but I thought it as well to 
+check).
+
+One possible format issue that occurs to me is that some records (a 
+minority) may have 4-fig or 6-fig grid refernces. I think the BRC file 
+when it comes will include the (calculated) tetrad for such records if 
+not we will need a conversion function but thats not much of a problem. 
+Some old records may have 10km grid refs (eg SD34 etc) but I think it 
+better to simply ignore them rather than plotting (eg) large circles.
+
+As a matter of interest the area mapped should really be called SOUTH 
+Lancashire- and the boudaries will not correspond to present day 
+political Lancashire ( the S Lancs boundary is the R.Mersey in the S, 
+the R.Ribble  in the N, and very roughly the Pennine watershed in the 
+E). Biological recording is based on 112 areas called 'vice counties' 
+corresponding to the old  English Welsh and Scottish counties - as 
+defined on mid19th century ordnance survey maps (definitive copies are 
+kept in the Natural History museum) but the larger counties are divided 
+into two or more. Lancashire divides into South lancashire (vice county 
+59) and (perversely) West Lancashire (VC 60). It would be unacceptable 
+that recording areas changed with time so the disappearance of parts of 
+Lancs into Yorkshire and Cumbria is ignored and the old boundaries kept. 
+When we get VC59 records from BRC they will have been vetted to ensure 
+that the tetrad field does indeed belong to the defined VC59 area.
+j
+On 11/01/2012 18:48, Nick Stokoe wrote:
+> On 11/01/12 17:29, j lowell wrote:
+>> On 11/01/2012 16:59, Nick Stokoe wrote:
+>>> On 11/01/12 16:48, j lowell wrote:
+>>>>> I expect the delimited text would be imported into an RDBMS running on the
+>>>>> server.
+>>>> NO PROBLEM THEN I THINK. WHAT I WAS THINKING WAS THAT IF YOUR PROGRAM READ DL
+>>>> TEXT DIRECTLY AND THE TEXT CHANGED IT MIGHT HAVE REPURCUSSIONS IN LOTS OF PLACES
+>>>> IN THE PROGRAM. bUT IF THE TEXT IS READ INTO SOME STRUCTURE  (RDBMS WHETEVER
+>>>> THAT IS?) WHICH THE PROGRAM THEN LOOKS AT THERE IS NO PROBLEM AS ONLY THE CODE
+>>>> FOR CREATING THE STRUCTURE WOULD NEED TO CHANGE.
+>>> I think there *may* be that sort of issue if for example on one import, the
+>>> species is spelt right, and the next spelt wrong.  They'd potentially show up as
+>>> two separate species.
+>>>
+>>> The way around that would be to have a table for species, and then require the
+>>> species to match a name in that.  Ditto other names.  There then will be a need
+>>> for some way to manage those names.
+>> YES GOOD POINT. ACTUALLY THERE IS VIRTUALLY NO POSSIBILITY OF MISPLELLING AND
+>> CONSEQUENT NAME DUPLICATION, THAT IS CHECKED AT SOURCE* ALONG THE LINES YOU ARE
+>> PROPOSING. HOWEVER, THERE IS A RELATED    PROBLEM IN THAT NAMES (OF THE SAME
+>> SPECIES) GET CHANGED FROM TIME TO TIME (eg SOMEBODY DISCOVERS  "SPECIES   CALLED
+>> "A" IS IN FACT IDENTICAL TO SOME OTHER SPECIES 'B' SO THE 'A' RECORDS GET
+>> RENAMED 'B').
+>> SO AS YOU SAY IT IS NECESSARY TO BE CAREFUL WITH THE NAME LISTS (AVOING BOTH 'A'
+>> AND 'B' APPEARING)
+>> IT WOULD BE POSSIBLE FOR UPDATES TO INCLUDE A NEW LIST OF NAMES AS WELL AS A NEW
+>> SET OF RECORDS BUT A BETTER WAY WOULD BE TO GENERATE THE LIST OF SPECIES NAMES
+>> FROM THE RECORDS THEMSELVES*** THIS SHOULD BE ABSOLTELY FOOLPROOF
+> If the records contained a bogus species name, wouldn't that then end up in the
+> master list?
+>
+> Putting it another way, this would work so long as the list could be trusted not
+> to have mistakes or obsolete species names.  Otherwise either they'd appear in
+> the database (if the import rules are permissive) or the bad records would be
+> rejected (if not).
+>
+>
+>
+>> *  records would not come directly from the recorder but via the biological
+>> records centre which has good quality control procedures eg for detecting
+>> outdated names.
+>> **in the past i have done this by sorting the names in the records into ab order
+>> then reading thru them picking each new name and ignoring the (many) following
+>> duplicates. There may be better ways.
+> There are lots of tools which could do this sort of thing.  But maybe not on
+> Windows by default.
+>
+> Cheers,
+>
+> N
+>
+
+
+** John Lowell
+
+Date: Thu, 12 Jan 2012 10:50:53 +0000
+From: j lowell <senecio@virginmedia.com>
+To: "Woolley, Nick" <nick@noodlefactory.co.uk>
+Subject: Fwd: RE: Proposed VC59 Website
+
+Dear nick
+
+Good coperation from the biological records centre.
+
+I cannot open the .xlcs file which seems to need a recent more recent
+excel program than mine. Are you able to cope with it? If need be I
+can get somebody with uptodate excel to translate it into something
+readable.  Evidently it will be ok to cite recorders, which will be
+useful.  Note the requirement to acknowledge BRC (actually the
+organisation is now called the "Centre for Ecology and Hydrology")
+Along with the acknowledgement, we should state the date of last
+update.
+
+-------- Original Message --------
+Subject: 	RE: Proposed VC59 Website
+Date: 	Thu, 12 Jan 2012 09:34:06 +0000
+From: 	Hill, Mark O. <moh@ceh.ac.uk>
+To: 	j lowell <senecio@virginmedia.com>
+
+
+
+Dear John
+
+The VC 59 data are too numerous to send conveniently by e-mail, and I
+have accordingly copied them to Dropbox, from where they can be
+downloaded - link
+http://dl.dropbox.com/u/9013194/Bryo_VC_59_records.xlsx
+
+The BBS tries to make its data as widely available as possible.  For
+example, we sent (a few years ago) our Irish data for use by the Irish
+BRC equivalent.  The only requirement is that other websites make it
+clear that the data are those of the BBS and that those who use them
+acknowledge BBS and BRC.  There is no other restriction on use.
+
+I disagree with you about the privacy issues.  All personal names are
+published on the NBN website, and it is now clear that listing
+recorders' names is not a contravention of the Data Protection Act.
+In judging the quality of a record, it is often critical to know who
+recorded it or checked the specimen.  I urge you to publish the names
+of recorders and checkers.  Compilers (of which you are by far the
+most prolific) are less important, and are mainly useful if one is
+tracing sources.  As yours would be a secondary source with the
+primary source the BRC, there would be no need to publish compilers.
+
+Best wishes and good luck
+                                                  Mark H
+
+PS I would be interested to see the result when it appears.
+
+________________________________________
+From: j lowell [senecio@virginmedia.com]
+Sent: 11 January 2012 17:48
+To: Hill, Mark O.
+Subject: Proposed VC59 Website
+
+Dear Mark,
+I have had an offer of help from a professional web designer (my
+daughters partner in fact) setting up a VC59 bryophytes website. Des
+Callaghan has expressed approval.
+
+Even though so much data is available on NBN I think a supplementary
+vc-59 dedicated website would be useful to local bryologists. We would
+of course hope to base it on CEH data for which we would need your
+permission. If you agree, could I ask you for a file of VC59 records,
+such as you used to send me when I was VC59 recorder?
+
+(I am conscious of privacy issues and do not plan to make
+recorder/determiner names available.)
+
+best wishes
+john--
+
+** John Lowell
+
+Date: Thu, 12 Jan 2012 15:07:20 +0000
+From: j lowell <senecio@virginmedia.com>
+To: Nick Stokoe <nick@noodlefactory.co.uk>
+Subject: Re: Fwd: RE: Proposed VC59 Website
+
+I found MS download to update fileformats so it opens now but the
+links could be useful for future reference, thanks.
+
+Fields of interest for actual mapping:
+
+ - Name
+ - Hectad+tetrad
+ - year1 (for implementing maps of records between 2 given years)
+
+(Year 2 is used when date is uncertain but known to be between year1
+and year2, so nearly always year2=year1 if year 2>year 1 the date of
+the record for mapping should be year1.)
+
+Fields required for displaying information about records of a given
+species in a given tetrad:
+
+ - Recorder
+ - Determiner 
+ - Date
+
+and possibly:
+
+ - Gridref (when higher resolution than a tetrad)
+ - Fruit
+ - Herbarium
+
+(Note, 'Y' under fruit signifies the plant was producing
+spores. Herbarium indicates a museum etc. where a specimen
+representing the record is stored.)
+
+I don't think any of the other fields are of interest.
+
+
+On 12/01/2012 12:04, Nick Stokoe wrote:
+> On 12/01/12 10:50, j lowell wrote:
+>> I cannot open the .xlcs* file which seems to need a recent more recent excel
+>> program than mine. Are you able to cope with it?
+> Yes.  I am using something open source called Open Office. It runs under Windows
+> so you could use it too.
+>
+> Although I should note that the OO project has now forked and the Libre Office
+> fork might be a better choice:
+>
+>    http://www.libreoffice.org/
+>
+> When Oracle acquired Sun Microsystems, many of the developers working on the
+> various open-source projects created by Sun apparently found Oracle an
+> unfriendly influence, so they invoked the open-source nature of their code and
+> created duplicates of their projects to run independently of Oracle.  I can
+> think of at least three major open source projects which did this.
+>
+>
+> N
+>
+
