@@ -1,0 +1,5 @@
+[
+  // filenames matching these regexps will not be pushed to the database
+  ".*~$",
+  ".*#$"
+]

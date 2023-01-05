@@ -136,19 +136,20 @@ module.exports = function(grunt) {
             },
         },
         browserify: {
+/*
             dinty: {
                 src: 'dinty/dinty.js',
                 dest: 'couchdb/mossmap/_attachments/3p/dinty.js',
                 options: {
                     alias: ['dinty:'],
                 },
-            },
-            unbrowserified: {
-                // code from this module which needs browserification
-                src: './src/unbrowserified/*.js',
+            },*///FIXME need to ensure csv2json is requireable
+            modules: {
+                // modules which needs browserification
+                src: './src/modules/mossmap-csv2json.js',
                 dest: 'couchdb/mossmap/_attachments/js/mossmap.js',
                 options: {
-                    alias: ['mossmap:'],
+                    alias: ['dinty:'],
                 },
             },
         },
